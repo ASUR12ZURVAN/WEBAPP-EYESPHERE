@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Snellen Chart</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: monospace, sans-serif;
+        }
+        .line {
+            margin: 10px 0;
+            letter-spacing: 10px;
+        }
+        .highlight {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dynamic Snellen Chart</h1>
+
+    <form id="setupForm">
+        <label for="diagonal">Enter Screen Diagonal (in inches): </label>
+        <input type="number" id="diagonal" name="diagonal" step="0.1" required>
+        <button type="submit">Generate Chart</button>
+    </form>
+
+    <form id="lineForm" style="display:none; margin-top: 20px;">
+        <label for="lineNumber">Enter Line Number (1-15): </label>
+        <input type="number" id="lineNumber" name="lineNumber" min="1" max="15" required>
+        <button type="submit">Highlight</button>
+    </form>
+
+    <div id="chartContainer"></div>
+
+    <script>
+        const chartLines = [
+            "E", "FP", "TOZ", "LPED", "PECFD",
+            "EDFCZP", "FELOPZD", "DEFPOTEC", "LEFODPCT",
+            "FDPLTCEO", "PDELOFZC", "DEFPOCTLE",
+            "FELPZOTEC", "PDEZCFLOP", "LEPCTDFOZ"
+        ];
+
+        const distance_m = 3.0;
+        const width_px = window.screen.width;
+        const height_px = window.screen.height;
+
+        function getScreenPPI(diagonal_inch) {
+            const diagonal_px = Math.sqrt(width_px ** 2 + height_px ** 2);
+            return diagonal_px / diagonal_inch;
+        }
+
+        function calculatePixelSizes(ppi) {
+            const distance_m = 3.0;  // keep distance in meters
+            const base_height_m = 0.000873;  // 0.291 × distance_m (0.291 = 5 arcminutes in radians at 1 m)
+        
+            const pixelSizes = [];
+        
+            for (let i = 0; i < 15; i++) {
+                const logmar = (14 - i) * 0.1;  // line 1 → logMAR 1.4, line 15 → logMAR 0
+                const height_m = base_height_m * Math.pow(10, logmar);  // letter height in meters
+                const height_mm = height_m * 1000;  // convert to mm
+                const pixel_size = height_mm * (ppi / 25.4);  // convert to pixels
+                pixelSizes.push(pixel_size);
+                console.log(`Line ${i + 1} (logMAR ${logmar.toFixed(1)}): ${pixel_size.toFixed(2)} px`);
+            }
+            console.log(width_px);
+            console.log(height_px);
+
+        
+            return pixelSizes;
+        }
+       
+
+        const chartContainer = document.getElementById('chartContainer');
+        const setupForm = document.getElementById('setupForm');
+        const lineForm = document.getElementById('lineForm');
+
+        let pixelSizes = [];
+
+        function renderChart(highlightIndex = null) {
+            chartContainer.innerHTML = '';
+            chartLines.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.classList.add('line');
+                if (highlightIndex === index) {
+                    div.classList.add('highlight');
+                }
+                div.style.fontSize = pixelSizes[index] + 'px';
+                div.textContent = line;
+                chartContainer.appendChild(div);
+            });
+        }
+
+        setupForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const diagonal_inch = parseFloat(document.getElementById('diagonal').value);
+            const ppi = getScreenPPI(diagonal_inch);
+            pixelSizes = calculatePixelSizes(ppi);
+
+            console.log("Calculated PPI:", ppi);
+            console.log("Pixel Sizes:", pixelSizes);
+
+            lineForm.style.display = 'block';
+            renderChart();
+        });
+
+        lineForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const lineNumber = parseInt(document.getElementById('lineNumber').value, 10);
+            if (lineNumber >= 1 && lineNumber <= 15) {
+                renderChart(lineNumber - 1);
+            } else {
+                alert('Please enter a valid line number (1–15).');
+            }
+        });
+    </script>
+
+</body>
+</html>
