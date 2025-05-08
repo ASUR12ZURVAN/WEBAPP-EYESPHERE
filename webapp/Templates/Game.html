@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Peripheral Number Memory Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        #centerDot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        #focusText {
+            position: absolute;
+            top: calc(50% + 30px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: black;
+        }
+        .number {
+            position: absolute;
+            font-weight: bold;
+        }
+        #inputSection {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            display: none;
+        }
+        #score {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+        button {
+            padding: 8px 15px;
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="centerDot"></div>
+    <div id="focusText">Focus here</div>
+
+    <div id="inputSection">
+        <p id="levelText">Level 1</p>
+        <p>Enter the numbers you saw (separated by commas):</p>
+        <input type="text" id="userInput" placeholder="e.g., 5,6,7">
+        <br>
+        <button id="checkBtn">Check</button>
+        <button id="restartBtn">Restart</button>
+        <div id="score"></div>
+    </div>
+
+    <script>
+        const colors = ['red', 'green', 'blue', 'orange', 'purple'];
+        const displayTime = 1500; // ms per number
+        const numberCount = 5;
+        let generatedNumbers = [];
+        let currentLevel = 1;
+
+        function randomPosition(level) {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            let x, y;
+
+            if (level === 1) {
+                // Near center (within ±100px)
+                x = centerX + (Math.random() * 400 - 300);
+                y = centerY + (Math.random() * 400 - 300);
+            } else if (level === 2) {
+                // Spread wider (±300px)
+                x = centerX + (Math.random() * 700 - 500);
+                y = centerY + (Math.random() * 700 - 500);
+            } else {
+                // Periphery (edges)
+                const edge = Math.floor(Math.random() * 4);
+                switch (edge) {
+                    case 0: x = Math.random() * window.innerWidth; y = 10; break; // top
+                    case 1: x = window.innerWidth - 40; y = Math.random() * window.innerHeight; break; // right
+                    case 2: x = Math.random() * window.innerWidth; y = window.innerHeight - 40; break; // bottom
+                    case 3: x = 10; y = Math.random() * window.innerHeight; break; // left
+                }
+            }
+            return { x, y };
+        }
+
+        function showNumber(num, color, level) {
+            const div = document.createElement('div');
+            div.classList.add('number');
+            div.textContent = num;
+            div.style.color = color;
+
+            if (level === 1) {
+                div.style.fontSize = '50px';
+            } else if (level === 2) {
+                div.style.fontSize = '35px';
+            } else {
+                div.style.fontSize = '25px';
+            }
+
+            const pos = randomPosition(level);
+            div.style.left = `${pos.x}px`;
+            div.style.top = `${pos.y}px`;
+
+            document.body.appendChild(div);
+
+            setTimeout(() => {
+                div.remove();
+            }, displayTime);
+        }
+
+        async function startRound() {
+            generatedNumbers = [];
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('score').textContent = '';
+            document.getElementById('levelText').textContent = `Level ${currentLevel}`;
+
+            for (let i = 0; i < numberCount; i++) {
+                const num = Math.floor(Math.random() * 9) + 1;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                generatedNumbers.push(num);
+                showNumber(num, color, currentLevel);
+                await new Promise(resolve => setTimeout(resolve, displayTime));
+            }
+
+            document.getElementById('inputSection').style.display = 'block';
+        }
+
+        document.getElementById('checkBtn').addEventListener('click', () => {
+            const userInput = document.getElementById('userInput').value;
+            const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            let correct = 0;
+            userNumbers.forEach(n => {
+                if (generatedNumbers.includes(n)) correct++;
+            });
+            document.getElementById('score').textContent = `You got ${correct} out of ${generatedNumbers.length} correct!`;
+
+            if (currentLevel < 3) {
+                currentLevel++;
+                setTimeout(() => {
+                    document.getElementById('userInput').value = '';
+                    startRound();
+                }, 2000);
+            } else {
+                document.getElementById('score').textContent += ' 🎉 You completed all levels!';
+            }
+        });
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            currentLevel = 1;
+            document.getElementById('userInput').value = '';
+            startRound();
+        });
+
+        // Start first round on load
+        window.onload = startRound;
+    </script>
+
+</body>
+</html>
