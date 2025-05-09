@@ -2,77 +2,588 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peripheral Number Memory Test</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3bc47d;
+            --accent-color: #ff6b6b;
+            --dark-color: #1e2a3a;
+            --light-color: #f8fafc;
+            --neutral-color: #a0aec0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            height: 100vh;
+            color: var(--light-color);
         }
-        #centerDot {
+        
+        /* Stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            background-color: red;
+            width: 2px;
+            height: 2px;
+            background: #fff;
             border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 4s infinite;
         }
-        #focusText {
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+        }
+        
+        .header {
             position: absolute;
-            top: calc(50% + 30px);
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            color: black;
+            top: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+            padding: 15px;
+            background-color: rgba(30, 42, 58, 0.7);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
+        .header h1 {
+            font-size: 28px;
+            color: var(--light-color);
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            color: var(--neutral-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #centerArea {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #centerDot {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.7);
+            animation: pulse 2s infinite;
+            z-index: 5;
+        }
+        
+        
+        @keyframes ringPulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0.2; }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+            }
+            70% {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+            }
+        }
+        
+        #focusText {
+            position: relative;
+            margin-top: 35px;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--light-color);
+            background-color: rgba(30, 42, 58, 0.7);
+            padding: 8px 18px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         .number {
             position: absolute;
             font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            animation: fadeInNumber 0.4s forwards ease-out;
+            z-index: 3;
         }
+        
+        @keyframes fadeInNumber {
+            from { opacity: 0; transform: scale(0.5); filter: blur(5px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        
         #inputSection {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
+            background-color: rgba(30, 42, 58, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 25px 35px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            max-width: 90%;
+            width: 450px;
             display: none;
+            animation: slideUp 0.6s forwards;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        #score {
-            margin-top: 10px;
-            font-size: 20px;
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, 80px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
         }
-        button {
-            padding: 8px 15px;
+        
+        #levelText {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        #levelText::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+        
+        #inputSection p {
+            margin: 12px 0;
             font-size: 16px;
-            margin: 5px;
+            color: var(--light-color);
+        }
+        
+        .input-container {
+            position: relative;
+            margin: 15px 0;
+        }
+        
+        #userInput {
+            width: 100%;
+            padding: 14px 15px;
+            font-size: 18px;
+            border: 2px solid rgba(160, 174, 192, 0.3);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--light-color);
+            transition: var(--transition);
+            outline: none;
+        }
+        
+        #userInput:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        #userInput::placeholder {
+            color: rgba(160, 174, 192, 0.7);
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        button:hover::before {
+            opacity: 1;
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        #checkBtn {
+            background-color: var(--primary-color);
+            color: white;
+            flex: 1;
+        }
+        
+        #checkBtn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        #restartBtn {
+            background-color: var(--secondary-color);
+            color: white;
+            flex: 1;
+        }
+        
+        #restartBtn:hover {
+            background-color: #2eae6d;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        #score {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 12px;
+            border-radius: 8px;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .score-highlight {
+            background-color: rgba(59, 196, 125, 0.15);
+            animation: highlight 1.5s ease-in-out forwards;
+            opacity: 1 !important;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(59, 196, 125, 0); }
+            30% { background-color: rgba(59, 196, 125, 0.25); }
+            100% { background-color: rgba(59, 196, 125, 0.15); }
+        }
+        
+        /* Level indicator */
+        .level-indicator {
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            background-color: rgba(30, 42, 58, 0.8);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-md);
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+        
+        .level-indicator i {
+            color: var(--primary-color);
+        }
+        
+        #levelDisplay {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--light-color);
+        }
+        
+        /* Stats section */
+        .stats-container {
+            position: absolute;
+            top: 90px;
+            left: 20px;
+            background-color: rgba(30, 42, 58, 0.8);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 160px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .stat-label {
+            color: var(--neutral-color);
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: var(--light-color);
+        }
+        
+        /* Progress indicator */
+        .progress-bar {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.5s ease;
+        }
+        
+        /* Help button */
+        .help-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(30, 42, 58, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--neutral-color);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            z-index: 10;
+            backdrop-filter: blur(8px);
+        }
+        
+        .help-btn:hover {
+            color: var(--light-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            #inputSection {
+                width: 90%;
+                padding: 20px;
+            }
+            
+            button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            
+            .stats-container {
+                top: auto;
+                left: 20px;
+                bottom: 90px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: space-around;
+                min-width: 0;
+                width: calc(100% - 40px);
+            }
+            
+            .stat-item {
+                width: 45%;
+            }
+            
+            .level-indicator {
+                top: auto;
+                bottom: 150px;
+                right: 20px;
+            }
+            
+            .progress-bar {
+                top: auto;
+                bottom: 20px;
+                width: calc(100% - 40px);
+            }
         }
     </style>
 </head>
 <body>
-
-    <div id="centerDot"></div>
-    <div id="focusText">Focus here</div>
-
-    <div id="inputSection">
-        <p id="levelText">Level 1</p>
-        <p>Enter the numbers you saw (separated by commas):</p>
-        <input type="text" id="userInput" placeholder="e.g., 5,6,7">
-        <br>
-        <button id="checkBtn">Check</button>
-        <button id="restartBtn">Restart</button>
-        <div id="score"></div>
+    <!-- Stars background -->
+    <div class="stars" id="stars"></div>
+    
+    <div id="gameContainer">
+        <div class="header">
+            <h1>Peripheral Vision Memory Test</h1>
+            <p>Keep your eyes on the center dot and try to remember the numbers that appear</p>
+        </div>
+        
+        <div class="level-indicator">
+            <i class="fas fa-layer-group"></i> Level <span id="levelDisplay">1</span>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-label">Total Numbers:</span>
+                <span class="stat-value" id="totalNumbers">5</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Current Level:</span>
+                <span class="stat-value" id="currentLevelStat">1 / 3</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Progress:</span>
+                <span class="stat-value" id="progressStat">0%</span>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="game-area">
+            <div id="centerArea">
+                <div id="focusRing"></div>
+                <div id="centerDot"></div>
+                <div id="focusText">Focus on this dot</div>
+            </div>
+        </div>
+        
+        <div id="inputSection">
+            <p id="levelText">Level 1</p>
+            <p>Enter the numbers you saw (separated by commas):</p>
+            <div class="input-container">
+                <input type="text" id="userInput" placeholder="e.g., 5,6,7" autocomplete="off">
+            </div>
+            <div class="buttons-container">
+                <button id="checkBtn"><i class="fas fa-check"></i> Check</button>
+                <button id="restartBtn"><i class="fas fa-sync-alt"></i> Restart</button>
+            </div>
+            <div id="score"></div>
+        </div>
+        
+        <button class="help-btn" id="helpBtn"><i class="fas fa-question"></i></button>
     </div>
 
     <script>
-        const colors = ['red', 'green', 'blue', 'orange', 'purple'];
+        const colors = ['#ff6b6b', '#4cc9f0', '#4361ee', '#3bc47d', '#f72585'];
         const displayTime = 1500; // ms per number
         const numberCount = 5;
         let generatedNumbers = [];
         let currentLevel = 1;
+        let totalScore = 0;
+        let correctAnswers = 0;
+        
+        // Create stars background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 100;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.width = `${Math.random() * 3 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                starsContainer.appendChild(star);
+            }
+        }
 
         function randomPosition(level) {
             const centerX = window.innerWidth / 2;
@@ -80,23 +591,23 @@
             let x, y;
 
             if (level === 1) {
-                // Near center (within ±100px)
-                x = centerX + (Math.random() * 400 - 300);
-                y = centerY + (Math.random() * 400 - 300);
+                // Near center (within ±200px)
+                x = centerX + (Math.random() * 400 - 200);
+                y = centerY + (Math.random() * 400 - 200);
             } else if (level === 2) {
-                // Spread wider (±300px)
-                x = centerX + (Math.random() * 700 - 500);
-                y = centerY + (Math.random() * 700 - 500);
+                // Spread wider (±350px)
+                x = centerX + (Math.random() * 700 - 350);
+                y = centerY + (Math.random() * 700 - 350);
             } else {
-                // Periphery (edges)
-                const edge = Math.floor(Math.random() * 4);
-                switch (edge) {
-                    case 0: x = Math.random() * window.innerWidth; y = 10; break; // top
-                    case 1: x = window.innerWidth - 40; y = Math.random() * window.innerHeight; break; // right
-                    case 2: x = Math.random() * window.innerWidth; y = window.innerHeight - 40; break; // bottom
-                    case 3: x = 10; y = Math.random() * window.innerHeight; break; // left
-                }
+   
+                  x = centerX + (Math.random() * 1000 - 500);
+                  y = centerY + (Math.random() * 1000 - 500);
             }
+            
+            if (y < 150) y = 150;
+            x = Math.max(60, Math.min(x, window.innerWidth - 60));
+            y = Math.max(150, Math.min(y, window.innerHeight - 60));
+            
             return { x, y };
         }
 
@@ -107,11 +618,11 @@
             div.style.color = color;
 
             if (level === 1) {
-                div.style.fontSize = '50px';
+                div.style.fontSize = '60px';
             } else if (level === 2) {
-                div.style.fontSize = '35px';
+                div.style.fontSize = '48px';
             } else {
-                div.style.fontSize = '25px';
+                div.style.fontSize = '36px';
             }
 
             const pos = randomPosition(level);
@@ -121,35 +632,68 @@
             document.body.appendChild(div);
 
             setTimeout(() => {
-                div.remove();
-            }, displayTime);
+                div.style.opacity = '0';
+                div.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    div.remove();
+                }, 300);
+            }, displayTime - 300);
         }
 
         async function startRound() {
             generatedNumbers = [];
             document.getElementById('inputSection').style.display = 'none';
             document.getElementById('score').textContent = '';
+            document.getElementById('score').classList.remove('score-highlight');
             document.getElementById('levelText').textContent = `Level ${currentLevel}`;
+            document.getElementById('levelDisplay').textContent = currentLevel;
+            document.getElementById('currentLevelStat').textContent = `${currentLevel} / 3`;
+            
+            // Update progress
+            const progressPercentage = ((currentLevel - 1) / 3) * 100;
+            document.getElementById('progressStat').textContent = `${Math.round(progressPercentage)}%`;
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
 
             for (let i = 0; i < numberCount; i++) {
                 const num = Math.floor(Math.random() * 9) + 1;
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 generatedNumbers.push(num);
                 showNumber(num, color, currentLevel);
+                
+                // Update progress during number display
+                const currentProgress = progressPercentage + ((i + 1) / numberCount) * (100 / 3);
+                document.getElementById('progressStat').textContent = `${Math.round(currentProgress)}%`;
+                document.getElementById('progressFill').style.width = `${currentProgress}%`;
+                
                 await new Promise(resolve => setTimeout(resolve, displayTime));
             }
 
             document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('userInput').focus();
         }
 
-        document.getElementById('checkBtn').addEventListener('click', () => {
+        function checkAnswer() {
             const userInput = document.getElementById('userInput').value;
             const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
             let correct = 0;
+            
             userNumbers.forEach(n => {
                 if (generatedNumbers.includes(n)) correct++;
             });
-            document.getElementById('score').textContent = `You got ${correct} out of ${generatedNumbers.length} correct!`;
+            
+            correctAnswers += correct;
+            totalScore += correct;
+            
+            const scoreElement = document.getElementById('score');
+            scoreElement.style.opacity = '1';
+            
+            const accuracy = Math.round((correct / generatedNumbers.length) * 100);
+            let emoji = '⚠️';
+            if (accuracy >= 80) emoji = '🎯';
+            else if (accuracy >= 50) emoji = '👍';
+            
+            scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
+            scoreElement.classList.add('score-highlight');
 
             if (currentLevel < 3) {
                 currentLevel++;
@@ -158,18 +702,50 @@
                     startRound();
                 }, 2000);
             } else {
-                document.getElementById('score').textContent += ' 🎉 You completed all levels!';
+                const finalScore = Math.round((totalScore / (numberCount * 3)) * 100);
+                let message = `🏆 You completed all levels with a total score of ${totalScore} out of ${numberCount * 3}!`;
+                
+                if (finalScore >= 80) {
+                    message += ' Outstanding memory skills!';
+                } else if (finalScore >= 60) {
+                    message += ' Great job!';
+                } else {
+                    message += ' Keep practicing to improve!';
+                }
+                
+                scoreElement.textContent = message;
             }
+        }
+
+        document.getElementById('checkBtn').addEventListener('click', () => {
+            checkAnswer();
         });
 
         document.getElementById('restartBtn').addEventListener('click', () => {
             currentLevel = 1;
+            totalScore = 0;
+            correctAnswers = 0;
             document.getElementById('userInput').value = '';
             startRound();
         });
 
-        // Start first round on load
-        window.onload = startRound;
+        // Enter key to submit
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Help button functionality
+        document.getElementById('helpBtn').addEventListener('click', function() {
+            alert('Instructions:\n\n1. Focus on the red dot in the center.\n2. Try to remember the numbers that appear around the screen.\n3. Enter the numbers you saw (separated by commas).\n4. The game has 3 levels, with numbers appearing further from center as you progress.');
+        });
+
+        // Create stars and start first round
+        window.onload = function() {
+            createStars();
+            startRound();
+        };
     </script>
 
 </body>
