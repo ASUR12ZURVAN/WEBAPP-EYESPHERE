@@ -3,58 +3,451 @@
 <head>
     <title>Dynamic Snellen Chart</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+        }
+        body{
             text-align: center;
-            font-family: monospace, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff;
+            background: linear-gradient(135deg, #f5f7fa, #e0e6ed);
+            transition: background 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1{
+            margin-top: 20px;
+            font-size: 2.5em;
+            color: #2c3e50;
+            animation: fadeIn 1s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            letter-spacing: 0.5px;
         }
         .line {
-            margin: 10px 0;
-            letter-spacing: 10px;
+            opacity: 0;
+            animation: fadeInLine 0.5s ease forwards;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            letter-spacing: 0.1em;
         }
+
+        .line:hover {
+            transform: scale(1.05);
+            color: #3498db;
+        }
+
+        .line:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+        .line:nth-child(even) {
+            animation-delay: 0.4s;
+        }
+
         .highlight {
-            color: red;
+            color: #e74c3c;
             font-weight: bold;
-            animation: flash 1s infinite;
+            animation: pulse 2s infinite ease-in-out;
+            text-shadow: 0px 0px 5px rgba(231, 76, 60, 0.3);
         }
-        @keyframes flash {
-            0% { opacity: 1; }
-            50% { opacity: 0.2; }
-            100% { opacity: 1; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        #fullscreenBtn, #pdfBtn {
-            margin: 10px;
-            padding: 10px 20px;
+
+        @keyframes fadeInLine {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+                text-shadow: 0px 0px 8px rgba(231, 76, 60, 0.5);
+            }
+        }
+
+        /* Forms */
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 600px;
+            transition: all 0.3s ease;
+        }
+
+        .form-container:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        form {
+            transition: transform 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        form:focus-within {
+            transform: scale(1.01);
+        }
+
+        label {
+            font-weight: 600;
+            color: #34495e;
+            margin-right: 5px;
+        }
+
+        input {
+            padding: 12px 15px;
             font-size: 16px;
+            width: 120px;
+            border: 2px solid #dde1e7;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+            transform: scale(1.02);
+        }
+
+        input:hover {
+            border-color: #adb5bd;
+        }
+
+        button {
+            margin: 10px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        button:hover:before {
+            transform: scaleX(1);
+        }
+
+        button:hover {
+            opacity: 0.95;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #555;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:hover::after {
+            opacity: 1;
+        }
+
+        #chartContainer {
+            margin: 40px auto;
+            transition: all 0.3s ease;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            max-width: 90%;
+            display: none; /* Hide initially */
+        }
+
+        #fullscreenBtn {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+        }
+
+        #pdfBtn {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+        }
+
+        #setupForm button {
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            color: white;
+        }
+
+        #lineForm button {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .actions-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .line-counter {
+            position: absolute;
+            left: 10px;
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        .chart-line-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 25px;
+            background:rgb(61, 66, 74);
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-slider {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode h1 {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .form-container {
+            background-color: rgba(30, 39, 46, 0.95);
+        }
+
+        body.dark-mode label {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode input {
+            background-color: #2c3e50;
+            border-color: #34495e;
+            color: #ecf0f1;
+        }
+
+        body.dark-mode #chartContainer {
+            background-color: #1e272e;
+        }
+
+        body.dark-mode .line {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .line:hover {
+            color: #3498db;
+        }
+
+        body.dark-mode .theme-toggle {
+            background:rgb(169, 184, 198);
+            justify-content: flex-end;
+        }
+
+        body.dark-mode .theme-toggle-slider {
+            background: #f39c12;
+        }
+
+        body.dark-mode .line-counter {
+            color:rgb(4, 10, 14);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .form-container {
+                padding: 15px;
+                max-width: 90%;
+            }
+
+            input {
+                width: 100px;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 12px 20px;
+                margin: 8px;
+            }
+
+            #chartContainer {
+                padding: 15px;
+                margin: 20px auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            input {
+                width: 100%;
+            }
+
+            .actions-container {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body.dark-mode .loading {
+            background: rgba(0,0,0,0.8);
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #3498db;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        body.dark-mode .spinner {
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: #3498db;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
+    <div class="theme-toggle" id="themeToggle">
+        <div class="theme-toggle-slider"></div>
+    </div>
 
-    <h1>Dynamic Snellen Chart</h1>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
 
-    <form id="setupForm">
-        <label for="diagonal">Enter Screen Diagonal (in inches): </label>
-        <input type="number" id="diagonal" name="diagonal" step="0.1" required>
-        <button type="submit">Generate Chart</button>
-    </form>
+    <div class="container">
+        <h1>Dynamic Snellen Chart</h1>
 
-    <form id="lineForm" style="display:none; margin-top: 20px;">
-        <label for="lineNumber">Enter Line Number (1-15): </label>
-        <input type="number" id="lineNumber" name="lineNumber" min="1" max="15" required>
-        <button type="submit">Highlight</button>
-    </form>
+        <div class="form-container">
+            <form id="setupForm">
+                <label for="diagonal">Screen Diagonal (inches):</label>
+                <input type="number" id="diagonal" name="diagonal" step="0.1" required>
+                <button type="submit">Generate Chart</button>
+            </form>
 
-    <button id="fullscreenBtn" style="display:none;">
-        Go Fullscreen
-    </button>
-    <button id="pdfBtn" style="display:none;">
-        Download PDF
-    </button>
+            <form id="lineForm" style="display: none;">
+                <label for="lineNumber">Line Number (1–15):</label>
+                <input type="number" id="lineNumber" name="lineNumber" min="1" max="15" required>
+                <button type="submit">Highlight Line</button>
+            </form>
+        </div>
 
-    <div id="chartContainer" style="margin-top: 30px;"></div>
+        <div class="actions-container">
+            <button id="fullscreenBtn" style="display:none;">Go Fullscreen</button>
+            <button id="pdfBtn" style="display:none;">Download PDF</button>
+        </div>
+        
+        <div id="chartContainer"></div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -97,26 +490,50 @@
         const lineForm = document.getElementById('lineForm');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const pdfBtn = document.getElementById('pdfBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const loading = document.getElementById('loading');
 
         let pixelSizes = [];
 
         function renderChart(highlightIndex = null) {
+            showLoading();
             chartContainer.innerHTML = '';
+            
             chartLines.forEach((line, index) => {
+                const container = document.createElement('div');
+                container.classList.add('chart-line-container');
+                const counter = document.createElement('span');
+                counter.classList.add('line-counter');
+                counter.textContent = `${index + 1}`;
                 const div = document.createElement('div');
                 div.classList.add('line');
                 if (highlightIndex === index) {
                     div.classList.add('highlight');
                 }
                 div.style.fontSize = pixelSizes[index] + 'px';
+                div.style.textAlign = 'center';
+                div.style.width = '100%';
                 div.textContent = line;
-                chartContainer.appendChild(div);
+                
+                container.appendChild(counter);
+                container.appendChild(div);
+                chartContainer.appendChild(container);
             });
+            
+            hideLoading();
+        }
+        function showLoading() {
+            loading.style.display = 'flex';
+        }
+        function hideLoading() {
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 500);
         }
 
         fullscreenBtn.addEventListener('click', function() {
             if (document.fullscreenElement) {
-                document.exitFullscreen();
+               document.exitFullscreen();
                 fullscreenBtn.textContent = 'Go Fullscreen';
             } else {
                 document.documentElement.requestFullscreen().catch((err) => {
@@ -126,19 +543,83 @@
             }
         });
 
-        pdfBtn.addEventListener('click', function() {
-            const opt = {
-                margin:       0,
-                filename:     'snellen_chart.pdf',
-                image:        { type: 'jpeg', quality: 1 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(chartContainer).save();
-        });
+  pdfBtn.addEventListener('click', async function () {
+     showLoading();
+
+    const highlightedLine = document.querySelector('.line.highlight');
+    const highlightIndex = highlightedLine
+        ? Array.from(highlightedLine.parentElement.parentElement.children).indexOf(highlightedLine.parentElement)
+        : null;
+
+     const pdfContent = document.createElement('div');
+     pdfContent.style.padding = '30px';
+     pdfContent.style.backgroundColor = '#fff';
+     pdfContent.style.color = '#000';
+     pdfContent.style.width = '100%';
+     pdfContent.style.maxWidth = '800px';
+     pdfContent.style.margin = '0 auto';
+     pdfContent.style.fontFamily = 'Arial, sans-serif';
+
+     const title = document.createElement('h2');
+     title.textContent = 'Snellen Eye Chart';
+     title.style.textAlign = 'center';
+     title.style.marginBottom = '30px';
+     pdfContent.appendChild(title);
+
+     chartLines.forEach((line, index) => {
+          const lineDiv = document.createElement('div');
+         lineDiv.textContent = line;
+         lineDiv.style.fontSize = pixelSizes[index] + 'px';
+         lineDiv.style.textAlign = 'center';
+         lineDiv.style.margin = '15px 0';
+         lineDiv.style.lineHeight = '1.2';
+
+         if (highlightIndex !== null && index === highlightIndex) {
+            lineDiv.style.color = '#e74c3c';
+            lineDiv.style.fontWeight = 'bold';
+            lineDiv.style.textShadow = '0 0 5px rgba(231, 76, 60, 0.3)';
+         }
+
+         const lineNumber = document.createElement('div');
+         lineNumber.textContent = `Line ${index + 1}`;
+         lineNumber.style.fontSize = '12px';
+          lineNumber.style.textAlign = 'center';
+          lineNumber.style.color = '#666';
+         lineNumber.style.marginBottom = '5px';
+
+         const container = document.createElement('div');
+         container.appendChild(lineNumber);
+         container.appendChild(lineDiv);
+         pdfContent.appendChild(container);
+    });
+
+    document.body.appendChild(pdfContent);
+
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    const opt = {
+        margin: [15, 10, 15, 10],
+        filename: 'snellen_chart.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'], before: '.pdf-pagebreak' }
+    };
+
+    try {
+        await html2pdf().set(opt).from(pdfContent).save();
+    } catch (err) {
+        console.error('PDF generation error:', err);
+        alert('Error generating PDF. Please try again.');
+    } finally {
+        document.body.removeChild(pdfContent);
+        hideLoading();
+    }
+});
 
         setupForm.addEventListener('submit', function(event) {
             event.preventDefault();
+            showLoading();
             const diagonal_inch = parseFloat(document.getElementById('diagonal').value);
             const ppi = getScreenPPI(diagonal_inch);
             pixelSizes = calculatePixelSizes(ppi);
@@ -149,24 +630,36 @@
             lineForm.style.display = 'block';
             fullscreenBtn.style.display = 'inline-block';
             pdfBtn.style.display = 'inline-block';
+            chartContainer.style.display = 'block'; 
             renderChart();
 
             document.documentElement.requestFullscreen().catch((err) => {
                 console.warn(`Failed to enter fullscreen: ${err.message}`);
+                hideLoading();
             });
             fullscreenBtn.textContent = 'Exit Fullscreen';
         });
 
         lineForm.addEventListener('submit', function(event) {
             event.preventDefault();
+            showLoading();
             const lineNumber = parseInt(document.getElementById('lineNumber').value, 10);
             if (lineNumber >= 1 && lineNumber <= 15) {
                 renderChart(lineNumber - 1);
             } else {
                 alert('Please enter a valid line number (1–15).');
+                hideLoading();
             }
         });
-    </script>
 
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </body>
 </html>
