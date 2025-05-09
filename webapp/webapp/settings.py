@@ -55,7 +55,7 @@ ROOT_URLCONF = 'webapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["E:\EYE-SPHERE\WEBAPP EYESPHERE\webapp\Templates",],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
