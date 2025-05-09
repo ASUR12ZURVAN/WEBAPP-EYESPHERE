@@ -4,5 +4,6 @@ from Myopia_Test.views import predict_diopters
 from . import views
 
 urlpatterns = [
-    path('', views.index, name = "base_myopia"),
+    path('Myopia_Test/', views.index, name = "base_myopia"),
+    path('create-user/', views.create_user, name='create-user'),
 ]
