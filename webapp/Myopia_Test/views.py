@@ -4,9 +4,10 @@ def predict_diopters(request):
     if request.method == 'POST':
         try:
             line_number = int(request.POST.get('lineNumber'))
-
+            logmar = (10 - line_number)*0.1
+            raw_diopters = 3.3*logmar
             # Replace with your ML model logic if applicable
-            prediction = round(-0.1 * line_number, 2)
+            prediction = round(raw_diopters * 2)/2.0
 
             return render(request, 'prediction_result.html', {
                 'prediction': prediction

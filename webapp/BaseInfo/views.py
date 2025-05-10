@@ -1,9 +1,9 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User
-from .Serializers import UserSerializer
+from .models import User,TestResult
+from .Serializers import UserSerializer,ResultSerializer
 
 def index(request):
     return render(request, 'hd.html')  
@@ -26,3 +26,19 @@ def create_user(request):
         return render(request, 'create_user.html', {'errors': serializer.errors})
 
     return render(request, 'create_user.html')
+
+def save_test_result(request, user_id, test_type, prediction_value):
+    user = User.objects.get(id=user_id)
+    TestResult.objects.create(
+        user=user,
+        test_type=test_type,
+        result_value=prediction_value
+    )
+
+def user_profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    test_results = user.test_results.all().order_by('-date_taken')
+    return render(request, 'user_profile.html', {
+        'user': user,
+        'test_results': test_results
+    })

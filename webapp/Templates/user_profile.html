@@ -1,0 +1,36 @@
+<!-- templates/user_profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.name }}'s Profile</title>
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ user.name }}'s Profile</h1>
+    <p><strong>Age:</strong> {{ user.age }}</p>
+    <p><strong>Phone Number:</strong> {{ user.ph_Number }}</p>
+    <p><strong>City:</strong> {{ user.city }}</p>
+
+    <h2>Test Results</h2>
+    {% if test_results %}
+        {% for result in test_results %}
+            <div class="card">
+                <p><strong>Test Type:</strong> {{ result.test_type }}</p>
+                <p><strong>Result:</strong> {{ result.result_value }}</p>
+                <p><strong>Date Taken:</strong> {{ result.date_taken|date:"Y-m-d H:i" }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No test results found.</p>
+    {% endif %}
+</body>
+</html>
