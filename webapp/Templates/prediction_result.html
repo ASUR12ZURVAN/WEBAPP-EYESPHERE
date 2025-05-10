@@ -8,6 +8,13 @@
 <body>
     <h1>Predicted Diopter</h1>
     <p>Your predicted diopter value is: <strong>{{ prediction }}</strong></p>
-    <a>Back to Chart</a>
+
+    <a href="{% url 'base_glaucoma' %}">
+        <button>Go to Game</button>
+    </a>
+
+    <a href="{% url 'base_myopia' %}">
+        <button>Back to Chart</button>
+    </a>
 </body>
 </html>

@@ -7,6 +7,8 @@ from .Serializers import UserSerializer
 
 def index(request):
     return render(request, 'hd.html')  
+def next(request):
+    return render(request,'Game.html' )
 
 @api_view(['GET', 'POST'])
 def create_user(request):
