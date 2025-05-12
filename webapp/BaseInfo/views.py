@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import User,TestResult
 from .Serializers import UserSerializer,ResultSerializer
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 def index(request):
     return render(request, 'hd.html')  
@@ -42,3 +45,17 @@ def user_profile(request, user_id):
         'user': user,
         'test_results': test_results
     })
+
+@csrf_exempt  # For now, to bypass CSRF in development
+def submit_score(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            final_score = data.get('final_score')
+            accuracy = data.get('accuracy')
+            # You can log it, store in DB, etc.
+            print("Received Score:", final_score, "Accuracy:", accuracy)
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'invalid request'}, status=405)

@@ -672,50 +672,69 @@
             document.getElementById('userInput').focus();
         }
 
-        function checkAnswer() {
-            const userInput = document.getElementById('userInput').value;
-            const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-            let correct = 0;
-            
-            userNumbers.forEach(n => {
-                if (generatedNumbers.includes(n)) correct++;
-            });
-            
-            correctAnswers += correct;
-            totalScore += correct;
-            
-            const scoreElement = document.getElementById('score');
-            scoreElement.style.opacity = '1';
-            
-            const accuracy = Math.round((correct / generatedNumbers.length) * 100);
-            let emoji = '⚠️';
-            if (accuracy >= 80) emoji = '🎯';
-            else if (accuracy >= 50) emoji = '👍';
-            
-            scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
-            scoreElement.classList.add('score-highlight');
+function checkAnswer() {
+    const userInput = document.getElementById('userInput').value;
+    const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    let correct = 0;
 
-            if (currentLevel < 3) {
-                currentLevel++;
-                setTimeout(() => {
-                    document.getElementById('userInput').value = '';
-                    startRound();
-                }, 2000);
-            } else {
-                const finalScore = Math.round((totalScore / (numberCount * 3)) * 100);
-                let message = `🏆 You completed all levels with a total score of ${totalScore} out of ${numberCount * 3}!`;
-                
-                if (finalScore >= 80) {
-                    message += ' Good peripheral vision';
-                } else if (finalScore >= 60) {
-                    message += ' Average peripheral vision';
-                } else {
-                    message += 'Consult a doctor for best outcomes';
-                }
-                
-                scoreElement.textContent = message;
-            }
+    userNumbers.forEach(n => {
+        if (generatedNumbers.includes(n)) correct++;
+    });
+
+    correctAnswers += correct;
+    totalScore += correct;
+
+    const scoreElement = document.getElementById('score');
+    scoreElement.style.opacity = '1';
+
+    const accuracy = Math.round((correct / generatedNumbers.length) * 100);
+    let emoji = '⚠️';
+    if (accuracy >= 80) emoji = '🎯';
+    else if (accuracy >= 50) emoji = '👍';
+
+    scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
+    scoreElement.classList.add('score-highlight');
+
+    if (currentLevel < 3) {
+        currentLevel++;
+        setTimeout(() => {
+            document.getElementById('userInput').value = '';
+            startRound();
+        }, 2000);
+    } else {
+        const finalScore = Math.round((totalScore / (numberCount * 3)) * 100);
+        let message = `🏆 You completed all levels with a total score of ${totalScore} out of ${numberCount * 3}!`;
+
+        if (finalScore >= 80) {
+            message += ' Good peripheral vision';
+        } else if (finalScore >= 60) {
+            message += ' Average peripheral vision';
+        } else {
+            message += ' Consult a doctor for best outcomes';
         }
+
+        scoreElement.textContent = message;
+
+        // 🔽 Send score to backend via HTTP POST
+        fetch('http://127.0.0.1:8000/submit-score/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                final_score: finalScore,
+                accuracy: accuracy
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Server response:', data);
+        })
+        .catch(error => {
+            console.error('Error sending score:', error);
+        });
+    }
+}
 
         document.getElementById('checkBtn').addEventListener('click', () => {
             checkAnswer();
