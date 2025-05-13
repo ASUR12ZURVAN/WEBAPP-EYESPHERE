@@ -252,9 +252,13 @@
         {% endif %}
         
         <div class="navigation">
-            <a href="{% url 'base_myopia' %}">
-                <button>Go to Myopia Test</button>
-            </a>
+            {% if selected_user_id %}
+                <a href="{% url 'base_myopia' user_id=selected_user_id %}">
+                    <button>Go to Myopia Test</button>
+                </a>
+            {% else %}
+                <p>No user found in session.</p>
+            {% endif %}
             <a href="{% url 'base_glaucoma' %}">
                 <button>Go to Glaucoma Test</button>
             </a>

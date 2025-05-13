@@ -18,7 +18,8 @@ class TestResult(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_results')
     test_type = models.CharField(max_length=100, choices=TEST_CHOICES)
-    result_value = models.FloatField()
+    final_score = models.DecimalField(max_digits=5,decimal_places=2)
+    result_value = models.FloatField(null = True)
     date_taken = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

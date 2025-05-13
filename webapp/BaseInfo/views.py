@@ -9,8 +9,10 @@ from django.http import JsonResponse
 from collections import defaultdict
 import json 
 
-def index(request):
-    return render(request, 'hd.html')  
+def index(request, user_id):
+    request.session['user_id'] = user_id  # store in session
+    user = get_object_or_404(User, id=user_id)
+    return render(request, 'hd.html', {'user': user})
 def next(request):
     return render(request,'Game.html' )
 
@@ -21,10 +23,12 @@ def create_user(request):
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            user_id = serializer.instance.id
+            request.session['user_id'] = user_id  # ✅ store in session
+            return redirect('base_myopia', user_id=user_id)
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             # redirect to Myopia_Test/ after successful HTML form submission
-            return redirect('base_myopia')
         if request.content_type == 'application/json':
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return render(request, 'create_user.html', {'errors': serializer.errors})
@@ -47,73 +51,67 @@ def user_profile(request, user_id):
         'test_results': test_results
     })
 
+@csrf_exempt
 def submit_score(request):
     if request.method != 'POST':
         return JsonResponse({'status': 'invalid request'}, status=405)
 
     try:
         data = json.loads(request.body)
-        user_id = data.get('user_id')
         test_type = data.get('test_type')
         final_score = data.get('final_score')
-        print(user_id)
+        result_value = 0
+        if test_type == "myopia":
+            result_value = final_score
 
-        # 1️⃣ Validate user_id presence
+        # Get user_id from session
+        user_id = request.session.get('user_id')
         if not user_id:
-            return JsonResponse(
-                {'status': 'error', 'message': 'Missing user_id'}, status=400
-            )
+            return JsonResponse({'status': 'error', 'message': 'User ID not found in session'}, status=400)
 
-        # 2️⃣ Cast to int (will catch non-numeric strings)
+        # Fetch the user
         try:
-            user_id = int(user_id)
-        except (TypeError, ValueError):
-            return JsonResponse(
-                {'status': 'error', 'message': 'Invalid user_id'}, status=400
-            )
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=404)
 
-        # 3️⃣ Lookup the user or 404
-        user = get_object_or_404(User, id=user_id)
+        # Save test result
+        TestResult.objects.create(user=user, test_type=test_type, final_score=final_score)
 
-        # 4️⃣ Finally, save the result
-        TestResult.objects.create(
-            user=user,
-            test_type=test_type,
-            result_value=final_score
-        )
         return JsonResponse({'status': 'success'})
 
     except json.JSONDecodeError:
-        return JsonResponse(
-            {'status': 'error', 'message': 'Invalid JSON'}, status=400
-        )
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse(
-            {'status': 'error', 'message': str(e)}, status=500
-        )
-
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 def test_results_history(request):
-    selected_user_id = request.GET.get('user_id')
+    # Get user_id from session
+    user_id = request.session.get('user_id')
+
+    # If user_id is not found in session, redirect to login or error page
+    if not user_id:
+        return redirect('login')  # Or render an error page
+
     selected_test_type = request.GET.get('test_type')
 
     users = User.objects.all()
     test_results = TestResult.objects.all()
 
-    if selected_user_id:
-        test_results = test_results.filter(user_id=selected_user_id)
+    # Filter test results by user_id if user_id is found in session
+    test_results = test_results.filter(user_id=user_id)
 
     if selected_test_type:
         test_results = test_results.filter(test_type=selected_test_type)
 
     grouped_results = defaultdict(list)
     for result in test_results.select_related('user'):
-        grouped_results[result.user].append(result)  # Use user object as key
+        grouped_results[result.user].append(result)
 
     context = {
         'users': users,
         'grouped_results': dict(grouped_results),
-        'selected_user_id': int(selected_user_id) if selected_user_id else '',
+        'selected_user_id': user_id,
         'selected_test_type': selected_test_type,
     }
 

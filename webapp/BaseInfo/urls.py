@@ -4,7 +4,7 @@ from Myopia_Test.views import predict_diopters
 from . import views
 
 urlpatterns = [
-    path('Myopia_Test/', views.index, name = "base_myopia"),
+    path('Myopia_Test/<int:user_id>/', views.index, name='base_myopia'),
     path('create-user/', views.create_user, name='create-user'),
     path('glaucoma_test',views.next,name = 'base_glaucoma'),
     path('submit_score/', views.submit_score, name='submit_score'),

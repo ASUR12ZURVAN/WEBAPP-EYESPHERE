@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from django.urls import reverse
+
 def predict_diopters(request):
     if request.method == 'POST':
         try:
@@ -8,20 +10,26 @@ def predict_diopters(request):
             raw_diopters = 3.3 * logmar
             prediction = round(raw_diopters * 2) / 2.0
 
+            user_id = request.session.get('user_id')
+            if not user_id:
+                raise Exception("User ID not found in session")
+
             context = {
                 'prediction': prediction,
-                'user': request.user,             # ← make user available
+                'user_id': user_id,
             }
+
         except Exception as e:
-            print("Prediction error:", e)
             context = {
                 'prediction': "Invalid input",
-                'user': request.user,             # ← still pass user
+                'error': str(e),
+                'user_id': request.session.get('user_id'),
             }
+
     else:
         context = {
             'prediction': "Invalid request method",
-            'user': request.user,                 # ← still pass user
+            'user_id': request.session.get('user_id'),
         }
 
     return render(request, 'prediction_result.html', context)
