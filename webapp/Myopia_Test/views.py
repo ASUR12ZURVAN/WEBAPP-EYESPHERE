@@ -4,21 +4,24 @@ def predict_diopters(request):
     if request.method == 'POST':
         try:
             line_number = int(request.POST.get('lineNumber'))
-            logmar = (10 - line_number)*0.1
-            raw_diopters = 3.3*logmar
-            # Replace with your ML model logic if applicable
-            prediction = round(raw_diopters * 2)/2.0
+            logmar = (10 - line_number) * 0.1
+            raw_diopters = 3.3 * logmar
+            prediction = round(raw_diopters * 2) / 2.0
 
-            return render(request, 'prediction_result.html', {
-                'prediction': prediction
-            })
-
+            context = {
+                'prediction': prediction,
+                'user': request.user,             # ← make user available
+            }
         except Exception as e:
             print("Prediction error:", e)
-            return render(request, 'prediction_result.html', {
-                'prediction': "Invalid input"
-            })
+            context = {
+                'prediction': "Invalid input",
+                'user': request.user,             # ← still pass user
+            }
+    else:
+        context = {
+            'prediction': "Invalid request method",
+            'user': request.user,                 # ← still pass user
+        }
 
-    return render(request, 'prediction_result.html', {
-        'prediction': "Invalid request method"
-    })
+    return render(request, 'prediction_result.html', context)

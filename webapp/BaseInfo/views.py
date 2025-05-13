@@ -47,18 +47,35 @@ def user_profile(request, user_id):
         'test_results': test_results
     })
 
-@csrf_exempt  # For now, to bypass CSRF in development
 def submit_score(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
+        return JsonResponse({'status': 'invalid request'}, status=405)
+
+    try:
         data = json.loads(request.body)
         user_id = data.get('user_id')
         test_type = data.get('test_type')
         final_score = data.get('final_score')
+        print(user_id)
 
+        # 1️⃣ Validate user_id presence
         if not user_id:
-            return JsonResponse({'status': 'error', 'message': 'User ID missing'}, status=400)
+            return JsonResponse(
+                {'status': 'error', 'message': 'Missing user_id'}, status=400
+            )
 
-        user = User.objects.get(id=user_id)
+        # 2️⃣ Cast to int (will catch non-numeric strings)
+        try:
+            user_id = int(user_id)
+        except (TypeError, ValueError):
+            return JsonResponse(
+                {'status': 'error', 'message': 'Invalid user_id'}, status=400
+            )
+
+        # 3️⃣ Lookup the user or 404
+        user = get_object_or_404(User, id=user_id)
+
+        # 4️⃣ Finally, save the result
         TestResult.objects.create(
             user=user,
             test_type=test_type,
@@ -66,8 +83,14 @@ def submit_score(request):
         )
         return JsonResponse({'status': 'success'})
 
-    return JsonResponse({'status': 'invalid request'}, status=405)
-
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {'status': 'error', 'message': 'Invalid JSON'}, status=400
+        )
+    except Exception as e:
+        return JsonResponse(
+            {'status': 'error', 'message': str(e)}, status=500
+        )
 
 
 def test_results_history(request):
