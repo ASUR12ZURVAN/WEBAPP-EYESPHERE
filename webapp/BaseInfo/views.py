@@ -50,16 +50,25 @@ def user_profile(request, user_id):
 @csrf_exempt  # For now, to bypass CSRF in development
 def submit_score(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            final_score = data.get('final_score')
-            accuracy = data.get('accuracy')
-            # You can log it, store in DB, etc.
-            print("Received Score:", final_score, "Accuracy:", accuracy)
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        test_type = data.get('test_type')
+        final_score = data.get('final_score')
+
+        if not user_id:
+            return JsonResponse({'status': 'error', 'message': 'User ID missing'}, status=400)
+
+        user = User.objects.get(id=user_id)
+        TestResult.objects.create(
+            user=user,
+            test_type=test_type,
+            result_value=final_score
+        )
+        return JsonResponse({'status': 'success'})
+
     return JsonResponse({'status': 'invalid request'}, status=405)
+
+
 
 def test_results_history(request):
     selected_user_id = request.GET.get('user_id')
@@ -75,19 +84,14 @@ def test_results_history(request):
         test_results = test_results.filter(test_type=selected_test_type)
 
     grouped_results = defaultdict(list)
-    user_map = {}  # map from id to user object
-
     for result in test_results.select_related('user'):
-        grouped_results[result.user.id].append(result)
-        user_map[result.user.id] = result.user  # store actual user
-
+        grouped_results[result.user].append(result)  # Use user object as key
 
     context = {
-    'users': users,
-    'grouped_results': dict(grouped_results),
-    'user_map': user_map,  # pass user details separately
-    'selected_user_id': int(selected_user_id) if selected_user_id else '',
-    'selected_test_type': selected_test_type,
+        'users': users,
+        'grouped_results': dict(grouped_results),
+        'selected_user_id': int(selected_user_id) if selected_user_id else '',
+        'selected_test_type': selected_test_type,
     }
 
     return render(request, 'test_results_history.html', context)

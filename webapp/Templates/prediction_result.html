@@ -54,9 +54,14 @@
     </style>
 </head>
 <body>
+    <!-- Hidden input to carry the current user ID -->
+    <input type="hidden" id="user-id" value="{{ user.id }}">
+
     <div class="prediction-container">
         <h1>Predicted Diopter</h1>
-        <p>Your predicted diopter value is: <strong id="prediction-value">{{ prediction }}</strong></p>
+        <p>Your predicted diopter value is: 
+           <strong id="prediction-value">{{ prediction }}</strong>
+        </p>
         
         <div id="submission-result"></div>
         
@@ -64,11 +69,11 @@
             <button onclick="submitScore()">Submit Result</button>
             
             <a href="{% url 'base_glaucoma' %}">
-                <button>Go to Game</button>
+                <button>Go to Glaucoma Test</button>
             </a>
             
             <a href="{% url 'base_myopia' %}">
-                <button>Back to Chart</button>
+                <button>Back to Myopia Chart</button>
             </a>
         </div>
         
@@ -77,20 +82,19 @@
 
     <script>
         function submitScore() {
-            // Get the prediction value
+            const userId = document.getElementById('user-id').value;
             const prediction = document.getElementById('prediction-value').textContent;
-            
-            // You can calculate accuracy or use a default value
-            // For example, you might want to compare with some expected value
-            const accuracy = 100; // Default value, adjust as needed
-            
-            // Send score to backend via HTTP POST
-            fetch('http://127.0.0.1:8000/submit-score/', {
+            const accuracy = 100;  // adjust if you have a real accuracy measure
+
+            fetch("{% url 'submit_score' %}", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
                 },
                 body: JSON.stringify({
+                    user_id: userId,
+                    test_type: 'myopia',
                     final_score: prediction,
                     accuracy: accuracy
                 })
@@ -98,43 +102,45 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Server response:', data);
-                
-                // Display success message
+                const container = document.getElementById('submission-result');
+
                 if (data.status === 'success') {
-                    document.getElementById('submission-result').innerHTML = 
-                        `<div class="result-message success">
+                    container.innerHTML = `
+                        <div class="result-message success">
                             Result submitted successfully!
-                        </div>`;
-                    
-                    // Show additional action button
+                        </div>
+                    `;
                     showActionButton();
                 } else {
-                    document.getElementById('submission-result').innerHTML = 
-                        `<div class="result-message error">
+                    container.innerHTML = `
+                        <div class="result-message error">
                             Error: ${data.message || 'Could not submit result'}
-                        </div>`;
+                        </div>
+                    `;
                 }
             })
             .catch(error => {
                 console.error('Error sending score:', error);
-                document.getElementById('submission-result').innerHTML = 
-                    `<div class="result-message error">
+                document.getElementById('submission-result').innerHTML = `
+                    <div class="result-message error">
                         Error submitting result. Please try again.
-                    </div>`;
+                    </div>
+                `;
             });
         }
         
         function showActionButton() {
-            const actionButton = document.createElement('button');
-            actionButton.textContent = 'View Your History';
-            actionButton.onclick = function() {
-                // Replace with your desired action
-                window.location.href = '/history/';
+            const actions = document.getElementById('post-submit-actions');
+            actions.innerHTML = '';
+
+            const btn = document.createElement('button');
+            btn.textContent = 'View Your History';
+            btn.onclick = () => {
+                window.location.href = "{% url 'results_history' %}";
             };
-            
-            document.getElementById('post-submit-actions').innerHTML = '';
-            document.getElementById('post-submit-actions').appendChild(actionButton);
-            document.getElementById('post-submit-actions').style.display = 'block';
+
+            actions.appendChild(btn);
+            actions.style.display = 'block';
         }
     </script>
 </body>

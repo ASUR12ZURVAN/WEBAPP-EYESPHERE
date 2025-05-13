@@ -543,6 +543,8 @@
                 <div id="focusText">Focus on this dot</div>
             </div>
         </div>
+        <input type="hidden" id="user-id" value="{{ user.id }}">
+
         
         <div id="inputSection">
             <p id="levelText">Level 1</p>
@@ -717,28 +719,32 @@
                 }
 
                 scoreElement.textContent = message;
+                const userId = document.getElementById('user-id').value;
+
 
                 // 🔽 Send score to backend via HTTP POST
-                fetch('http://127.0.0.1:8000/submit-score/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        final_score: finalScore,
-                        accuracy: accuracy,
-                        test_type: 'glaucoma'  // Specify the test type for the results database
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Server response:', data);
-                    // Show the "View Your History" button after successful submission
-                    showActionButton();
-                })
-                .catch(error => {
-                    console.error('Error sending score:', error);
-                });
+               fetch('http://127.0.0.1:8000/submit_score/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        user_id: userId,          // <-- new
+        test_type: 'glaucoma',    // specify which test
+        final_score: finalScore,
+        accuracy: accuracy
+    })
+})
+.then(response => response.json())
+.then(data => {
+  if (data.status === 'success') {
+    // e.g. redirect to history page or show a message
+    window.location.href = '/test_results_history/';
+  } else {
+    console.error('Save failed:', data.message);
+  }
+})
+.catch(err => console.error('Network error:', err));
             }
         }
 
