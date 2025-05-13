@@ -61,8 +61,6 @@ def submit_score(request):
         test_type = data.get('test_type')
         final_score = data.get('final_score')
         result_value = 0
-        if test_type == "myopia":
-            result_value = final_score
 
         # Get user_id from session
         user_id = request.session.get('user_id')
