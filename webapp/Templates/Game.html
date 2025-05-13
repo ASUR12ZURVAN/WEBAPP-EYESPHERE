@@ -502,6 +502,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Stars background -->
     <div class="stars" id="stars"></div>
@@ -552,8 +553,10 @@
             <div class="buttons-container">
                 <button id="checkBtn"><i class="fas fa-check"></i> Check</button>
                 <button id="restartBtn"><i class="fas fa-sync-alt"></i> Restart</button>
+                <button id="viewResultsBtn"><i class="fas fa-history"></i> View All Results</button>
             </div>
             <div id="score"></div>
+            <div id="post-submit-actions" style="display: none;"></div>
         </div>
         
         <button class="help-btn" id="helpBtn"><i class="fas fa-question"></i></button>
@@ -672,69 +675,72 @@
             document.getElementById('userInput').focus();
         }
 
-function checkAnswer() {
-    const userInput = document.getElementById('userInput').value;
-    const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-    let correct = 0;
+        function checkAnswer() {
+            const userInput = document.getElementById('userInput').value;
+            const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            let correct = 0;
 
-    userNumbers.forEach(n => {
-        if (generatedNumbers.includes(n)) correct++;
-    });
+            userNumbers.forEach(n => {
+                if (generatedNumbers.includes(n)) correct++;
+            });
 
-    correctAnswers += correct;
-    totalScore += correct;
+            correctAnswers += correct;
+            totalScore += correct;
 
-    const scoreElement = document.getElementById('score');
-    scoreElement.style.opacity = '1';
+            const scoreElement = document.getElementById('score');
+            scoreElement.style.opacity = '1';
 
-    const accuracy = Math.round((correct / generatedNumbers.length) * 100);
-    let emoji = '⚠️';
-    if (accuracy >= 80) emoji = '🎯';
-    else if (accuracy >= 50) emoji = '👍';
+            const accuracy = Math.round((correct / generatedNumbers.length) * 100);
+            let emoji = '⚠️';
+            if (accuracy >= 80) emoji = '🎯';
+            else if (accuracy >= 50) emoji = '👍';
 
-    scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
-    scoreElement.classList.add('score-highlight');
+            scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
+            scoreElement.classList.add('score-highlight');
 
-    if (currentLevel < 3) {
-        currentLevel++;
-        setTimeout(() => {
-            document.getElementById('userInput').value = '';
-            startRound();
-        }, 2000);
-    } else {
-        const finalScore = Math.round((totalScore / (numberCount * 3)) * 100);
-        let message = `🏆 You completed all levels with a total score of ${totalScore} out of ${numberCount * 3}!`;
+            if (currentLevel < 3) {
+                currentLevel++;
+                setTimeout(() => {
+                    document.getElementById('userInput').value = '';
+                    startRound();
+                }, 2000);
+            } else {
+                const finalScore = Math.round((totalScore / (numberCount * 3)) * 100);
+                let message = `🏆 You completed all levels with a total score of ${totalScore} out of ${numberCount * 3}!`;
 
-        if (finalScore >= 80) {
-            message += ' Good peripheral vision';
-        } else if (finalScore >= 60) {
-            message += ' Average peripheral vision';
-        } else {
-            message += ' Consult a doctor for best outcomes';
+                if (finalScore >= 80) {
+                    message += ' Good peripheral vision';
+                } else if (finalScore >= 60) {
+                    message += ' Average peripheral vision';
+                } else {
+                    message += ' Consult a doctor for best outcomes';
+                }
+
+                scoreElement.textContent = message;
+
+                // 🔽 Send score to backend via HTTP POST
+                fetch('http://127.0.0.1:8000/submit-score/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        final_score: finalScore,
+                        accuracy: accuracy,
+                        test_type: 'glaucoma'  // Specify the test type for the results database
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server response:', data);
+                    // Show the "View Your History" button after successful submission
+                    showActionButton();
+                })
+                .catch(error => {
+                    console.error('Error sending score:', error);
+                });
+            }
         }
-
-        scoreElement.textContent = message;
-
-        // 🔽 Send score to backend via HTTP POST
-        fetch('http://127.0.0.1:8000/submit-score/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                final_score: finalScore,
-                accuracy: accuracy
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Server response:', data);
-        })
-        .catch(error => {
-            console.error('Error sending score:', error);
-        });
-    }
-}
 
         document.getElementById('checkBtn').addEventListener('click', () => {
             checkAnswer();
@@ -747,6 +753,11 @@ function checkAnswer() {
             document.getElementById('userInput').value = '';
             startRound();
         });
+        
+        // New button to view all results
+        document.getElementById('viewResultsBtn').addEventListener('click', () => {
+            window.location.href = '/results-history/';  // Make sure this matches your URL pattern
+        });
 
         // Enter key to submit
         document.getElementById('userInput').addEventListener('keypress', function(e) {
@@ -757,8 +768,21 @@ function checkAnswer() {
 
         // Help button functionality
         document.getElementById('helpBtn').addEventListener('click', function() {
-            alert('Instructions:\n\n1. Focus on the red dot in the center.\n2. Try to remember the numbers that appear around the screen.\n3. Enter the numbers you saw (separated by commas).\n4. The game has 3 levels, with numbers appearing further from center as you progress.');
+            alert('Instructions:\n\n1. Focus on the red dot in the center.\n2. Try to remember the numbers that appear around the screen.\n3. Enter the numbers you saw (separated by commas).\n4. The game has 3 levels, with numbers appearing further from center as you progress.\n5. Click "View All Results" to see your full test history.');
         });
+        
+        function showActionButton() {
+            const actionButton = document.createElement('button');
+            actionButton.textContent = 'View Details';
+            actionButton.className = 'details-btn';
+            actionButton.onclick = function() {
+                window.location.href = '/results-history/';
+            };
+            
+            document.getElementById('post-submit-actions').innerHTML = '';
+            document.getElementById('post-submit-actions').appendChild(actionButton);
+            document.getElementById('post-submit-actions').style.display = 'block';
+        }
 
         // Create stars and start first round
         window.onload = function() {
@@ -766,6 +790,5 @@ function checkAnswer() {
             startRound();
         };
     </script>
-
 </body>
 </html>

@@ -6,7 +6,8 @@ from .models import User,TestResult
 from .Serializers import UserSerializer,ResultSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-import json
+from collections import defaultdict
+import json 
 
 def index(request):
     return render(request, 'hd.html')  
@@ -59,3 +60,34 @@ def submit_score(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'invalid request'}, status=405)
+
+def test_results_history(request):
+    selected_user_id = request.GET.get('user_id')
+    selected_test_type = request.GET.get('test_type')
+
+    users = User.objects.all()
+    test_results = TestResult.objects.all()
+
+    if selected_user_id:
+        test_results = test_results.filter(user_id=selected_user_id)
+
+    if selected_test_type:
+        test_results = test_results.filter(test_type=selected_test_type)
+
+    grouped_results = defaultdict(list)
+    user_map = {}  # map from id to user object
+
+    for result in test_results.select_related('user'):
+        grouped_results[result.user.id].append(result)
+        user_map[result.user.id] = result.user  # store actual user
+
+
+    context = {
+    'users': users,
+    'grouped_results': dict(grouped_results),
+    'user_map': user_map,  # pass user details separately
+    'selected_user_id': int(selected_user_id) if selected_user_id else '',
+    'selected_test_type': selected_test_type,
+    }
+
+    return render(request, 'test_results_history.html', context)

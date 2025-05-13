@@ -1,0 +1,267 @@
+<!-- templates/test_results_history.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .user-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f5f9ff;
+        }
+        
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .user-info h2 {
+            margin: 0;
+            color: #3498db;
+        }
+        
+        .user-details {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background-color: #f2f6fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
+            background-color: #f8f8f8;
+        }
+        
+        .test-myopia {
+            color: #2980b9;
+        }
+        
+        .test-glaucoma {
+            color: #16a085;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .filters {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f2f6fa;
+            border-radius: 5px;
+        }
+        
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .filter-row label {
+            min-width: 100px;
+        }
+        
+        select, input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .navigation {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .navigation a {
+            display: inline-block;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge-myopia {
+            background-color: #e1f0fa;
+            color: #2980b9;
+        }
+        
+        .badge-glaucoma {
+            background-color: #e8f6f3;
+            color: #16a085;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Results History</h1>
+        
+        {% if users %}
+            <div class="filters">
+                <form method="get">
+                    <div class="filter-row">
+                        <label for="user-filter">Filter by User:</label>
+                        <select id="user-filter" name="user_id">
+                            <option value="">All Users</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}" {% if selected_user_id == user.id %}selected{% endif %}>
+                                    {{ user.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <label for="test-type">Test Type:</label>
+                        <select id="test-type" name="test_type">
+                            <option value="">All Tests</option>
+                            <option value="myopia" {% if selected_test_type == "myopia" %}selected{% endif %}>Myopia</option>
+                            <option value="glaucoma" {% if selected_test_type == "glaucoma" %}selected{% endif %}>Glaucoma</option>
+                        </select>
+                        
+                        <button type="submit">Apply Filters</button>
+                    </div>
+                </form>
+            </div>
+            
+            {% if grouped_results %}
+                {% for user, results in grouped_results.items %}
+                    <div class="user-section">
+                        <div class="user-header">
+                            <div class="user-info">
+                                <h2>{{ user.name }}</h2>
+                                <div class="user-details">
+                                    Age: {{ user.age }} | Phone: {{ user.ph_Number }} | City: {{ user.city }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Test Type</th>
+                                    <th>Result Value</th>
+                                    <th>Date Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in results %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge badge-{{ result.test_type|lower }}">
+                                                {{ result.test_type|title }}
+                                            </span>
+                                        </td>
+                                        <td class="test-{{ result.test_type|lower }}">
+                                            {% if result.test_type == "myopia" %}
+                                                {{ result.result_value }} diopters
+                                            {% elif result.test_type == "glaucoma" %}
+                                                {{ result.result_value }} mmHg
+                                            {% else %}
+                                                {{ result.result_value }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ result.date_taken|date:"F j, Y, g:i a" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">
+                    <p>No test results found matching your criteria.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="no-results">
+                <p>No test results available.</p>
+            </div>
+        {% endif %}
+        
+        <div class="navigation">
+            <a href="{% url 'base_myopia' %}">
+                <button>Go to Myopia Test</button>
+            </a>
+            <a href="{% url 'base_glaucoma' %}">
+                <button>Go to Glaucoma Test</button>
+            </a>
+            <a href="{% url 'create-user' %}">
+                <button>Back to Home</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

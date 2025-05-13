@@ -3,18 +3,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diopter Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .prediction-container {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        #post-submit-actions {
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Predicted Diopter</h1>
-    <p>Your predicted diopter value is: <strong>{{ prediction }}</strong></p>
+    <div class="prediction-container">
+        <h1>Predicted Diopter</h1>
+        <p>Your predicted diopter value is: <strong id="prediction-value">{{ prediction }}</strong></p>
+        
+        <div id="submission-result"></div>
+        
+        <div class="buttons-container">
+            <button onclick="submitScore()">Submit Result</button>
+            
+            <a href="{% url 'base_glaucoma' %}">
+                <button>Go to Game</button>
+            </a>
+            
+            <a href="{% url 'base_myopia' %}">
+                <button>Back to Chart</button>
+            </a>
+        </div>
+        
+        <div id="post-submit-actions" style="display: none;"></div>
+    </div>
 
-    <a href="{% url 'base_glaucoma' %}">
-        <button>Go to Game</button>
-    </a>
-
-    <a href="{% url 'base_myopia' %}">
-        <button>Back to Chart</button>
-    </a>
+    <script>
+        function submitScore() {
+            // Get the prediction value
+            const prediction = document.getElementById('prediction-value').textContent;
+            
+            // You can calculate accuracy or use a default value
+            // For example, you might want to compare with some expected value
+            const accuracy = 100; // Default value, adjust as needed
+            
+            // Send score to backend via HTTP POST
+            fetch('http://127.0.0.1:8000/submit-score/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    final_score: prediction,
+                    accuracy: accuracy
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server response:', data);
+                
+                // Display success message
+                if (data.status === 'success') {
+                    document.getElementById('submission-result').innerHTML = 
+                        `<div class="result-message success">
+                            Result submitted successfully!
+                        </div>`;
+                    
+                    // Show additional action button
+                    showActionButton();
+                } else {
+                    document.getElementById('submission-result').innerHTML = 
+                        `<div class="result-message error">
+                            Error: ${data.message || 'Could not submit result'}
+                        </div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error sending score:', error);
+                document.getElementById('submission-result').innerHTML = 
+                    `<div class="result-message error">
+                        Error submitting result. Please try again.
+                    </div>`;
+            });
+        }
+        
+        function showActionButton() {
+            const actionButton = document.createElement('button');
+            actionButton.textContent = 'View Your History';
+            actionButton.onclick = function() {
+                // Replace with your desired action
+                window.location.href = '/history/';
+            };
+            
+            document.getElementById('post-submit-actions').innerHTML = '';
+            document.getElementById('post-submit-actions').appendChild(actionButton);
+            document.getElementById('post-submit-actions').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
