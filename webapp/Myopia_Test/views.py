@@ -7,7 +7,7 @@ def predict_diopters(request):
         try:
             line_number = int(request.POST.get('lineNumber'))
             logmar = (10 - line_number) * 0.1
-            raw_diopters = 3.3 * logmar
+            raw_diopters = -3.3 * logmar
             prediction = round(raw_diopters * 2) / 2.0
 
             user_id = request.session.get('user_id')

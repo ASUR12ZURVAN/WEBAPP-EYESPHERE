@@ -60,7 +60,7 @@ def submit_score(request):
         data = json.loads(request.body)
         test_type = data.get('test_type')
         final_score = data.get('final_score')
-        result_value = 0
+        result_value = final_score
 
         # Get user_id from session
         user_id = request.session.get('user_id')
@@ -72,9 +72,11 @@ def submit_score(request):
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=404)
+        if test_type == 'Myopia':
+            TestResult.objects.create(user=user,test_type=test_type,final_score=result_value)
 
         # Save test result
-        TestResult.objects.create(user=user, test_type=test_type, final_score=final_score)
+        TestResult.objects.create(user=user, test_type=test_type, final_score=final_score,result_value =result_value)
 
         return JsonResponse({'status': 'success'})
 
