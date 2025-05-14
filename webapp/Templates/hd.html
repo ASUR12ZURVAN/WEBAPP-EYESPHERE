@@ -327,6 +327,30 @@
         body.dark-mode .line-counter {
             color:rgb(4, 10, 14);
         }
+        .message-box {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .message-box:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .message-box {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 5px solid #3498db;
+            color: #ecf0f1;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -354,6 +378,12 @@
             #chartContainer {
                 padding: 15px;
                 margin: 20px auto;
+            }
+
+            .message-box {
+                max-width: 90%;
+                font-size: 14px;
+                padding: 12px;
             }
         }
 
@@ -426,6 +456,10 @@
 
     <div class="container">
         <h1>Dynamic Snellen Chart</h1>
+
+        <div class="message-box">
+            <strong>Vision Test Instructions:</strong> Start from the top and work your way down. Try to read up to the 10th line for a comprehensive assessment of your vision. The 10th line is a good benchmark for normal vision when viewed from 3 meter distance.
+        </div>
 
         <div class="form-container">
             <form id="setupForm">
