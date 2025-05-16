@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Colorblind Test Simulation</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #222;
+      color: white;
+      font-family: sans-serif;
+      flex-direction: column;
+    }
+    canvas {
+      border-radius: 50%;
+      background-color: white;
+    }
+    h2 {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="circleCanvas" width="400" height="400"></canvas>
+  <h2 id="label"></h2>
+
+  <script>
+    const canvas = document.getElementById('circleCanvas');
+    const ctx = canvas.getContext('2d');
+    const label = document.getElementById('label');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 180;
+    const numbers = ['12', '8', '6', '29', '45', '74', '5', '3', '9', '15'];
+
+    function drawCircleWithNumber(number) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Generate 800 dots randomly inside the circle
+      for (let i = 0; i < 800; i++) {
+        let angle = Math.random() * 2 * Math.PI;
+        let r = Math.sqrt(Math.random()) * radius;
+        let x = centerX + r * Math.cos(angle);
+        let y = centerY + r * Math.sin(angle);
+
+        // Use getImageData to know where the number will be drawn
+        ctx.font = "bold 140px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "black";
+        ctx.fillText(number, centerX, centerY);
+
+        // Check if this point is inside the number
+        const imageData = ctx.getImageData(x, y, 1, 1).data;
+        const isInNumber = imageData[0] === 0 && imageData[1] === 0 && imageData[2] === 0;
+
+        // Clear text again after checking
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = isInNumber ? '#d44' : '#5cd';
+        ctx.fill();
+      }
+
+      // Optionally: Show the number as text label
+      label.textContent = `Number: ${number}`;
+    }
+
+    // Auto-display 10 numbers, one by one
+    let index = 0;
+    drawCircleWithNumber(numbers[index]);
+
+    setInterval(() => {
+      index = (index + 1) % numbers.length;
+      drawCircleWithNumber(numbers[index]);
+    }, 3000);
+  </script>
+</body>
+</html>
