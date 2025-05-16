@@ -36,19 +36,17 @@ The user inputs the **physical screen diagonal (in inches)**.
 🖥 Step 2: Automatically Reading Screen Resolution
 The script detects the screen resolution using built-in browser properties:
 
-javascript
-Copy
-Edit
-const width_px = window.screen.width;
-const height_px = window.screen.height;
+`javascript`
+
+`const width_px = window.screen.width;`
+`const height_px = window.screen.height;`
 These give the horizontal and vertical resolution of the screen in pixels (e.g., 1920×1080).
 
 📏 Step 3: Calculating Screen PPI (Pixels Per Inch)
 With the screen resolution and the user-provided diagonal size, the script calculates PPI (Pixels Per Inch) using the formula:
 
-javascript
-Copy
-Edit
+`javascript`
+
 const diagonal_px = Math.sqrt(width_px ** 2 + height_px ** 2);
 const ppi = diagonal_px / diagonal_inch;
 This determines how many pixels fit into one physical inch on your screen, which is crucial for scaling the Snellen chart correctly.
