@@ -1,83 +1,1143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Colorblind Test Simulation</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #222;
-      color: white;
-      font-family: sans-serif;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Color Blindness Test</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --primary: #0a74da;
+    --primary-dark: #095ec2;
+    --primary-light: #e6f0ff;
+    --primary-lightest: #f1f8ff;
+    --primary-pale: #a3c0f9;
+    --success: #2e7d32;
+    --error: #c62828;
+    --neutral-100: #f0f4f8;
+    --neutral-200: #e1e5eb;
+    --neutral-300: #ccd2d9;
+    --neutral-700: #666;
+    --neutral-800: #333;
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 10px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 20px rgba(0,0,0,0.1);
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 20px;
+    --transition: all 0.3s ease;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--neutral-100);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: var(--neutral-800);
+    line-height: 1.6;
+  }
+
+  main {
+    flex: 1;
+    max-width: 900px;
+    width: 92%;
+    margin: 2rem auto 3rem;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), #4287f5);
+  }
+
+  h1, h2, h3 {
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+  }
+
+  h2 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  h3 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-light);
+  }
+
+  .instructions {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  #start-test, button {
+    display: inline-block;
+    background-color: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 1.8rem;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0.5rem;
+    transition: var(--transition);
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(10, 116, 218, 0.2);
+  }
+
+  #start-test {
+    font-size: 1.1rem;
+    padding: 0.8rem 2.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 10px rgba(10, 116, 218, 0.25);
+  }
+
+  #start-test:hover, button:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 116, 218, 0.3);
+  }
+
+  button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(10, 116, 218, 0.2);
+  }
+
+  button:disabled, button[disabled] {
+    background-color: var(--primary-pale);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+  }
+
+  #test-container {
+    margin-top: 1.5rem;
+    position: relative;
+  }
+
+  .test-plate {
+    display: none;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+    background: #f9fbfd;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+  }
+
+  .test-plate.active {
+    display: block;
+    border-color: var(--primary);
+    background: var(--primary-light);
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .plate-image-placeholder {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+
+  .plate-image {
+    border-radius: var(--radius-md);
+    max-width: 300px;
+    max-height: 300px;
+    transition: transform 0.3s ease;
+  }
+
+  .plate-image:hover {
+    transform: scale(1.02);
+  }
+
+  .input-container {
+    background: white;
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .input-container label,
+  .input-container p {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    display: block;
+  }
+
+  .input-container input[type="number"],
+  .input-container select {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--primary);
+    outline: none;
+    transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .input-container input[type="number"]:focus,
+  .input-container select:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.15);
+  }
+
+  .navigation {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  #submit-btn {
+    background-color: #2e7d32;
+  }
+
+  #submit-btn:hover {
+    background-color: #1b5e20;
+  }
+
+  #results {
+    animation: fadeIn 0.6s ease;
+  }
+
+  #results table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2rem;
+  }
+
+  #results th, #results td {
+    border: 1px solid var(--neutral-300);
+    padding: 0.8rem 1rem;
+    text-align: center;
+  }
+
+  #results th {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+
+  #results tr:nth-child(even) {
+    background-color: var(--primary-lightest);
+  }
+
+  #results tr:hover {
+    background-color: var(--primary-light);
+  }
+
+  tr.correct td:last-child {
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  tr.incorrect td:last-child {
+    color: var(--error);
+    font-weight: 600;
+  }
+
+  #diagnosis {
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+    padding: 1rem;
+    background: var(--primary-lightest);
+    border-radius: var(--radius-md);
+    border-left: 5px solid var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  #deficiency-info {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .deficiency-type {
+    border-left: 5px solid #4CAF50;
+    background-color: var(--primary-lightest);
+    padding: 1.2rem;
+    width: 280px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    user-select: none;
+    transition: var(--transition);
+  }
+
+  .deficiency-type:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(10, 116, 218, 0.15);
+  }
+
+  #protanopia {
+    border-left-color: #f44336;
+  }
+
+  #deuteranopia {
+    border-left-color: #4CAF50;
+  }
+
+  #general {
+    border-left-color: #FF9800;
+  }
+
+  .deficiency-type h4 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+
+  .deficiency-type p {
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    color: var(--neutral-800);
+  }
+
+  .severity-levels {
+    margin: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .severity-level {
+    cursor: default;
+    border-radius: var(--radius-xl);
+    padding: 0.5rem 1.6rem;
+    border: 2px solid var(--primary);
+    font-weight: 600;
+    color: var(--primary);
+    user-select: none;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .severity-level:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .severity-level.selected {
+    color: #fff;
+    background-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(10, 116, 218, 0.25);
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--neutral-700);
+    margin: 1rem 0 2rem;
+  }
+
+  #progress-text {
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-container {
+    background: var(--neutral-200);
+    border-radius: var(--radius-xl);
+    height: 10px;
+    margin: 0.5rem 1rem 1rem;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  #progress-fill {
+    background: linear-gradient(90deg, var(--primary), #4287f5);
+    height: 100%;
+    width: 0%;
+    border-radius: var(--radius-xl);
+    transition: width 0.4s ease;
+  }
+
+  #restart-btn {
+    font-size: 1.05rem;
+    margin-top: 1rem;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    main {
+      width: 95%;
+      padding: 1.5rem;
+      margin: 1.5rem auto;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+    }
+    
+    .navigation {
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 600px) {
+    main {
+      width: 100%;
+      border-radius: 0;
+      margin: 0;
+      padding: 1.5rem 1rem;
+      box-shadow: none;
+    }
+    
+    .deficiency-type {
+      width: 100%;
+    }
+    
+    h1 {
+      font-size: 1.6rem;
+    }
+    
+    #start-test, button {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    
+    .navigation {
+      margin-top: 1.5rem;
       flex-direction: column;
+      gap: 0.5rem;
     }
-    canvas {
-      border-radius: 50%;
-      background-color: white;
+    
+    .test-plate {
+      padding: 1rem;
     }
-    h2 {
-      margin-top: 20px;
+    
+    .plate-image {
+      max-width: 100%;
     }
-  </style>
+    
+    .severity-levels {
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    
+    .severity-level {
+      width: 80%;
+      text-align: center;
+    }
+  }
+</style>
 </head>
 <body>
-  <canvas id="circleCanvas" width="400" height="400"></canvas>
-  <h2 id="label"></h2>
+<main>
+  <h1>Color Blindness Test</h1>
+  <div class="instructions" id="instructions">
+    <p>Welcome! This test consists of 38 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
+  </div>
+  <div style="text-align: center;">
+    <button id="start-test">Start Test</button>
+  </div>
 
-  <script>
-    const canvas = document.getElementById('circleCanvas');
-    const ctx = canvas.getContext('2d');
-    const label = document.getElementById('label');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = 180;
-    const numbers = ['12', '8', '6', '29', '45', '74', '5', '3', '9', '15'];
+  <div id="test-container" class="hidden">
+    <div class="test-plate active" id="plate-1">
+      <h3>Plate 1</h3>
+      <div class="plate-image-placeholder">
+        <img data-src="plate1.png" alt="Color Blindness Test Plate 1" class="plate-image" />
+      </div>
+      <div class="input-container">
+        <label for="answer-1">What number do you see?</label>
+        <input type="number" id="answer-1" min="0" max="99" placeholder="Enter number" />
+      </div>
+    </div>
 
-    function drawCircleWithNumber(number) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Generate 800 dots randomly inside the circle
-      for (let i = 0; i < 800; i++) {
-        let angle = Math.random() * 2 * Math.PI;
-        let r = Math.sqrt(Math.random()) * radius;
-        let x = centerX + r * Math.cos(angle);
-        let y = centerY + r * Math.sin(angle);
+    <div class="navigation">
+      <button id="prev-btn" disabled>Previous</button>
+      <button id="next-btn">Next</button>
+      <button id="submit-btn" class="hidden">Submit</button>
+    </div>
+    <div>
+      <div id="progress-text" aria-live="polite">Plate 1 of 38</div>
+      <div class="progress-container">
+        <div id="progress-fill"></div>
+      </div>
+    </div>
+  </div>
 
-        // Use getImageData to know where the number will be drawn
-        ctx.font = "bold 140px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "black";
-        ctx.fillText(number, centerX, centerY);
+  <div id="results" style="display:none;">
+    <h2>Test Results</h2>
+    <table aria-label="Test result details">
+      <thead>
+        <tr>
+          <th>Plate</th><th>Your Answer</th><th>Expected Answer</th><th>Result</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
 
-        // Check if this point is inside the number
-        const imageData = ctx.getImageData(x, y, 1, 1).data;
-        const isInNumber = imageData[0] === 0 && imageData[1] === 0 && imageData[2] === 0;
+    <div id="diagnosis" role="region" aria-live="polite"></div>
 
-        // Clear text again after checking
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    <div class="severity-levels" aria-label="Severity Levels">
+      <div id="severity-none" class="severity-level">None</div>
+      <div id="severity-weak" class="severity-level">Weak</div>
+      <div id="severity-moderate" class="severity-level">Moderate</div>
+      <div id="severity-strong" class="severity-level">Strong</div>
+    </div>
 
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = isInNumber ? '#d44' : '#5cd';
-        ctx.fill();
-      }
+    <div id="deficiency-info" aria-label="Deficiency Information">
+      <div class="deficiency-type" id="protanopia">
+        <h4>Protanopia / Protanomaly</h4>
+        <p>Reduced sensitivity to red light. Difficulty distinguishing red and green hues.</p>
+      </div>
+      <div class="deficiency-type" id="deuteranopia">
+        <h4>Deuteranopia / Deuteranomaly</h4>
+        <p>Reduced sensitivity to green light. Difficulty distinguishing red and green hues.</p>
+      </div>
+      <div class="deficiency-type" id="general">
+        <h4>General Red-Green Color Blindness</h4>
+        <p>Some characteristics of red-green color vision deficiency but not specific.</p>
+      </div>
+    </div>
 
-      // Optionally: Show the number as text label
-      label.textContent = `Number: ${number}`;
-    }
-
-    // Auto-display 10 numbers, one by one
-    let index = 0;
-    drawCircleWithNumber(numbers[index]);
-
-    setInterval(() => {
-      index = (index + 1) % numbers.length;
-      drawCircleWithNumber(numbers[index]);
-    }, 3000);
-  </script>
+    <div style="text-align: center; margin-top: 2rem;">
+      <button id="restart-btn">Restart Test</button>
+    </div>
+  </div>
+</main>
 </body>
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const testData = [
+        { plateNumber: 1, normalView: 12, redGreenDeficiency: 12, type: 'number' },
+        { plateNumber: 2, normalView: 8, redGreenDeficiency: 3, type: 'number' },
+        { plateNumber: 3, normalView: 6, redGreenDeficiency: 5, type: 'number' },
+        { plateNumber: 4, normalView: 29, redGreenDeficiency: 70, type: 'number' },
+        { plateNumber: 5, normalView: 57, redGreenDeficiency: 35, type: 'number' },
+        { plateNumber: 6, normalView: 5, redGreenDeficiency: 2, type: 'number' },
+        { plateNumber: 7, normalView: 3, redGreenDeficiency: 5, type: 'number' },
+        { plateNumber: 8, normalView: 15, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 9, normalView: 74, redGreenDeficiency: 21, type: 'number' },
+        { plateNumber: 10, normalView: 2, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 11, normalView: 6, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 12, normalView: 97, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 13, normalView: 45, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 14, normalView: 5, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 15, normalView: 7, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 16, normalView: 16, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 17, normalView: 73, redGreenDeficiency: null, type: 'number' },
+        { plateNumber: 18, normalView: null, redGreenDeficiency: 5, type: 'number' },
+        { plateNumber: 19, normalView: null, redGreenDeficiency: 2, type: 'number' },
+        { plateNumber: 20, normalView: null, redGreenDeficiency: 45, type: 'number' },
+        { plateNumber: 21, normalView: null, redGreenDeficiency: 73, type: 'number' },
+        { plateNumber: 22, normalView: 26, protanopia: 6, deuteranopia: 2, type: 'number' },
+        { plateNumber: 23, normalView: 42, protanopia: 2, deuteranopia: 4, type: 'number' },
+        { plateNumber: 24, normalView: 35, protanopia: 5, deuteranopia: 3, type: 'number' },
+        { plateNumber: 25, normalView: 96, protanopia: 6, deuteranopia: 9, type: 'number' },
+        { plateNumber: 26, normalView: 'both', protanopia: 'purple', deuteranopia: 'red', type: 'line' },
+        { plateNumber: 27, normalView: 'both', protanopia: 'purple', deuteranopia: 'red', type: 'line' },
+        { plateNumber: 28, normalView: 'none', redGreenDeficiency: 'line', type: 'line' },
+        { plateNumber: 29, normalView: 'none', redGreenDeficiency: 'line', type: 'line' },
+        { plateNumber: 30, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
+        { plateNumber: 31, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
+        { plateNumber: 32, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
+        { plateNumber: 33, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
+        { plateNumber: 34, normalView: 'blue-green-yellow', redGreenDeficiency: 'red-violet', type: 'line' },
+        { plateNumber: 35, normalView: 'blue-green-yellow', redGreenDeficiency: 'blue-violet', type: 'line' },
+        { plateNumber: 36, normalView: 'violet-orange', redGreenDeficiency: 'blue-violet', type: 'line' },
+        { plateNumber: 37, normalView: 'violet-orange', redGreenDeficiency: 'blue-violet', type: 'line' },
+        { plateNumber: 38, normalView: 'line', redGreenDeficiency: 'line', type: 'line' }
+    ];
+
+    const startTestBtn = document.getElementById('start-test');
+    const testContainer = document.getElementById('test-container');
+    const instructionsDiv = document.getElementById('instructions');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsDiv = document.getElementById('results');
+    const diagnosisDiv = document.getElementById('diagnosis');
+    const progressText = document.getElementById('progress-text');
+    const progressFill = document.getElementById('progress-fill');
+    const resultsTableBody = document.getElementById('results-body');
+    const restartBtn = document.getElementById('restart-btn');
+    const deficiencyInfoDiv = document.getElementById('deficiency-info');
+    const deficiencyTypes = deficiencyInfoDiv.querySelectorAll('.deficiency-type');
+
+    let currentPlate = 1;
+    const userAnswers = {};
+    const totalPlates = 38;
+
+    for (let i = 2; i <= 25; i++) {
+        createNumberPlate(i);
+    }
+    for (let i = 26; i <= 38; i++) {
+        createLinePlate(i);
+    }
+
+  function createNumberPlate(plateNumber) {
+    const plateDiv = document.createElement('div');
+    plateDiv.classList.add('test-plate');
+    plateDiv.id = `plate-${plateNumber}`;
+
+    plateDiv.innerHTML = `
+        <h3>Plate ${plateNumber}</h3>
+        <div class="plate-image-placeholder">
+            <img data-src="plate${plateNumber}.png" 
+            alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
+        </div>
+        <div class="input-container">
+            <label for="answer-${plateNumber}">What number do you see?</label>
+            <input type="number" id="answer-${plateNumber}" min="0" max="99" placeholder="Enter number" />
+        </div>
+    `;
+
+    const plate1Div = document.getElementById('plate-1');
+    plate1Div.parentNode.insertBefore(plateDiv, document.getElementById('plate-26') || plate1Div.nextSibling);
+}
+
+function createLinePlate(plateNumber) {
+    const plateDiv = document.createElement('div');
+    plateDiv.classList.add('test-plate');
+    plateDiv.id = `plate-${plateNumber}`;
+
+    let options = '';
+    if (plateNumber === 26) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Purple line only</option>
+            <option value="2">Red line only</option>
+            <option value="3">Both purple and red lines</option>
+        `;
+    } else if (plateNumber === 27) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Purple line only</option>
+            <option value="2">Red line only</option>
+            <option value="3">Both purple and red lines</option>
+        `;
+    } else if (plateNumber >= 28 && plateNumber <= 29) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Line visible</option>
+        `;
+    } else if (plateNumber >= 30 && plateNumber <= 33) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Line visible</option>
+        `;
+    } else if (plateNumber === 34) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Blue-green and yellow-green lines</option>
+            <option value="2">Red-green and violet lines</option>
+        `;
+    } else if (plateNumber === 35) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Blue-green and yellow-green lines</option>
+            <option value="2">Blue-green and violet lines</option>
+        `;
+    } else if (plateNumber >= 36 && plateNumber <= 37) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Red and orange lines</option>
+            <option value="2">Blue-green and violet lines</option>
+        `;
+    } else if (plateNumber === 38) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Line visible</option>
+        `;
+    }
+
+    plateDiv.innerHTML = `
+        <h3>Plate ${plateNumber}</h3>
+        <div class="plate-image-placeholder">
+            <img data-src="plate${plateNumber}.png" 
+                 alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
+        </div>
+        <div class="input-container">
+            <p>What line(s) do you see?</p>
+            <select id="answer-${plateNumber}">
+                ${options}
+            </select>
+        </div>
+    `;
+
+    const navDiv = document.querySelector('.navigation');
+    if (navDiv) {
+        testContainer.insertBefore(plateDiv, navDiv);
+    } else {
+        testContainer.appendChild(plateDiv);
+    }
+}
+
+
+
+    function loadImageForPlate(plateNumber) {
+        const plateDiv = document.getElementById(`plate-${plateNumber}`);
+        if (!plateDiv) return;
+        const img = plateDiv.querySelector('img.plate-image');
+        if (!img) return;
+        if (!img.src || img.src === window.location.href) {
+            const src = img.getAttribute('data-src');
+            if (src) img.src = src;
+        }
+    }
+     document.addEventListener('DOMContentLoaded', function() {
+
+      loadImageForPlate(1);
+
+      const plate1Img = document.querySelector('#plate-1 img.plate-image');
+      if (plate1Img) {
+         plate1Img.dataset.src = "plate1.png"; 
+         plate1Img.src = "plate1.png"; 
+      }
+
+    showPlate(currentPlate);
+    updateProgress();
+    });
+     
+
+    function showPlate(plateNumber) {
+        if (plateNumber < 1 || plateNumber > totalPlates) return;
+
+        const oldPlateDiv = document.getElementById(`plate-${currentPlate}`);
+        if (oldPlateDiv) oldPlateDiv.classList.remove('active');
+
+        currentPlate = plateNumber;
+
+        const newPlateDiv = document.getElementById(`plate-${currentPlate}`);
+        if (newPlateDiv) newPlateDiv.classList.add('active');
+
+        prevBtn.disabled = (currentPlate === 1);
+
+        if (currentPlate === totalPlates) {
+            nextBtn.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            submitBtn.classList.add('hidden');
+        }
+
+        updateProgress();
+        loadImageForPlate(currentPlate);
+        if (currentPlate > 1) loadImageForPlate(currentPlate - 1);
+        if (currentPlate < totalPlates) loadImageForPlate(currentPlate + 1);
+    }
+
+    function updateProgress() {
+        progressText.textContent = `Plate ${currentPlate} of ${totalPlates}`;
+        progressFill.style.width = `${(currentPlate / totalPlates) * 100}%`;
+    }
+
+
+    function resetTest() {
+        currentPlate = 1;
+        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+
+        for (let i = 1; i <= totalPlates; i++) {
+            if (i <= 25) {
+                const input = document.getElementById(`answer-${i}`);
+                if (input) input.value = '';
+            } else {
+                const select = document.getElementById(`answer-${i}`);
+                if (select) select.selectedIndex = 0;
+            }
+        }
+
+        document.querySelectorAll('.test-plate').forEach(plate => plate.classList.remove('active'));
+        const plate1Div = document.getElementById('plate-1');
+        if (plate1Div) plate1Div.classList.add('active');
+
+        prevBtn.disabled = true;
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+
+        resultsDiv.style.display = 'none';
+        testContainer.classList.remove('hidden');
+        instructionsDiv.classList.add('hidden'); 
+        startTestBtn.classList.add('hidden'); 
+
+        updateProgress();
+
+        diagnosisDiv.innerHTML = '';
+        document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+        deficiencyTypes.forEach(type => type.style.borderLeft = '4px solid #4CAF50');
+    }
+
+
+
+    function saveCurrentAnswer() {
+        if (currentPlate <= 25) {
+            const inputElem = document.getElementById(`answer-${currentPlate}`);
+            if (inputElem) {
+                const val = inputElem.value;
+                userAnswers[currentPlate] = val !== '' ? parseInt(val) : null;
+            }
+        } else {
+            const selectElem = document.getElementById(`answer-${currentPlate}`);
+            if (selectElem) {
+                const val = selectElem.value;
+                userAnswers[currentPlate] = val !== '' ? parseInt(val) : null;
+            }
+        }
+    }
+
+    function calculateResults() {
+        let normalCorrect = 0;
+        let redGreenErrors = 0;
+        let protanopiaIndicators = 0;
+        let deuteranopiaIndicators = 0;
+        let resultsHTML = '';
+
+        for (let i = 1; i <= 25; i++) {
+            const plate = testData[i-1];
+            const userAnswer = userAnswers[i] ?? null;
+            let result = 'incorrect';
+            let expected = plate.normalView;
+
+            if (i === 1) {
+                if (userAnswer === plate.normalView) {
+                    normalCorrect++;
+                    result = 'correct';
+                }
+            } else if (i >= 2 && i <= 21) {
+                if (userAnswer === plate.normalView) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === plate.redGreenDeficiency) {
+                    redGreenErrors++;
+                    expected = `${plate.normalView} (Normal), ${plate.redGreenDeficiency} (Red-Green Deficiency)`;
+                }
+            } else {
+                if (userAnswer === plate.normalView) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === plate.protanopia) {
+                    protanopiaIndicators++;
+                    redGreenErrors++;
+                    expected = `${plate.normalView} (Normal), ${plate.protanopia} (Protanopia), ${plate.deuteranopia} (Deuteranopia)`;
+                } else if (userAnswer === plate.deuteranopia) {
+                    deuteranopiaIndicators++;
+                    redGreenErrors++;
+                    expected = `${plate.normalView} (Normal), ${plate.protanopia} (Protanopia), ${plate.deuteranopia} (Deuteranopia)`;
+                }
+            }
+            resultsHTML += `
+                <tr>
+                    <td>${i}</td>
+                    <td>${userAnswer !== null ? userAnswer : 'No answer'}</td>
+                    <td>${expected !== null ? expected : 'No number visible'}</td>
+                    <td class="${result}">${result}</td>
+                </tr>`;
+        }
+
+        for (let i = 26; i <= 38; i++) {
+            const plate = testData[i - 1];
+            const userAnswer = userAnswers[i];
+            let result = 'incorrect';
+            let expectedText = '';
+            let userAnswerText = '';
+
+            if (i >= 26 && i <= 27) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Purple line only'; break;
+                    case 2: userAnswerText = 'Red line only'; break;
+                    case 3: userAnswerText = 'Both purple and red lines'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'Both purple and red lines (Normal), Purple line only (Protanopia), Red line only (Deuteranopia)';
+                if (userAnswer === 3) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === 1) {
+                    protanopiaIndicators++;
+                    redGreenErrors++;
+                } else if (userAnswer === 2) {
+                    deuteranopiaIndicators++;
+                    redGreenErrors++;
+                }
+            } else if (i >= 28 && i <= 29) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Line visible'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'No lines visible (Normal), Line visible (Red-Green Deficiency)';
+                if (userAnswer === 0) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === 1) {
+                    redGreenErrors++;
+                }
+            } else if (i >= 30 && i <= 33) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Line visible'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'Line visible (Normal), No lines visible (Red-Green Deficiency)';
+                if (userAnswer === 1) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === 0) {
+                    redGreenErrors++;
+                }
+            } else if (i === 34) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Blue-green and yellow-green lines'; break;
+                    case 2: userAnswerText = 'Red-green and violet lines'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'Blue-green and yellow-green lines (Normal), Red-green and violet lines (Red-Green Deficiency)';
+                if (userAnswer === 1) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === 2) {
+                    redGreenErrors++;
+                }
+            } else if (i === 35) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Blue-green and yellow-green lines'; break;
+                    case 2: userAnswerText = 'Blue-green and violet lines'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'Blue-green and yellow-green lines (Normal), Blue-green and violet lines (Red-Green Deficiency)';
+                if (userAnswer === 1) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === 2) {
+                    redGreenErrors++;
+                }
+            } else if (i >= 36 && i <= 37) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Violet and orange lines'; break;
+                    case 2: userAnswerText = 'Blue-green and violet lines'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'Violet and orange lines (Normal), Blue-green and violet lines (Red-Green Deficiency)';
+                if (userAnswer === 1) {
+                    normalCorrect++;
+                    result = 'correct';
+                } else if (userAnswer === 2) {
+                    redGreenErrors++;
+                }
+            } else if (i === 38) {
+                switch (userAnswer) {
+                    case 0: userAnswerText = 'No lines visible'; break;
+                    case 1: userAnswerText = 'Line visible'; break;
+                    default: userAnswerText = 'No answer';
+                }
+                expectedText = 'Line visible (Everyone)';
+                if (userAnswer === 1) {
+                    result = 'correct';
+                    normalCorrect++;
+                }
+            }
+
+            resultsHTML += `
+                <tr>
+                    <td>${i}</td>
+                    <td>${userAnswerText}</td>
+                    <td>${expectedText}</td>
+                    <td class="${result}">${result}</td>
+                </tr>`;
+        }
+
+        resultsTableBody.innerHTML = resultsHTML;
+
+        determineDiagnosis(normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators);
+        showDeficiencyInfo(redGreenErrors, protanopiaIndicators, deuteranopiaIndicators);
+    }
+
+    function determineDiagnosis(normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators) {
+        let diagnosis = '';
+        let severity = 'none';
+
+        if (redGreenErrors >= 20) severity = 'strong';
+        else if (redGreenErrors >= 10) severity = 'moderate';
+        else if (redGreenErrors >= 5) severity = 'weak';
+
+        if (redGreenErrors <= 2) {
+            diagnosis = 'Your color vision appears to be normal.';
+        } else {
+            diagnosis = 'You have some form of <strong>red-green color blindness</strong>.';
+
+            if (protanopiaIndicators > deuteranopiaIndicators) {
+                diagnosis += '<br><br>The results indicate <strong>Protanopia or Protanomaly</strong> (reduced sensitivity to red light).';
+            } else if (deuteranopiaIndicators > protanopiaIndicators) {
+                diagnosis += '<br><br>The results indicate <strong>Deuteranopia or Deuteranomaly</strong> (reduced sensitivity to green light).';
+            } else {
+                diagnosis += '<br><br>The specific type couldn\'t be determined precisely, but results show characteristics of red-green color vision deficiency.';
+            }
+        }
+
+        diagnosisDiv.innerHTML = diagnosis;
+
+        document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+        const severityEl = document.getElementById(`severity-${severity}`);
+        if (severityEl) severityEl.classList.add('selected');
+    }
+
+    function showDeficiencyInfo(redGreenErrors, protanopiaIndicators, deuteranopiaIndicators) {
+        deficiencyTypes.forEach(type => {
+            type.style.borderLeft = '4px solid #4CAF50';
+        });
+
+        if (redGreenErrors > 2) {
+            if (protanopiaIndicators > deuteranopiaIndicators) {
+                document.getElementById('protanopia').style.borderLeft = '4px solid #FF5733';
+            } else if (deuteranopiaIndicators > protanopiaIndicators) {
+                document.getElementById('deuteranopia').style.borderLeft = '4px solid #FF5733';
+            } else {
+                document.getElementById('general').style.borderLeft = '4px solid #FF5733';
+            }
+        }
+    }
+
+    function resetTest() {
+        currentPlate = 1;
+        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+
+        for (let i = 1; i <= totalPlates; i++) {
+            if (i <= 25) {
+                const input = document.getElementById(`answer-${i}`);
+                if (input) input.value = '';
+            } else {
+                const select = document.getElementById(`answer-${i}`);
+                if (select) select.selectedIndex = 0;
+            }
+        }
+
+        document.querySelectorAll('.test-plate').forEach(plate => plate.classList.remove('active'));
+        const plate1Div = document.getElementById('plate-1');
+        if (plate1Div) plate1Div.classList.add('active');
+
+        prevBtn.disabled = true;
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+
+        resultsDiv.style.display = 'none';
+        testContainer.classList.remove('hidden');
+        instructionsDiv.classList.remove('hidden');
+        startTestBtn.classList.remove('hidden');
+
+        updateProgress();
+
+        diagnosisDiv.innerHTML = '';
+        document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+        deficiencyTypes.forEach(type => type.style.borderLeft = '4px solid #4CAF50');
+    }
+
+    // Event listeners
+    startTestBtn.addEventListener('click', () => {
+        instructionsDiv.classList.add('hidden');
+        startTestBtn.classList.add('hidden');
+        testContainer.classList.remove('hidden');
+        updateProgress();
+        showPlate(currentPlate);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        if (currentPlate > 1) {
+            showPlate(currentPlate - 1);
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        if (currentPlate < totalPlates) {
+            showPlate(currentPlate + 1);
+        }
+    });
+
+    submitBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        calculateResults();
+        testContainer.classList.add('hidden');
+        resultsDiv.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    restartBtn.addEventListener('click', resetTest);
+ 
+    updateProgress();
+    showPlate(currentPlate);
+});
+</script>
+</body>
+</html>
+
