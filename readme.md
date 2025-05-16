@@ -59,14 +59,12 @@ The Snellen chart lines are sized using the logMAR (logarithm of the Minimum Ang
 The app uses a base height of characters at a 3-meter distance:
 
 javascript
-Copy
-Edit
+
 const base_height_m = 0.00435;
 Then for each line, it calculates the required height using the logMAR formula:
 
 javascript
-Copy
-Edit
+
 const logmar = (10 - i) * 0.1;
 const height_m = base_height_m * Math.pow(10, logmar);
 const height_mm = height_m * 1000;
@@ -74,14 +72,15 @@ const pixel_size = height_mm * (ppi / 25.4); // convert mm to px
 Why use 25.4?
 Because there are 25.4 millimeters in an inch, so we convert mm to inches and multiply by PPI.
 
+The line having logmar = 0 is set as the normal vision line and rest lines have been calculated by a logmar increment of 0.1 for everyline. And the logmar is converted to diopters assuming a linear division dependence to get approximately accurate results. The multiplied constant would be recaliberated on further testing.
+
 This gives the actual pixel height for each letter on that line.
 
 🧾 Step 5: Rendering the Snellen Chart
 The script loops through the lines and applies the computed fontSize in pixels to each one:
 
 javascript
-Copy
-Edit
+
 div.style.fontSize = pixelSizes[index] + 'px';
 div.textContent = line;
 Each line is styled and appended to the chart container with proper alignment and optional highlighting.
@@ -90,8 +89,7 @@ Each line is styled and appended to the chart container with proper alignment an
 After the chart is rendered, a second form appears where the user can select the last line they were able to read:
 
 html
-Copy
-Edit
+
 <form id="lineForm" method="POST" action="{% url 'predict_diopters' %}">
 This value is sent to the Django backend to calculate and return the approximate diopter value.
 
@@ -107,8 +105,7 @@ Highlights the selected line (if any).
 Uses html2pdf.js to save it as a downloadable PDF.
 
 javascript
-Copy
-Edit
+
 await html2pdf().set(opt).from(pdfContent).save();
 PDF includes all lines and preserves font scaling for printing or sharing.
 
@@ -116,8 +113,7 @@ PDF includes all lines and preserves font scaling for printing or sharing.
 Clicking the "Go Fullscreen" button triggers fullscreen mode via the browser's Fullscreen API:
 
 javascript
-Copy
-Edit
+
 document.documentElement.requestFullscreen();
 This allows better visibility when taking the Snellen test.
 
@@ -125,16 +121,14 @@ This allows better visibility when taking the Snellen test.
 The app has a theme toggle switch that adds or removes the dark-mode class:
 
 javascript
-Copy
-Edit
+
 themeToggle.addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
 It also respects the system's preferred theme:
 
 javascript
-Copy
-Edit
+
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.body.classList.add('dark-mode');
 }
@@ -142,8 +136,7 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 The JavaScript includes a utility function to fetch the CSRF token from cookies for Django POST requests:
 
 javascript
-Copy
-Edit
+
 function getCSRFToken() {
     const name = 'csrftoken';
     const cookies = document.cookie.split(';');
