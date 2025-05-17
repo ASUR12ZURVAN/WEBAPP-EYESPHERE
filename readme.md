@@ -37,10 +37,11 @@ The user inputs the **physical screen diagonal (in inches)**.
 🖥 Step 2: Automatically Reading Screen Resolution
 The script detects the screen resolution using built-in browser properties:
 
-javascript
+```javascript
 
-`const width_px = window.screen.width;`
-`const height_px = window.screen.height;`
+const width_px = window.screen.width;
+const height_px = window.screen.height;
+```
 These give the horizontal and vertical resolution of the screen in pixels (e.g., 1920×1080).
 
 📏 Step 3: Calculating Screen PPI (Pixels Per Inch)
@@ -182,3 +183,78 @@ This app is intended for educational or demonstration purposes.
 For real-world eye exams, consult with a licensed optometrist.
 
 Character sizing is accurate only if diagonal size is entered correctly.
+
+# 🧠 Glaucoma Peripheral Vision Test Game
+
+This web-based game is an interactive tool designed to help identify early signs of **glaucoma** by testing a user's **peripheral vision**. The game displays randomly placed numbers on the screen, and the user is asked to recall and enter them correctly, simulating the conditions of a peripheral vision test.
+
+---
+
+## 🎮 Features
+
+### 🌌 Visual Design
+- **Animated Starry Background:** Dynamic star field created to maintain visual engagement.
+- **Responsive Randomized Number Positions:** Numbers are displayed at various distances from the center to simulate peripheral challenges.
+
+### 📊 Game Mechanics
+- **Three Progressive Levels:**
+  - **Level 1:** Numbers appear close to the center.
+  - **Level 2:** Wider spread from the center.
+  - **Level 3:** Furthest spread, increasing challenge.
+- **5 Numbers Per Level:** Randomly generated and shown with different colors.
+- **Color Variety:** Each number is displayed in a randomly selected color from a preset palette.
+- **Dynamic Font Sizes:** Adjusted based on difficulty (larger for easier levels).
+
+### 📝 User Interaction
+- **Input Field:** Users input numbers they remember, separated by commas.
+- **Real-Time Feedback:**
+  - Correct numbers displayed with feedback on score and accuracy.
+  - Emoji-based feedback for performance (`🎯`, `👍`, `⚠️`).
+- **Keyboard Support:** Pressing `Enter` submits the answer.
+- **Help Button:** Offers user-friendly instructions and tips.
+
+### 📈 Progress Tracking
+- **Progress Bar:** Shows test progress across levels and number displays.
+- **Score and Accuracy Display:** Immediate feedback after each round.
+- **Final Performance Summary:**
+  - Total score out of 15.
+  - Accuracy percentage.
+  - Personalized suggestion (Good/Average/See a Doctor).
+
+### 🔁 Controls
+- **Restart Button:** Allows the user to restart the entire test.
+- **View All Results Button:** Redirects to `/results_history/` to see full test history.
+
+### 🔒 Backend Integration
+- **POST Request on Completion:**
+  - Sends user data to backend (`/submit_score/` endpoint).
+  - Includes `user_id`, `test_type`, `final_score`, and `accuracy`.
+- **Automatic Redirect:** After submission, the user is taken to results history page.
+
+---
+
+## 🧪 Use Cases
+
+### 🩺 Health Screening
+- **Early Glaucoma Detection:** Helps detect symptoms by simulating a peripheral vision loss test.
+- **Vision Monitoring:** Users can periodically test their field of vision for changes.
+
+### 🏥 Clinics & Eye Hospitals
+- **Supplementary Diagnostic Tool:** Used alongside standard tests to provide early warnings.
+- **Engaging for Patients:** Gamified format reduces anxiety and increases participation.
+
+### 👨‍💻 Research and Data Collection
+- **Track User Vision Health Over Time:** Stores and retrieves historical data.
+- **Evaluate Test Performance Trends:** Useful for vision-related research or pilot studies.
+
+### 🧠 Cognitive Engagement
+- **Memory & Focus Practice:** Enhances attention span and short-term memory.
+- **Peripheral Awareness Training:** Could be repurposed for athletes or other cognitive disciplines.
+
+---
+
+## ✅ Future Improvements (Optional Suggestions)
+- Add **leaderboard** or **comparison chart** for motivation.
+- Introduce **dark mode** or **accessibility features**.
+- Enable **adaptive difficulty** based on performance.
+- Offer **localized translations** for international use.
