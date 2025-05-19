@@ -46,10 +46,17 @@ def save_test_result(request, user_id, test_type, prediction_value):
 
 def user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
+
+    # Existing test results (from your TestResult model)
     test_results = user.test_results.all().order_by('-date_taken')
+
+    # New color vision test results
+    color_vision_tests = user.color_vision_tests.all().order_by('-date_taken')
+
     return render(request, 'user_profile.html', {
         'user': user,
-        'test_results': test_results
+        'test_results': test_results,
+        'color_vision_tests': color_vision_tests
     })
 
 @csrf_exempt
@@ -125,13 +132,16 @@ class ColorVisionTestView(APIView):
     def post(self, request):
         data = request.data
 
+        # ✅ Get user_id from session first
+        user_id = request.session.get('user_id')
         try:
-            user_id = request.session.get('user_id')
+            user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+        # ✅ Create ColorVisionTest instance
         test = ColorVisionTest.objects.create(
-            user=user_id,
+            user=user,  # <-- Fix: added comma
             normal_correct=data.get('normal_correct', 0),
             red_green_errors=data.get('red_green_errors', 0),
             protanopia_indicators=data.get('protanopia_indicators', 0),
@@ -140,6 +150,7 @@ class ColorVisionTestView(APIView):
             diagnosis_text=data.get('diagnosis_text', '')
         )
 
+        # ✅ Create ColorVisionPlateResponse instances
         responses = data.get('responses', [])
         for r in responses:
             ColorVisionPlateResponse.objects.create(

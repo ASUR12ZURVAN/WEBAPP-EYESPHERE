@@ -12,6 +12,10 @@
             margin: 16px 0;
             box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
         }
+        .response-list {
+            margin-left: 20px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -31,6 +35,36 @@
         {% endfor %}
     {% else %}
         <p>No test results found.</p>
+    {% endif %}
+
+    <h2>Color Vision Test Results</h2>
+    {% if color_vision_tests %}
+        {% for test in color_vision_tests %}
+            <div class="card">
+                <p><strong>Date Taken:</strong> {{ test.date_taken|date:"Y-m-d H:i" }}</p>
+                <p><strong>Severity Level:</strong> {{ test.severity_level|title }}</p>
+                <p><strong>Diagnosis:</strong> {{ test.diagnosis_text }}</p>
+                <ul>
+                    <li><strong>Normal Correct:</strong> {{ test.normal_correct }}</li>
+                    <li><strong>Red-Green Errors:</strong> {{ test.red_green_errors }}</li>
+                    <li><strong>Protanopia Indicators:</strong> {{ test.protanopia_indicators }}</li>
+                    <li><strong>Deuteranopia Indicators:</strong> {{ test.deuteranopia_indicators }}</li>
+                </ul>
+                <h4>Plate Responses:</h4>
+                <ul class="response-list">
+                    {% for response in test.plate_responses.all %}
+                        <li>
+                            Plate {{ response.plate_number }}: 
+                            Answered "{{ response.user_answer }}", 
+                            Expected "{{ response.expected_text }}" → 
+                            <strong>{{ response.result|title }}</strong>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No color vision test results found.</p>
     {% endif %}
 </body>
 </html>
