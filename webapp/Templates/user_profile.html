@@ -1,70 +1,654 @@
-<!-- templates/user_profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ user.name }}'s Profile</title>
     <style>
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-            box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+        /* CSS Variables for consistent theming - Enhanced medical palette */
+        :root {
+            --primary-color: #0073b6;           /* Medical blue */
+            --primary-dark: #005a8c;            /* Darker blue */
+            --secondary-color: #2c9a42;         /* Medical green */
+            --accent-color: #f59e0b;            /* Warning amber */
+            --danger-color: #dc3545;            /* Medical red */
+            --text-primary: #2d3748;            /* Dark slate */
+            --text-secondary: #4a5568;          /* Medium slate */
+            --text-light: #718096;              /* Light slate */
+            --bg-primary: #ffffff;              /* Pure white */
+            --bg-secondary: #f7fafc;            /* Off-white */
+            --bg-tertiary: #edf2f7;             /* Light gray */
+            --border-color: #e2e8f0;            /* Light border */
+            --border-light: #edf2f7;            /* Very light border */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
         }
+
+        /* Global reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: #f0f4f8;  /* Subtle medical blue-gray background */
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 2rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Main container - More clinical feel */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Header section - More professional medical appearance */
+        .header {
+            background: linear-gradient(to right, #f7fafc, #edf2f7);
+            color: var(--text-primary);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-container {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container img {
+            height: 70px;
+            width: auto;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            letter-spacing: -0.02em;
+        }
+
+        /* Patient information layout */
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .user-info-item {
+            background: var(--bg-primary);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .user-info-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-info-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .user-info-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Content section - More clinical spacing */
+        .content {
+            padding: 2.5rem 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .section-header h2 {
+            font-size: 1.625rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            letter-spacing: -0.01em;
+        }
+
+        .section-icon {
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+
+        .section-icon::before {
+            content: '📊';
+            font-size: 1rem;
+        }
+
+        .section:nth-child(2) .section-icon::before {
+            content: '🧪';
+        }
+
+        .section:nth-child(3) .section-icon::before {
+            content: '👁️';
+        }
+
+        /* Enhanced medical card styles */
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-content {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .card-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .card-field:last-child {
+            border-bottom: none;
+        }
+
+        .card-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .card-value {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* Medical test result styling */
+        .test-result-card {
+            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(to right, rgba(0, 115, 182, 0.03), transparent);
+        }
+
+        .color-vision-card {
+            border-left: 4px solid var(--secondary-color);
+            background: linear-gradient(to right, rgba(44, 154, 66, 0.03), transparent);
+        }
+
+        /* Clinical severity level badges */
+        .severity-badge {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            border-radius: 2rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            letter-spacing: 0.02em;
+        }
+
+        .severity-normal {
+            background: rgba(44, 154, 66, 0.1);
+            color: var(--secondary-color);
+            border: 1px solid rgba(44, 154, 66, 0.2);
+        }
+
+        .severity-mild {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .severity-moderate {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        .severity-severe {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        /* Enhanced clinical response list */
         .response-list {
-            margin-left: 20px;
-            font-size: 14px;
+            margin: 1.25rem 0 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .response-list li {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.875rem;
+            margin-bottom: 0.625rem;
+            transition: all 0.2s ease;
+        }
+
+        .response-list li:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary-color);
+        }
+
+        .response-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .plate-info {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .answer-info {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .result-badge {
+            padding: 0.25rem 0.625rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .result-correct {
+            background: rgba(44, 154, 66, 0.1);
+            color: var(--secondary-color);
+            border: 1px solid rgba(44, 154, 66, 0.2);
+        }
+
+        .result-incorrect {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        /* Clinical empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-color);
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            color: var(--text-light);
+        }
+
+        .empty-state-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        /* Date styling - More clinical */
+        .date-display {
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Courier New', monospace;
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        /* Statistics grid - Clinical data display */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.875rem;
+            margin: 1.5rem 0;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.875rem;
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        /* Responsive design - Medical portal friendly */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .header {
+                padding: 1.75rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.875rem;
+            }
+
+            .content {
+                padding: 1.75rem 1rem;
+            }
+
+            .user-info {
+                grid-template-columns: 1fr;
+                gap: 0.875rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .response-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Medical print styles - for records */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                font-size: 12pt;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                border: none;
+            }
+
+            .header {
+                background: white;
+                padding: 1.5rem 0;
+            }
+
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+            
+            .section-header::after {
+                background: #000;
+            }
+
+            .stat-value {
+                color: #000;
+            }
+            
+            .section-header h2,
+            .header h1 {
+                color: #000;
+            }
+            
+            .severity-badge,
+            .result-badge {
+                background: transparent !important;
+                border: 1px solid #777 !important;
+                color: #000 !important;
+            }
+        }
+
+        /* Accessibility enhancements */
+        .card:focus-within {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        /* Higher contrast for text labels */
+        .card-label,
+        .user-info-label {
+            color: #3a4858;
+        }
+        
+        /* Clinical data presentation improvements */
+        h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.075rem;
         }
     </style>
 </head>
 <body>
-    <h1>{{ user.name }}'s Profile</h1>
-    <p><strong>Age:</strong> {{ user.age }}</p>
-    <p><strong>Phone Number:</strong> {{ user.ph_Number }}</p>
-    <p><strong>City:</strong> {{ user.city }}</p>
-
-    <h2>Test Results</h2>
-    {% if test_results %}
-        {% for result in test_results %}
-            <div class="card">
-                <p><strong>Test Type:</strong> {{ result.test_type }}</p>
-                <p><strong>Result:</strong> {{ result.result_value }}</p>
-                <p><strong>Date Taken:</strong> {{ result.date_taken|date:"Y-m-d H:i" }}</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="eyesphere.jpg" alt="Eyesphere - Vision Beyond Limits" />
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No test results found.</p>
-    {% endif %}
+            <h1>{{ user.name }}'s Profile</h1>
+            <div class="user-info">
+                <div class="user-info-item">
+                    <span class="user-info-label">Age</span>
+                    <span class="user-info-value">{{ user.age }}</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">Phone Number</span>
+                    <span class="user-info-value">{{ user.ph_Number }}</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">City</span>
+                    <span class="user-info-value">{{ user.city }}</span>
+                </div>
+            </div>
+        </div>
 
-    <h2>Color Vision Test Results</h2>
-    {% if color_vision_tests %}
-        {% for test in color_vision_tests %}
-            <div class="card">
-                <p><strong>Date Taken:</strong> {{ test.date_taken|date:"Y-m-d H:i" }}</p>
-                <p><strong>Severity Level:</strong> {{ test.severity_level|title }}</p>
-                <p><strong>Diagnosis:</strong> {{ test.diagnosis_text }}</p>
-                <ul>
-                    <li><strong>Normal Correct:</strong> {{ test.normal_correct }}</li>
-                    <li><strong>Red-Green Errors:</strong> {{ test.red_green_errors }}</li>
-                    <li><strong>Protanopia Indicators:</strong> {{ test.protanopia_indicators }}</li>
-                    <li><strong>Deuteranopia Indicators:</strong> {{ test.deuteranopia_indicators }}</li>
-                </ul>
-                <h4>Plate Responses:</h4>
-                <ul class="response-list">
-                    {% for response in test.plate_responses.all %}
-                        <li>
-                            Plate {{ response.plate_number }}: 
-                            Answered "{{ response.user_answer }}", 
-                            Expected "{{ response.expected_text }}" → 
-                            <strong>{{ response.result|title }}</strong>
-                        </li>
+        <div class="content">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon"></div>
+                    <h2>Test Results</h2>
+                </div>
+                {% if test_results %}
+                    {% for result in test_results %}
+                        <div class="card test-result-card">
+                            <div class="card-content">
+                                <div class="card-field">
+                                    <span class="card-label">Test Type</span>
+                                    <span class="card-value">{{ result.test_type }}</span>
+                                </div>
+                                <div class="card-field">
+                                    <span class="card-label">Result</span>
+                                    <span class="card-value">{{ result.result_value }}</span>
+                                </div>
+                                <div class="card-field">
+                                    <span class="card-label">Date Taken</span>
+                                    <span class="card-value date-display">{{ result.date_taken|date:"Y-m-d H:i" }}</span>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
-                </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p class="empty-state-text">No test results found.</p>
+                    </div>
+                {% endif %}
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No color vision test results found.</p>
-    {% endif %}
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon"></div>
+                    <h2>Color Vision Test Results</h2>
+                </div>
+                {% if color_vision_tests %}
+                    {% for test in color_vision_tests %}
+                        <div class="card color-vision-card">
+                            <div class="card-content">
+                                <div class="card-field">
+                                    <span class="card-label">Date Taken</span>
+                                    <span class="card-value date-display">{{ test.date_taken|date:"Y-m-d H:i" }}</span>
+                                </div>
+                                <div class="card-field">
+                                    <span class="card-label">Severity Level</span>
+                                    <span class="severity-badge severity-{{ test.severity_level|lower }}">{{ test.severity_level|title }}</span>
+                                </div>
+                                <div class="card-field">
+                                    <span class="card-label">Diagnosis</span>
+                                    <span class="card-value">{{ test.diagnosis_text }}</span>
+                                </div>
+                                
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-value">{{ test.normal_correct }}</span>
+                                        <span class="stat-label">Normal Correct</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-value">{{ test.red_green_errors }}</span>
+                                        <span class="stat-label">Red-Green Errors</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-value">{{ test.protanopia_indicators }}</span>
+                                        <span class="stat-label">Protanopia Indicators</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-value">{{ test.deuteranopia_indicators }}</span>
+                                        <span class="stat-label">Deuteranopia Indicators</span>
+                                    </div>
+                                </div>
+
+                                <h4>Plate Responses:</h4>
+                                <ul class="response-list">
+                                    {% for response in test.plate_responses.all %}
+                                        <li>
+                                            <div class="response-item">
+                                                <span class="plate-info">Plate {{ response.plate_number }}</span>
+                                                <span class="answer-info">
+                                                    Answered "{{ response.user_answer }}", Expected "{{ response.expected_text }}"
+                                                </span>
+                                                <span class="result-badge result-{{ response.result|lower }}">{{ response.result|title }}</span>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👁️</div>
+                        <p class="empty-state-text">No color vision test results found.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </body>
 </html>
