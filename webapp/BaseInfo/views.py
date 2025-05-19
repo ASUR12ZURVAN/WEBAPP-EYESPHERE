@@ -103,22 +103,28 @@ def test_results_history(request):
 
     selected_test_type = request.GET.get('test_type')
 
-    users = User.objects.all()
-    test_results = TestResult.objects.all()
-
-    # Filter test results by user_id if user_id is found in session
-    test_results = test_results.filter(user_id=user_id)
-
+    # Filter TestResult by user
+    test_results = TestResult.objects.filter(user_id=user_id)
     if selected_test_type:
         test_results = test_results.filter(test_type=selected_test_type)
 
-    grouped_results = defaultdict(list)
+    # Filter ColorVisionTest by user
+    color_vision_tests = ColorVisionTest.objects.filter(user_id=user_id)
+
+    # Group TestResult by user (in this case only one user)
+    grouped_test_results = defaultdict(list)
     for result in test_results.select_related('user'):
-        grouped_results[result.user].append(result)
+        grouped_test_results[result.user].append(result)
+
+    # Group ColorVisionTest by user
+    grouped_color_tests = defaultdict(list)
+    for color_test in color_vision_tests.select_related('user'):
+        grouped_color_tests[color_test.user].append(color_test)
 
     context = {
-        'users': users,
-        'grouped_results': dict(grouped_results),
+        'users': User.objects.all(),
+        'grouped_results': dict(grouped_test_results),
+        'grouped_color_tests': dict(grouped_color_tests),
         'selected_user_id': user_id,
         'selected_test_type': selected_test_type,
     }
@@ -149,16 +155,5 @@ class ColorVisionTestView(APIView):
             severity_level=data.get('severity_level', 'none'),
             diagnosis_text=data.get('diagnosis_text', '')
         )
-
-        # ✅ Create ColorVisionPlateResponse instances
-        responses = data.get('responses', [])
-        for r in responses:
-            ColorVisionPlateResponse.objects.create(
-                test=test,
-                plate_number=r.get('plate_number'),
-                user_answer=str(r.get('user_answer')),
-                expected_text=r.get('expected_text', ''),
-                result=r.get('result', 'incorrect')
-            )
 
         return Response({'detail': 'Color vision test submitted successfully.'}, status=status.HTTP_201_CREATED)

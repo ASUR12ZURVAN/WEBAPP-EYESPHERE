@@ -563,9 +563,9 @@
         <p>Some characteristics of red-green color vision deficiency but not specific.</p>
       </div>
     </div>
-    <div style="text-align: center; margin-top: 2rem;">
-      <button id="submit-results-btn">Submit Results to Server</button>
-    </div>
+      <button id="saveResultBtn">Save Results to Database</button>
+    <div id="saveStatus" style="margin-top: 10px;"></div>
+
 
 
     <div style="text-align: center; margin-top: 2rem;">
@@ -577,6 +577,11 @@
 </html>
 
 <script>
+let normalCorrect = 0;
+let redGreenErrors = 0;
+let protanopiaIndicators = 0;
+let deuteranopiaIndicators = 0;
+let resultsHTML = '';
 document.addEventListener('DOMContentLoaded', function() {
     const testData = [
         { plateNumber: 1, normalView: 12, redGreenDeficiency: 12, type: 'number' },
@@ -801,43 +806,8 @@ function createLinePlate(plateNumber) {
         progressText.textContent = `Plate ${currentPlate} of ${totalPlates}`;
         progressFill.style.width = `${(currentPlate / totalPlates) * 100}%`;
     }
-    document.getElementById('submit-results-btn').addEventListener('click', async () => {
-    const payload = {
-      user_id: CURRENT_USER_ID,  // You need to inject this dynamically via template or JavaScript
-      normal_correct,
-      red_green_errors,
-      protanopia_indicators,
-      deuteranopia_indicators,
-      severity_level: getSeverityLevel(),
-      diagnosis_text: document.getElementById('diagnosis').innerHTML,
-      responses: Object.entries(userAnswers).map(([plate, answer]) => ({
-        plate_number: parseInt(plate),
-        user_answer: answer,
-        expected_text: getExpectedTextForPlate(plate),
-        result: getResultForPlate(plate)
-      }))
-    };
+    const CURRENT_USER_ID = {{ request.session.user_id|default:'null' }};
 
-    try {
-      const response = await fetch('/api/color-vision-tests/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert('Results submitted successfully!');
-      } else {
-        alert('Failed to submit results: ' + (data.detail || 'Unknown error'));
-      }
-    } catch (err) {
-      alert('Submission error: ' + err.message);
-    }
-  });
 
   function getSeverityLevel() {
     return document.querySelector('.severity-level.selected')?.id.replace('severity-', '') || 'none';
@@ -920,11 +890,6 @@ function createLinePlate(plateNumber) {
     }
 
     function calculateResults() {
-        let normalCorrect = 0;
-        let redGreenErrors = 0;
-        let protanopiaIndicators = 0;
-        let deuteranopiaIndicators = 0;
-        let resultsHTML = '';
 
         for (let i = 1; i <= 25; i++) {
             const plate = testData[i-1];
@@ -1088,7 +1053,8 @@ function createLinePlate(plateNumber) {
 
         determineDiagnosis(normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators);
         showDeficiencyInfo(redGreenErrors, protanopiaIndicators, deuteranopiaIndicators);
-    }
+        
+    }//Put before here
 
     function determineDiagnosis(normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators) {
         let diagnosis = '';
@@ -1200,7 +1166,41 @@ function createLinePlate(plateNumber) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
+    document.getElementById('saveResultBtn').addEventListener('click', async () => {
+    const diagnosisText = diagnosisDiv.innerText;
+    const severityLevel = document.querySelector('.severity-level.selected')?.id?.replace('severity-', '') || 'none';
+
+    const data = {
+    normal_correct: normalCorrect,
+    red_green_errors: redGreenErrors,
+    protanopia_indicators: protanopiaIndicators,
+    deuteranopia_indicators: deuteranopiaIndicators,
+    severity_level: severityLevel,
+    diagnosis_text: diagnosisText,
+};
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/color-vision-tests/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // Django's CSRF token
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            document.getElementById('saveStatus').innerText = '✅ Results saved successfully!';
+        } else {
+            document.getElementById('saveStatus').innerText = '❌ Failed to save results.';
+        }
+    } catch (error) {
+        document.getElementById('saveStatus').innerText = '❌ Error occurred: ' + error.message;
+    }
+});
+
+
     restartBtn.addEventListener('click', resetTest);
+ 
  
     updateProgress();
     showPlate(currentPlate);
