@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,TestResult
+from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,3 +11,12 @@ class ResultSerializer(serializers.ModelSerializer):
         model = TestResult
         fields = '__all__'
 
+class ColorVisionTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ColorVisionTest
+        fields = '__all__'
+
+class ColorVisionPlateResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ColorVisionPlateResponse
+        fields = '__all__'

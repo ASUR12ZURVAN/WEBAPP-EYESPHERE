@@ -563,6 +563,10 @@
         <p>Some characteristics of red-green color vision deficiency but not specific.</p>
       </div>
     </div>
+    <div style="text-align: center; margin-top: 2rem;">
+      <button id="submit-results-btn">Submit Results to Server</button>
+    </div>
+
 
     <div style="text-align: center; margin-top: 2rem;">
       <button id="restart-btn">Restart Test</button>
@@ -797,6 +801,70 @@ function createLinePlate(plateNumber) {
         progressText.textContent = `Plate ${currentPlate} of ${totalPlates}`;
         progressFill.style.width = `${(currentPlate / totalPlates) * 100}%`;
     }
+    document.getElementById('submit-results-btn').addEventListener('click', async () => {
+    const payload = {
+      user_id: CURRENT_USER_ID,  // You need to inject this dynamically via template or JavaScript
+      normal_correct,
+      red_green_errors,
+      protanopia_indicators,
+      deuteranopia_indicators,
+      severity_level: getSeverityLevel(),
+      diagnosis_text: document.getElementById('diagnosis').innerHTML,
+      responses: Object.entries(userAnswers).map(([plate, answer]) => ({
+        plate_number: parseInt(plate),
+        user_answer: answer,
+        expected_text: getExpectedTextForPlate(plate),
+        result: getResultForPlate(plate)
+      }))
+    };
+
+    try {
+      const response = await fetch('/api/color-vision-tests/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert('Results submitted successfully!');
+      } else {
+        alert('Failed to submit results: ' + (data.detail || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('Submission error: ' + err.message);
+    }
+  });
+
+  function getSeverityLevel() {
+    return document.querySelector('.severity-level.selected')?.id.replace('severity-', '') || 'none';
+  }
+
+  function getExpectedTextForPlate(plateNumber) {
+    return document.querySelector(`#results-body tr:nth-child(${plateNumber}) td:nth-child(3)`)?.innerText || '';
+  }
+
+  function getResultForPlate(plateNumber) {
+    return document.querySelector(`#results-body tr:nth-child(${plateNumber}) td:nth-child(4)`)?.innerText.toLowerCase() || 'unknown';
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        const trimmed = cookie.trim();
+        if (trimmed.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(trimmed.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 
 
     function resetTest() {

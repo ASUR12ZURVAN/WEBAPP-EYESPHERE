@@ -2,11 +2,12 @@ from django.shortcuts import render,redirect,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User,TestResult
+from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest
 from .Serializers import UserSerializer,ResultSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from collections import defaultdict
+from rest_framework.views import APIView
 import json 
 
 def index(request, user_id):
@@ -116,3 +117,37 @@ def test_results_history(request):
     }
 
     return render(request, 'test_results_history.html', context)
+
+def Colour_Blindness_Test(request):
+    return render(request,"Colourblindness_test.html")
+
+class ColorVisionTestView(APIView):
+    def post(self, request):
+        data = request.data
+
+        try:
+            user_id = request.session.get('user_id')
+        except User.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        test = ColorVisionTest.objects.create(
+            user=user_id,
+            normal_correct=data.get('normal_correct', 0),
+            red_green_errors=data.get('red_green_errors', 0),
+            protanopia_indicators=data.get('protanopia_indicators', 0),
+            deuteranopia_indicators=data.get('deuteranopia_indicators', 0),
+            severity_level=data.get('severity_level', 'none'),
+            diagnosis_text=data.get('diagnosis_text', '')
+        )
+
+        responses = data.get('responses', [])
+        for r in responses:
+            ColorVisionPlateResponse.objects.create(
+                test=test,
+                plate_number=r.get('plate_number'),
+                user_answer=str(r.get('user_answer')),
+                expected_text=r.get('expected_text', ''),
+                result=r.get('result', 'incorrect')
+            )
+
+        return Response({'detail': 'Color vision test submitted successfully.'}, status=status.HTTP_201_CREATED)
