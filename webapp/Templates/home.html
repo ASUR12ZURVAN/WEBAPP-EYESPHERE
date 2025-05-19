@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyesphere - Vision Beyond Limits</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-image: url('eyei.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Modified overlay for better visibility but preserving background image */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3); /* Reduced opacity to show more of the background */
+            z-index: -1;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo img {
+            height: 80px; /* Increased from 50px to 80px */
+        }
+        
+        .logo-text {
+            font-size: 1.8rem; /* Increased from 1.5rem */
+            font-weight: bold;
+            color: #004052;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #004052;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #0085a5;
+        }
+        
+        .hero {
+            padding: 8rem 5%;
+            color: white;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Added text shadow for better readability */
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color:rgba(74, 124, 136, 0.72);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color:rgb(17, 20, 20);
+        }
+        
+        .features {
+            padding: 4rem 5%;
+            background-color: white;
+            text-align: center;
+        }
+        
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #004052;
+        }
+        
+        .feature-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .card {
+            background-color: #f5f5f5;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #004052;
+        }
+        
+        footer {
+            padding: 2rem 5%;
+            background-color: #004052;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="eyesphere.jpg" alt="Eyesphere Logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About Us</a>
+            <a href="#">Testimonials</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Vision Beyond Limits</h1>
+        <p>Experience comprehensive eye care with cutting-edge technology and compassionate professionals dedicated to your visual health.</p>
+        <a href="#" class="cta-button">Create user</a>
+    </section>
+
+    <section class="features">
+        <h2>Our Services</h2>
+        <div class="feature-cards">
+            <div class="card">
+                <h3>Comprehensive Eye Exams</h3>
+                <p>Thorough evaluations using the latest diagnostic technology to assess your overall eye health and vision.</p>
+            </div>
+            <div class="card">
+                <h3>Vision Correction</h3>
+                <p>Advanced solutions for refractive errors including glasses, contact lenses, and surgical options.</p>
+            </div>
+            <div class="card">
+                <h3>Eye Disease Management</h3>
+                <p>Expert diagnosis and treatment of conditions like glaucoma, cataracts, macular degeneration, and diabetic retinopathy.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Eyesphere - Vision Beyond Limits. All rights reserved.</p>
+    </footer>
+</body>
+</html>
