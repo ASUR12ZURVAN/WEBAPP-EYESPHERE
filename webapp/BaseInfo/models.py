@@ -4,8 +4,9 @@ from django.utils.timezone import localtime
 class User(models.Model):
     name = models.CharField(max_length=300)
     age = models.IntegerField()
-    ph_Number = models.CharField(max_length=200)
+    ph_Number = models.CharField(max_length=200,unique=True)
     city = models.CharField(max_length=200)
+    password = models.CharField(max_length=300)
 
     def __str__(self):
         return f"{self.name} ({self.city})"

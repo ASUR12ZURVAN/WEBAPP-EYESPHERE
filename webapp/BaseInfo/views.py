@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from collections import defaultdict
 from rest_framework.views import APIView
+from django.contrib.auth.hashers import make_password
 import json 
 
 def index(request, user_id):
@@ -21,19 +22,34 @@ def next(request):
 def create_user(request):
     if request.method == 'POST':
         data = request.data if request.content_type == 'application/json' else request.POST
-        serializer = UserSerializer(data=data)
+
+        # Check if user already exists
+        if User.objects.filter(ph_Number=data.get('ph_Number')).exists():
+            error = {'error': 'User with this phone number already exists'}
+            if request.content_type == 'application/json':
+                return Response(error, status=500)
+            return render(request, 'create_user.html', {'errors': error})
+
+        # Hash the password before saving
+        mutable_data = data.copy()
+        mutable_data['password'] = make_password(data.get('password'))
+
+        serializer = UserSerializer(data=mutable_data)
         if serializer.is_valid():
             serializer.save()
             user_id = serializer.instance.id
-            request.session['user_id'] = user_id  # ✅ store in session
-            return redirect('base_myopia', user_id=user_id)
+            request.session['user_id'] = user_id
+
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            # redirect to Myopia_Test/ after successful HTML form submission
+            return redirect('base_myopia', user_id=user_id)
+
+        # Invalid data
         if request.content_type == 'application/json':
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return render(request, 'create_user.html', {'errors': serializer.errors})
 
+    # GET request: render the form
     return render(request, 'create_user.html')
 
 def save_test_result(request, user_id, test_type, prediction_value):

@@ -565,6 +565,10 @@
     </div>
       <button id="saveResultBtn">Save Results to Database</button>
     <div id="saveStatus" style="margin-top: 10px;"></div>
+    <form action="{% url 'user_profile' request.session.user_id %}" method="get">
+      <button type="submit">Go to Profile</button>
+    </form>
+
 
 
 
