@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -508,7 +510,7 @@
     <div class="test-plate active" id="plate-1">
       <h3>Plate 1</h3>
       <div class="plate-image-placeholder">
-        <img data-src="plate1.png" alt="Color Blindness Test Plate 1" class="plate-image" />
+       <img data-src="{% static 'plate1.png' %}" alt="Color Blindness Test Plate 1" class="plate-image" />
       </div>
       <div class="input-container">
         <label for="answer-1">What number do you see?</label>
@@ -579,6 +581,12 @@
 </main>
 </body>
 </html>
+
+<script>
+    const staticUrl = "{% static '' %}";
+</script>
+
+
 
 <script>
 let normalCorrect = 0;
@@ -659,11 +667,12 @@ document.addEventListener('DOMContentLoaded', function() {
     plateDiv.classList.add('test-plate');
     plateDiv.id = `plate-${plateNumber}`;
 
+    // Use the global staticUrl defined in the template
     plateDiv.innerHTML = `
         <h3>Plate ${plateNumber}</h3>
         <div class="plate-image-placeholder">
-            <img data-src="plate${plateNumber}.png" 
-            alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
+            <img data-src="${staticUrl}plate${plateNumber}.png" 
+                 alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
         </div>
         <div class="input-container">
             <label for="answer-${plateNumber}">What number do you see?</label>
@@ -671,9 +680,10 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    const plate1Div = document.getElementById('plate-1');
-    plate1Div.parentNode.insertBefore(plateDiv, document.getElementById('plate-26') || plate1Div.nextSibling);
+    const testContainer = document.getElementById('test-container');
+    testContainer.appendChild(plateDiv);
 }
+
 
 function createLinePlate(plateNumber) {
     const plateDiv = document.createElement('div');
@@ -681,14 +691,7 @@ function createLinePlate(plateNumber) {
     plateDiv.id = `plate-${plateNumber}`;
 
     let options = '';
-    if (plateNumber === 26) {
-        options = `
-            <option value="0">No lines visible</option>
-            <option value="1">Purple line only</option>
-            <option value="2">Red line only</option>
-            <option value="3">Both purple and red lines</option>
-        `;
-    } else if (plateNumber === 27) {
+    if (plateNumber === 26 || plateNumber === 27) {
         options = `
             <option value="0">No lines visible</option>
             <option value="1">Purple line only</option>
@@ -730,26 +733,23 @@ function createLinePlate(plateNumber) {
         `;
     }
 
+    // Inject HTML including the image from static path
     plateDiv.innerHTML = `
         <h3>Plate ${plateNumber}</h3>
         <div class="plate-image-placeholder">
-            <img data-src="plate${plateNumber}.png" 
+            <img data-src="${staticUrl}plate${plateNumber}.png" 
                  alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
         </div>
         <div class="input-container">
-            <p>What line(s) do you see?</p>
+            <label for="answer-${plateNumber}">What line(s) do you see?</label>
             <select id="answer-${plateNumber}">
                 ${options}
             </select>
         </div>
     `;
 
-    const navDiv = document.querySelector('.navigation');
-    if (navDiv) {
-        testContainer.insertBefore(plateDiv, navDiv);
-    } else {
-        testContainer.appendChild(plateDiv);
-    }
+    const testContainer = document.getElementById('test-container');
+    testContainer.appendChild(plateDiv);
 }
 
 
