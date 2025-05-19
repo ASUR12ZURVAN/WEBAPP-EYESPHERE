@@ -10,8 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+
+import os
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Global static folder
+]
+
+# Optional for production:
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
