@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from collections import defaultdict
 from rest_framework.views import APIView
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
+from django.http import HttpResponse
 import json 
 
 def index(request, user_id):
@@ -173,3 +175,38 @@ class ColorVisionTestView(APIView):
         )
 
         return Response({'detail': 'Color vision test submitted successfully.'}, status=status.HTTP_201_CREATED)
+    
+@api_view(['GET', 'POST'])
+def sign_in_user(request):
+    if request.method == 'POST':
+        data = request.data if request.content_type == 'application/json' else request.POST
+
+        phone = data.get('ph_Number')
+        name = data.get('name')
+        raw_password = data.get('password')
+
+        try:
+            user = User.objects.get(name=name, ph_Number=phone)
+        except User.DoesNotExist:
+            error = {'error': 'User not found'}
+            if request.content_type == 'application/json':
+                return Response(error, status=status.HTTP_404_NOT_FOUND)
+            return render(request, 'sign_in.html', {'errors': error})
+
+        if check_password(raw_password, user.password):
+            # Password is correct
+            request.session['user_id'] = user.id  # Set session
+
+            if request.content_type == 'application/json':
+                serializer = UserSerializer(user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            # Redirect to user profile page with user id as parameter
+            return redirect('user_profile', user_id=user.id)
+        else:
+            error = {'error': 'Incorrect password'}
+            if request.content_type == 'application/json':
+                return Response(error, status=status.HTTP_401_UNAUTHORIZED)
+            return render(request, 'sign_in.html', {'errors': error})
+
+    # For GET request, just render sign-in form
+    return render(request, 'sign_in.html')

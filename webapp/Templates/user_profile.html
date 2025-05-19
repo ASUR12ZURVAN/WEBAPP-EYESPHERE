@@ -535,6 +535,11 @@
                 <img src="{% static 'eyesphere.jpg' %}" alt="Eyesphere - Vision Beyond Limits" />
             </div>
             <h1>{{ user.name }}'s Profile</h1>
+            <div class="test-buttons">
+                <a href="{% url 'base_myopia' user.id %}" class="test-button">Myopia Test</a>
+                <a href="{% url 'base_glaucoma' %}" class="test-button">Glaucoma Test</a>
+                <a href="{% url 'Colourblindness_Test' %}" class="test-button">Color Blindness Test</a>
+            </div>
             <div class="user-info">
                 <div class="user-info-item">
                     <span class="user-info-label">Age</span>
