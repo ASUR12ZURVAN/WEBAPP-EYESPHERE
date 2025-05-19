@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +17,7 @@
         
         body {
             font-family: 'Inter', Arial, sans-serif;
-            background-image: url('eyei.jpg');
+            background-image: url("{% static 'eyei.jpg' %}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -409,7 +411,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="eyesphere.jpg" alt="Eyesphere Logo">
+            <img src="{% static 'eyesphere.jpg' %}" alt="Eyesphere Logo">
         </div>
         <div class="nav-links">
             <a href="#">Home</a>
@@ -424,8 +426,8 @@
         <h1>Vision Beyond Limits</h1>
         <p>Experience comprehensive eye care with cutting-edge technology and compassionate professionals dedicated to your visual health and well-being.</p>
         <div class="cta-buttons">
-            <a href="#" class="cta-button">Sign In</a>
-            <a href="#" class="cta-button secondary">Sign Up</a>
+            <a href="{% url 'sign_in_user' %}" class="cta-button">Sign In</a>
+            <a href="{% url 'create-user' %}" class="cta-button secondary">Sign Up</a>
         </div>
     </section>
 

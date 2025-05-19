@@ -64,6 +64,9 @@
         </p>
         
         <div id="submission-result"></div>
+        <form action="{% url 'user_profile' request.session.user_id %}" method="get">
+            <button type="submit">Go to Profile</button>
+        </form>
         
         <div class="buttons-container">
             <button onclick="submitScore()">Submit Result</button>

@@ -5,6 +5,7 @@ from . import views
 from .views import ColorVisionTestView
 
 urlpatterns = [
+    path('',views.home,name = 'home_page'),
     path('Myopia_Test/<int:user_id>/', views.index, name='base_myopia'),
     path('create-user/', views.create_user, name='create-user'),
     path('glaucoma_test/',views.next,name = 'base_glaucoma'),

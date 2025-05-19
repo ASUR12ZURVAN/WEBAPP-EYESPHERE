@@ -13,6 +13,8 @@ from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse
 import json 
 
+def home(request):
+    return render(request,"home.html")
 def index(request, user_id):
     request.session['user_id'] = user_id  # store in session
     user = get_object_or_404(User, id=user_id)
