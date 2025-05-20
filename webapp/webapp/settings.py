@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-a)thyd#n%z6l)c!%$!69y7)^+9xp(af%&gy)7snym(&ca&cg@g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1"]
+ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1","netrascreen.in"]
 
 
 # Application definition
