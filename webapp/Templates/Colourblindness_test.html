@@ -1183,14 +1183,18 @@ function createLinePlate(plateNumber) {
     diagnosis_text: diagnosisText,
 };
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/color-vision-tests/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // Django's CSRF token
-            },
-            body: JSON.stringify(data)
-        });
+       const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000'
+    : 'https://webapp-eyesphere.onrender.com';
+
+const response = await fetch(`${baseUrl}/api/color-vision-tests/`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(data)
+});
 
         if (response.ok) {
             document.getElementById('saveStatus').innerText = '✅ Results saved successfully!';

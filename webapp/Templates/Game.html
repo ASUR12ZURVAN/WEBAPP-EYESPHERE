@@ -727,14 +727,18 @@
 
 
                 // 🔽 Send score to backend via HTTP POST
-               fetch('http://127.0.0.1:8000/submit_score/', {
+const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000'
+    : 'https://webapp-eyesphere.onrender.com';
+
+fetch(`${baseUrl}/submit_score/`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-        user_id: userId,          // <-- new
-        test_type: 'glaucoma',    // specify which test
+        user_id: userId,
+        test_type: 'glaucoma',
         final_score: finalScore,
         accuracy: accuracy
     })
