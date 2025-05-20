@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Press Counter....</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #count {
+            font-size: 100px;
+            margin: 30px 0;
+        }
+        #timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .inactive {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .inactive:hover {
+            background-color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>.....Press Counter......</h1>
+        <div id="timer">Time: 60 seconds</div>
+        <div id="count">0</div>
+        <button id="startButton">Start</button>
+        <p id="instructions">Press any key after clicking start!</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const countDisplay = document.getElementById('count');
+            const timerDisplay = document.getElementById('timer');
+            const startButton = document.getElementById('startButton');
+            const instructions = document.getElementById('instructions');
+            
+            let count = 0;
+            let timeLeft = 60;
+            let timer;
+            let isActive = false;
+            
+            startButton.addEventListener('click', function() {
+                if (isActive) return;
+                
+                isActive = true;
+                count = 0;
+                timeLeft = 60;
+                countDisplay.textContent = count;
+                
+                startButton.classList.add('inactive');
+                startButton.textContent = 'Running...';
+                
+                // Start the timer
+                timer = setInterval(function() {
+                    timeLeft--;
+                    timerDisplay.textContent = `Time: ${timeLeft} seconds`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        isActive = false;
+                        startButton.classList.remove('inactive');
+                        startButton.textContent = 'Start Again';
+                        instructions.textContent = 'Time\'s up! Press Start to try again.';
+                    }
+                }, 1000);
+                
+                instructions.textContent = 'Press any key on your keyboard!';
+                
+                // Set focus to the document body to capture key presses
+                document.body.focus();
+            });
+            
+            // Listen for key presses
+            document.addEventListener('keydown', function(event) {
+                if (isActive) {
+                    count++;
+                    countDisplay.textContent = count;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
