@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-a)thyd#n%z6l)c!%$!69y7)^+9xp(af%&gy)7snym(&ca&cg@g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://webapp-eyesphere.onrender.com/"]
 
 
 # Application definition
