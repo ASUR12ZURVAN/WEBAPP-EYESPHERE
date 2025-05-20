@@ -729,7 +729,7 @@
                 // 🔽 Send score to backend via HTTP POST
 const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
     ? 'http://127.0.0.1:8000'
-    : 'https://netrascreen.in/';
+    : 'https://netrascreen.in';
 
 fetch(`${baseUrl}/submit_score/`, {
     method: 'POST',
