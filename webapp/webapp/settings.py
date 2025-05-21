@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,6 +39,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1","netrascreen.in"]
 
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+}
 
 # Application definition
 REST_FRAMEWORK = {
