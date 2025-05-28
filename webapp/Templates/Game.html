@@ -595,30 +595,41 @@
         }
 
         function randomPosition(level) {
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            let x, y;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    let x, y;
 
-            if (level === 1) {
-                // Near center (within ±200px)
-                x = centerX + (Math.random() * 400 - 200);
-                y = centerY + (Math.random() * 400 - 200);
-            } else if (level === 2) {
-                // Spread wider (±350px)
-                x = centerX + (Math.random() * 700 - 350);
-                y = centerY + (Math.random() * 700 - 350);
-            } else {
-   
-                  x = centerX + (Math.random() * 1000 - 500);
-                  y = centerY + (Math.random() * 1000 - 500);
-            }
-            
-            if (y < 150) y = 150;
-            x = Math.max(60, Math.min(x, window.innerWidth - 60));
-            y = Math.max(150, Math.min(y, window.innerHeight - 60));
-            
-            return { x, y };
-        }
+    let minRadius, maxRadius;
+
+    if (level === 1) {
+        // Level 1: 10–20° ⇒ 244–524 px
+        minRadius = 244;
+        maxRadius = 524;
+    } else if (level === 2) {
+        // Level 2: 30–60° ⇒ 831–2494 px
+        minRadius = 831;
+        maxRadius = 2494;
+    } else {
+        // Level 3: 70–85° ⇒ 3436–5748 px
+        minRadius = 3436;
+        maxRadius = 5748;
+    }
+
+    const radius = Math.random() * (maxRadius - minRadius) + minRadius;
+    const angle = Math.random() * 2 * Math.PI;
+
+    x = centerX + radius * Math.cos(angle);
+    y = centerY + radius * Math.sin(angle);
+
+    // Constrain within viewport bounds (avoid off-screen elements)
+    const padding = 60;
+    const topLimit = 150;
+    x = Math.max(padding, Math.min(x, window.innerWidth - padding));
+    y = Math.max(topLimit, Math.min(y, window.innerHeight - padding));
+
+    return { x, y };
+}
+
 
         function showNumber(num, color, level) {
             const div = document.createElement('div');
@@ -682,48 +693,74 @@
         }
 
         function checkAnswer() {
-            const userInput = document.getElementById('userInput').value;
-            const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-            let correct = 0;
+    const userInput = document.getElementById('userInput').value;
 
-            userNumbers.forEach(n => {
-                if (generatedNumbers.includes(n)) correct++;
-            });
+    // Convert string to array of digits: "56789" => [5, 6, 7, 8, 9]
+   const userNumbers = userInput
+        .replace(/\D/g, '')        // Remove non-digit characters
+        .split('')                 // Split into individual characters
+        .map(Number)               // Convert to numbers
+        .filter(n => !isNaN(n));   // Filter out NaNs (just in case)
 
-            correctAnswers += correct;
-            totalScore += correct;
+    let correct = 0;
+    const generatedCopy = [...generatedNumbers]; // make a copy to track matched numbers
 
-            const scoreElement = document.getElementById('score');
-            scoreElement.style.opacity = '1';
+    userNumbers.forEach(n => {
+        const index = generatedCopy.indexOf(n);
+        if (index !== -1) {
+            correct++;
+            generatedCopy.splice(index, 1); // prevent counting the same generated number multiple times
+        }
+    });
 
-            const accuracy = Math.round((correct / generatedNumbers.length) * 100);
-            let emoji = '⚠️';
-            if (accuracy >= 80) emoji = '🎯';
-            else if (accuracy >= 50) emoji = '👍';
 
-            scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
-            scoreElement.classList.add('score-highlight');
+    // Score per level
+    let scoreMultiplier = 1;
+    if (currentLevel === 1) scoreMultiplier = 3;
+    else if (currentLevel === 2) scoreMultiplier = 2;
 
-            if (currentLevel < 3) {
-                currentLevel++;
-                setTimeout(() => {
-                    document.getElementById('userInput').value = '';
-                    startRound();
-                }, 2000);
-            } else {
-                const finalScore = Math.round((totalScore / (numberCount * 3)) * 100);
-                let message = `🏆 You completed all levels with a total score of ${totalScore} out of ${numberCount * 3}!`;
+    correctAnswers += correct;
+    totalScore += correct * scoreMultiplier;
 
-                if (finalScore >= 80) {
-                    message += ' Good peripheral vision';
-                } else if (finalScore >= 60) {
-                    message += ' Average peripheral vision';
-                } else {
-                    message += ' Consult a doctor for best outcomes';
-                }
+    const scoreElement = document.getElementById('score');
+    scoreElement.style.opacity = '1';
 
-                scoreElement.textContent = message;
-                const userId = document.getElementById('user-id').value;
+    const accuracy = Math.round((correct / generatedNumbers.length) * 100);
+    let emoji = '⚠️';
+    if (accuracy >= 80) emoji = '🎯';
+    else if (accuracy >= 50) emoji = '👍';
+
+    scoreElement.textContent = `${emoji} You got ${correct} out of ${generatedNumbers.length} correct! (${accuracy}% accuracy)`;
+    scoreElement.classList.add('score-highlight');
+
+    if (currentLevel < 3) {
+        currentLevel++;
+        setTimeout(() => {
+            document.getElementById('userInput').value = '';
+            startRound();
+        }, 2000);
+    } else {
+        const maxScore = (numberCount * 3) + (numberCount * 2) + (numberCount * 1); // weighted max score
+        const finalScore = Math.round((totalScore / maxScore) * 100);
+
+        let message = `🏁 You completed all levels with a weighted score of ${totalScore} out of ${maxScore} (${finalScore}%) — `;
+
+        if (finalScore >= 80) {
+            message += '✅ Peripheral Vision: **None (Normal)**';
+        } else if (finalScore >= 60) {
+            message += '🙂 Peripheral Vision: **Average**';
+        } else if (finalScore >= 40) {
+            message += '⚠️ Peripheral Vision: **Borderline**';
+        } else {
+            message += '🚨 Peripheral Vision: **Severe** — Consult a specialist';
+        }
+
+        scoreElement.textContent = message;
+        const userId = document.getElementById('user-id').value.trim();
+        console.log("User ID:", userId);
+    
+
+            
 
 
                 // 🔽 Send score to backend via HTTP POST
