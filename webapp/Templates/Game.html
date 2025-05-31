@@ -768,7 +768,7 @@
             <div class="buttons-container">
                 <button id="checkBtn"><i class="fas fa-check"></i> Check</button>
                 <button id="restartBtn"><i class="fas fa-sync-alt"></i> Restart</button>
-                <button id="viewResultsBtn"><i class="fas fa-history"></i> Go to Profile</button>
+                <button id="viewResultsBtn"><i class="fas fa-history"></i> Go to Next Test</button>
             </div>
             <div id="score"></div>
             <div id="post-submit-actions" style="display: none;"></div>
@@ -778,6 +778,8 @@
     </div>
 
     <script>
+        let severity = "NA";
+        const userId = document.getElementById('user-id').value;
         const colors = ['#ff6b6b', '#4cc9f0', '#4361ee', '#3bc47d', '#f72585'];
         const displayTime = 1500; // ms per number
         const numberCount = 5;
@@ -1009,13 +1011,32 @@
                 displayNumbers();
             }, 1000);
         }
+    document.addEventListener('DOMContentLoaded', () => {
+    const viewBtn = document.getElementById('viewResultsBtn');
+    const userId = document.getElementById('user-id').value.trim();
+
+    if (viewBtn && userId) {
+        viewBtn.addEventListener('click', () => {
+            submitResultsToBackend()
+                .then(() => {
+                    window.location.href = `/Colourblindness_Test/`;
+                })
+                .catch(error => {
+                    console.error('Failed to save results:', error);
+                    alert('Failed to save results. Please try again.');
+                });
+        });
+    } else {
+        console.error('Either #viewResultsBtn or #user-id not found.');
+    }
+});
+
         
         function showFinalResults() {
             const averageScore = Math.round(totalScore / 3);
             const totalCorrect = correctAnswers;
             const totalPossible = 15;
             
-            let severity = "Normal";
             let recommendation = "Your peripheral vision appears to be functioning normally.";
             
             if (averageScore < 30) {
@@ -1116,8 +1137,17 @@ Tip: Maintain consistent viewing distance for accurate results!`);
         document.getElementById('restartBtn').addEventListener('click', restartGame);
         document.getElementById('helpBtn').addEventListener('click', showHelp);
         document.getElementById('viewResultsBtn').addEventListener('click', () => {
-            alert('Results saved! In a full application, this would redirect to your profile page.');
+        submitResultsToBackend()
+            .then(() => {
+                // Replace `userId` with your actual user ID variable
+                window.location.href = `/user_profile/${userId}/`;
+            })
+            .catch(error => {
+                console.error('Failed to save results:', error);
+                alert('Failed to save results. Please try again.');
+            });
         });
+
         
         document.getElementById('userInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -1136,16 +1166,12 @@ Tip: Maintain consistent viewing distance for accurate results!`);
         
         function submitResultsToBackend() {
             const resultData = {
-                total_score: totalScore,
-                correct_answers: correctAnswers,
-                total_possible: 15,
-                average_score: Math.round(totalScore / 3),
-                severity: severity,
-                viewing_distance: viewingDistanceCm,
-                level_scores: []
+                final_score: Math.round(totalScore / 3),
+                test_type: "Glaucoma",
+                result_value:Math.round(totalScore / 3)
             };
 
-            fetch('/submit-peripheral-test-result/', {
+            return fetch('/submit_score/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

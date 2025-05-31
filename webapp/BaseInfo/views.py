@@ -10,6 +10,7 @@ from collections import defaultdict
 from rest_framework.views import APIView
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 import json 
 
@@ -19,6 +20,7 @@ def index(request, user_id):
     request.session['user_id'] = user_id  # store in session
     user = get_object_or_404(User, id=user_id)
     return render(request, 'hd.html', {'user': user})
+
 def next(request):
     return render(request,'Game.html' )
 
