@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'BaseInfo',
     'Myopia_Test',
+    'BlinkRate'
 ]
 
 MIDDLEWARE = [
@@ -98,7 +99,7 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
+"""
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
@@ -109,7 +110,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-"""
+
 
 
 # Password validation
