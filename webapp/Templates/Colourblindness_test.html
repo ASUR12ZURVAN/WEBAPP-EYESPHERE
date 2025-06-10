@@ -158,6 +158,8 @@
   #test-container {
     margin-top: 1.5rem;
     position: relative;
+    /* Increased padding bottom to accommodate navigation and progress */
+    padding-bottom: 180px;
   }
 
   .test-plate {
@@ -168,6 +170,7 @@
     background: #f9fbfd;
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
+    /* Removed fixed min-height to allow natural sizing */
   }
 
   .test-plate.active {
@@ -236,11 +239,25 @@
     box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.15);
   }
 
+  /* Fixed navigation positioning - now properly contained within test-container */
   .navigation {
-    margin-top: 1.5rem;
+    position: absolute;
+    bottom: 100px; /* Position above progress section */
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
     gap: 1rem;
+    padding: 0 2rem; /* Add padding to prevent edge overflow */
+  }
+
+  /* Fixed progress positioning - now properly contained within test-container */
+  .progress-section {
+    position: absolute;
+    bottom: 20px; /* Position at bottom of test-container */
+    left: 0;
+    right: 0;
+    padding: 0 2rem; /* Add padding to prevent edge overflow */
   }
 
   #submit-btn {
@@ -412,7 +429,7 @@
     background: var(--neutral-200);
     border-radius: var(--radius-xl);
     height: 10px;
-    margin: 0.5rem 1rem 1rem;
+    margin: 0.5rem 0 1rem;
     overflow: hidden;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   }
@@ -442,8 +459,19 @@
       font-size: 1.8rem;
     }
     
+    #test-container {
+      /* Reduce padding bottom for mobile */
+      padding-bottom: 160px;
+    }
+    
     .navigation {
       flex-wrap: wrap;
+      bottom: 80px;
+      gap: 0.5rem;
+    }
+
+    .progress-section {
+      bottom: 10px;
     }
   }
 
@@ -469,10 +497,28 @@
       margin: 0.5rem 0;
     }
     
+    #test-container {
+      /* Reset padding for mobile - let navigation flow naturally */
+      padding-bottom: 20px;
+    }
+    
     .navigation {
-      margin-top: 1.5rem;
+      /* Reset positioning on mobile - let it flow naturally */
+      position: static;
+      transform: none;
+      bottom: auto;
+      margin-top: 2rem;
       flex-direction: column;
       gap: 0.5rem;
+      padding: 0;
+    }
+
+    .progress-section {
+      /* Reset positioning on mobile - let it flow naturally */
+      position: static;
+      bottom: auto;
+      margin-top: 1.5rem;
+      padding: 0;
     }
     
     .test-plate {
@@ -502,7 +548,7 @@
   <div class="instructions" id="instructions">
     <p>Welcome! This test consists of 38 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
   </div>
-  <div style="text-align: center;">
+  <div id="start-section" style="text-align: center;">
     <button id="start-test">Start Test</button>
   </div>
 
@@ -523,7 +569,7 @@
       <button id="next-btn">Next</button>
       <button id="submit-btn" class="hidden">Submit</button>
     </div>
-    <div>
+    <div class="progress-section">
       <div id="progress-text" aria-live="polite">Plate 1 of 38</div>
       <div class="progress-container">
         <div id="progress-fill"></div>
@@ -571,9 +617,6 @@
       <button type="submit">Go to Profile</button>
     </form>
 
-
-
-
     <div style="text-align: center; margin-top: 2rem;">
       <button id="restart-btn">Restart Test</button>
     </div>
@@ -585,6 +628,7 @@
 <script>
     const staticUrl = "{% static '' %}";
 </script>
+
 
 
 
@@ -1129,9 +1173,8 @@ function createLinePlate(plateNumber) {
 
         resultsDiv.style.display = 'none';
         testContainer.classList.remove('hidden');
-        instructionsDiv.classList.remove('hidden');
-        startTestBtn.classList.remove('hidden');
-
+        instructionsDiv.classList.add('hidden');
+        document.getElementById('start-section').classList.add('hidden');
         updateProgress();
 
         diagnosisDiv.innerHTML = '';
