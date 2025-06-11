@@ -616,6 +616,10 @@
     <form action="{% url 'user_profile' request.session.user_id %}" method="get">
       <button type="submit">Go to Profile</button>
     </form>
+    <a href="{% url 'Blink_Page' %}" 
+                <button>Move to next Test</button>
+            </a>
+    
 
     <div style="text-align: center; margin-top: 2rem;">
       <button id="restart-btn">Restart Test</button>
@@ -628,7 +632,6 @@
 <script>
     const staticUrl = "{% static '' %}";
 </script>
-
 
 
 

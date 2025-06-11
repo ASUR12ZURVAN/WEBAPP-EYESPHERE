@@ -6,7 +6,7 @@ from .views import ColorVisionTestView
 
 urlpatterns = [
     path('',views.home,name = 'home_page'),
-    path('Myopia_Test/<int:user_id>/', views.index, name='base_myopia'),
+    path('Myopia_Test/', views.index, name='base_myopia'),
     path('create-user/', views.create_user, name='create-user'),
     path('glaucoma_test/',views.next,name = 'base_glaucoma'),
     path('submit_score/', views.submit_score, name='submit_score'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/color-vision-tests/', ColorVisionTestView.as_view(), name='color-vision-test'),
     path('Colourblindness_Test/',views.Colour_Blindness_Test,name = 'Colourblindness_Test'),
     path('sign-in/', views.sign_in_user, name='sign_in_user'),
+    path('main/<int:user_id>/',views.mainx,name='mainx'),
 ]

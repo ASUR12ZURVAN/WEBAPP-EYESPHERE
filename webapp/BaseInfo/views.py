@@ -18,13 +18,17 @@ import json
 
 def home(request):
     return render(request,"home.html")
-def index(request, user_id):
+def index(request ):
+    return render(request, 'hd.html', )
+
+def mainx(request,user_id):
     request.session['user_id'] = user_id  # store in session
     user = get_object_or_404(User, id=user_id)
-    return render(request, 'hd.html', {'user': user})
+    return render(request, 'f.html', {'user': user})
 
 def next(request):
     return render(request,'Game.html' )
+
 
 @api_view(['GET', 'POST'])
 def create_user(request):
@@ -50,7 +54,7 @@ def create_user(request):
 
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return redirect('base_myopia', user_id=user_id)
+            return redirect('mainx',user_id=user_id)
 
         # Invalid data
         if request.content_type == 'application/json':

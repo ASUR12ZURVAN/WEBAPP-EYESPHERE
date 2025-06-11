@@ -390,87 +390,187 @@
             color: rgba(160, 174, 192, 0.7);
         }
         
-        .buttons-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        
-        button {
-            padding: 12px 24px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-            opacity: 0;
-            transition: var(--transition);
-        }
-        
-        button:hover::before {
-            opacity: 1;
-        }
-        
-        button:active {
-            transform: translateY(1px);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        #checkBtn {
-            background-color: var(--primary-color);
-            color: white;
-            flex: 1;
-        }
-        
-        #checkBtn:hover {
-            background-color: #3051d3;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        #restartBtn {
-            background-color: var(--secondary-color);
-            color: white;
-            flex: 1;
-        }
-        
-        #restartBtn:hover {
-            background-color: #2eae6d;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        #viewResultsBtn {
-            background-color: var(--accent-color);
-            color: white;
-            flex: 1;
-            display: none;
-        }
-        
-        #viewResultsBtn:hover {
-            background-color: #e55555;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
+            /* Enhanced button styles */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+/* Button base styles with enhanced design */
+button {
+    padding: 14px 28px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 150px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Button hover shimmer effect */
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+button:hover::before {
+    left: 100%;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Check button - Primary blue */
+#checkBtn {
+    background: linear-gradient(135deg, var(--primary-color), #3051d3);
+    color: white;
+}
+
+#checkBtn:hover {
+    background: linear-gradient(135deg, #3051d3, #2541b8);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+}
+
+/* Restart button - Secondary green */
+#restartBtn {
+    background: linear-gradient(135deg, var(--secondary-color), #2eae6d);
+    color: white;
+}
+
+#restartBtn:hover {
+    background: linear-gradient(135deg, #2eae6d, #259d5d);
+    box-shadow: 0 8px 25px rgba(59, 196, 125, 0.4);
+}
+
+/* Save button - Success green */
+#saveBtn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+#saveBtn:hover {
+    background: linear-gradient(135deg, #218838, #1ba085);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+#saveBtn:disabled {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Next Test button - Info blue */
+#nextTestBtn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+}
+
+#nextTestBtn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+}
+
+/* Profile button - Purple */
+#profileBtn {
+    background: linear-gradient(135deg, #6f42c1, #5a2d91);
+    color: white;
+}
+
+#profileBtn:hover {
+    background: linear-gradient(135deg, #5a2d91, #4c1d6b);
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+}
+
+/* Button loading state */
+.btn-loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from { transform: rotate(0turn); }
+    to { transform: rotate(1turn); }
+}
+
+/* Success feedback animation */
+.btn-success-feedback {
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
+    animation: success-pulse 0.6s ease-in-out;
+}
+
+@keyframes success-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Button icons */
+button i {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+button:hover i {
+    transform: scale(1.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .buttons-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 15px;
+    }
+    
+    button {
+        width: 100%;
+        max-width: 280px;
+        padding: 16px 24px;
+        font-size: 15px;
+        min-width: 0;
+    }
+}
         
         #score {
             margin-top: 20px;
@@ -768,7 +868,11 @@
             <div class="buttons-container">
                 <button id="checkBtn"><i class="fas fa-check"></i> Check</button>
                 <button id="restartBtn"><i class="fas fa-sync-alt"></i> Restart</button>
-                <button id="viewResultsBtn"><i class="fas fa-history"></i> Go to Next Test</button>
+                <button id="saveBtn" style="display: none;"><i class="fas fa-save"></i> Save Results</button>
+                <button id="nextTestBtn" style="display: none;"><i class="fas fa-arrow-right"></i> Next Test</button>
+                <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
+                    <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i> Go to Profile</button>
+                </form>
             </div>
             <div id="score"></div>
             <div id="post-submit-actions" style="display: none;"></div>
@@ -811,6 +915,16 @@
             document.getElementById('gameUI').style.display = 'block';
             document.getElementById('helpBtn').style.display = 'block';
             isDisplayingNumbers = false;
+        }
+        
+        // Hide center dot and focus elements when test is complete
+        function hideCenterElements() {
+            document.getElementById('centerArea').style.display = 'none';
+        }
+        
+        // Show center dot and focus elements when test restarts
+        function showCenterElements() {
+            document.getElementById('centerArea').style.display = 'block';
         }
         
         function calculatePixelsPerCm() {
@@ -1011,26 +1125,6 @@
                 displayNumbers();
             }, 1000);
         }
-    document.addEventListener('DOMContentLoaded', () => {
-    const viewBtn = document.getElementById('viewResultsBtn');
-    const userId = document.getElementById('user-id').value.trim();
-
-    if (viewBtn && userId) {
-        viewBtn.addEventListener('click', () => {
-            submitResultsToBackend()
-                .then(() => {
-                    window.location.href = `/Colourblindness_Test/`;
-                })
-                .catch(error => {
-                    console.error('Failed to save results:', error);
-                    alert('Failed to save results. Please try again.');
-                });
-        });
-    } else {
-        console.error('Either #viewResultsBtn or #user-id not found.');
-    }
-});
-
         
         function showFinalResults() {
             const averageScore = Math.round(totalScore / 3);
@@ -1049,6 +1143,9 @@
                 severity = "Mild Defect";
                 recommendation = "Minor peripheral vision limitations. Monitor and consider professional evaluation.";
             }
+            
+            // Hide center dot and focus elements when showing final results
+            hideCenterElements();
             
             const scoreElement = document.getElementById('score');
             scoreElement.innerHTML = `
@@ -1069,7 +1166,10 @@
                 </div>
             `;
             
-            document.getElementById('viewResultsBtn').style.display = 'block';
+            // Show the new buttons
+            document.getElementById('saveBtn').style.display = 'inline-block';
+            document.getElementById('nextTestBtn').style.display = 'inline-block';
+            document.getElementById('profileBtn').style.display = 'inline-block';
             document.getElementById('checkBtn').style.display = 'none';
         }
         
@@ -1079,13 +1179,18 @@
             correctAnswers = 0;
             generatedNumbers = [];
             
+            // Show center elements when restarting
+            showCenterElements();
+            
             document.getElementById('levelText').textContent = 'Level 1';
             document.getElementById('userInput').value = '';
             document.getElementById('inputSection').style.display = 'none';
             document.getElementById('score').classList.remove('score-highlight');
             document.getElementById('score').innerHTML = '';
             document.getElementById('checkBtn').style.display = 'block';
-            document.getElementById('viewResultsBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('nextTestBtn').style.display = 'none';
+            document.getElementById('profileBtn').style.display = 'none';
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('progressStat').textContent = '0%';
             
@@ -1131,39 +1236,6 @@ Visual Field Ranges:
 Tip: Maintain consistent viewing distance for accurate results!`);
         }
         
-        // Event listeners
-        document.getElementById('startGameBtn').addEventListener('click', startGame);
-        document.getElementById('checkBtn').addEventListener('click', checkAnswer);
-        document.getElementById('restartBtn').addEventListener('click', restartGame);
-        document.getElementById('helpBtn').addEventListener('click', showHelp);
-        document.getElementById('viewResultsBtn').addEventListener('click', () => {
-        submitResultsToBackend()
-            .then(() => {
-                // Replace `userId` with your actual user ID variable
-                window.location.href = `/user_profile/${userId}/`;
-            })
-            .catch(error => {
-                console.error('Failed to save results:', error);
-                alert('Failed to save results. Please try again.');
-            });
-        });
-
-        
-        document.getElementById('userInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
-        
-        window.addEventListener('load', function() {
-            createStars();
-            initializeDisplayCalculations();
-        });
-        
-        window.addEventListener('resize', function() {
-            initializeDisplayCalculations();
-        });
-        
         function submitResultsToBackend() {
             const resultData = {
                 final_score: Math.round(totalScore / 3),
@@ -1186,6 +1258,45 @@ Tip: Maintain consistent viewing distance for accurate results!`);
             })
             .catch(error => console.error('Error:', error));
         }
+        
+        // Event listeners
+        document.getElementById('startGameBtn').addEventListener('click', startGame);
+        document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+        document.getElementById('restartBtn').addEventListener('click', restartGame);
+        document.getElementById('helpBtn').addEventListener('click', showHelp);
+        
+        // Save button event listener
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            submitResultsToBackend()
+                .then(() => {
+                    alert('Results saved successfully!');
+                    document.getElementById('saveBtn').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Failed to save results:', error);
+                    alert('Failed to save results. Please try again.');
+                });
+        });
+
+        // Next test button event listener
+        document.getElementById('nextTestBtn').addEventListener('click', () => {
+            window.location.href = '/Colourblindness_Test/';
+        });
+        
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        window.addEventListener('load', function() {
+            createStars();
+            initializeDisplayCalculations();
+        });
+        
+        window.addEventListener('resize', function() {
+            initializeDisplayCalculations();
+        });
     </script>
 </body>
 </html>
