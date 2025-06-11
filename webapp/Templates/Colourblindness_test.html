@@ -616,10 +616,12 @@
     <form action="{% url 'user_profile' request.session.user_id %}" method="get">
       <button type="submit">Go to Profile</button>
     </form>
-    <a href="{% url 'Blink_Page' %}" 
-                <button>Move to next Test</button>
-            </a>
-    
+    <form action="{% url 'Blink_Page' %}" method="get" >
+                <button type="submit">Move to next Test</button>
+            </form>
+      <form action="{% url 'mainx' request.session.user_id %}" method="get">
+            <button type="submit">HOME</button>
+        </form>
 
     <div style="text-align: center; margin-top: 2rem;">
       <button id="restart-btn">Restart Test</button>

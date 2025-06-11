@@ -375,22 +375,25 @@
     </div>
     
     <div class="result" id="result">
-      <h3>✅ Test Complete!</h3>
-      <div class="result-stats">
-        <div class="result-card">
-          <div class="label">Total Blinks</div>
-          <div class="value" id="final-blinks">0</div>
-        </div>
-        <div class="result-card">
-          <div class="label">Blinks per Minute</div>
-          <div class="value" id="blink-rate">0</div>
-        </div>
-      </div>
-      <div class="result-buttons">
-        <button class="submit" onclick="submitResult()">Submit Result</button>
-        <button class="reset" onclick="resetTest()">Test Again</button>
-      </div>
+  <h3>✅ Test Complete!</h3>
+  <div class="result-stats">
+    <div class="result-card">
+      <div class="label">Total Blinks</div>
+      <div class="value" id="final-blinks">0</div>
     </div>
+    <div class="result-card">
+      <div class="label">Blinks per Minute</div>
+      <div class="value" id="blink-rate">0</div>
+    </div>
+  </div>
+  <div class="result-buttons">
+    <button class="submit" onclick="submitResult()">Submit Result</button>
+    <button class="reset" onclick="resetTest()">Test Again</button>
+    <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline;">
+      <button type="submit">HOME</button>
+    </form>
+  </div>
+</div>
     
     <div class="button-group">
       <button id="start-btn" onclick="startTest()">

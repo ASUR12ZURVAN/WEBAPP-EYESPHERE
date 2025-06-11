@@ -508,6 +508,10 @@ button:active {
     background: linear-gradient(135deg, #5a2d91, #4c1d6b);
     box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
 }
+#HOMEBtn {
+    background: linear-gradient(135deg, #6f42c1, #5a2d91);
+    color: white;
+}
 
 /* Button loading state */
 .btn-loading {
@@ -873,6 +877,9 @@ button:hover i {
                 <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
                     <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i> Go to Profile</button>
                 </form>
+                <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline;">
+                  <button type="submit" id="HOMEBtn" style="display: none;"><i class="fas fa-user"></i> HOME</button>
+                </form>
             </div>
             <div id="score"></div>
             <div id="post-submit-actions" style="display: none;"></div>
@@ -1170,6 +1177,7 @@ button:hover i {
             document.getElementById('saveBtn').style.display = 'inline-block';
             document.getElementById('nextTestBtn').style.display = 'inline-block';
             document.getElementById('profileBtn').style.display = 'inline-block';
+            document.getElementById('HOMEBtn').style.display = 'inline-block';
             document.getElementById('checkBtn').style.display = 'none';
         }
         
@@ -1191,6 +1199,7 @@ button:hover i {
             document.getElementById('saveBtn').style.display = 'none';
             document.getElementById('nextTestBtn').style.display = 'none';
             document.getElementById('profileBtn').style.display = 'none';
+            document.getElementById('HOMEBtn').style.display = 'none';
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('progressStat').textContent = '0%';
             

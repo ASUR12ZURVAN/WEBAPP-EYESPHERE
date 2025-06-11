@@ -52,7 +52,7 @@ def create_user(request):
 
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return redirect('mainx',user_id=user_id)
+            return redirect('sign_in_user')
 
         # Invalid data
         if request.content_type == 'application/json':
@@ -209,7 +209,7 @@ def sign_in_user(request):
                 serializer = UserSerializer(user)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             # Redirect to user profile page with user id as parameter
-            return redirect('user_profile', user_id=user.id)
+            return redirect('mainx',user_id=user.id)
         else:
             error = {'error': 'Incorrect password'}
             if request.content_type == 'application/json':
