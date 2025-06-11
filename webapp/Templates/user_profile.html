@@ -376,14 +376,14 @@
                         {% endfor %}
                     {% endif %}
 
-                    {%if blink_rates %}
-                        {%for test in blink_rates %}
+                    {% if blink_rates %}
+                        {% for test in blink_rates %}
                             <div class="test-result">
                                 <span class="test-name">Blink Rate</span>
-                                <span class="test-percentage">{{ test.blink_rate }} blinks/min</span>
+                                <span class="test-percentage">{{ test.rate }} blinks/30sec</span>
                             </div>
                         {% endfor %}
-                    {%endif%}
+                    {% endif %}
 
                     {% if not test_results and not color_vision_tests %}
                         <div class="empty-state">
