@@ -12,6 +12,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+
+from BlinkRate.models import BlinkRate
 import json 
 
 def home(request):
@@ -75,10 +77,13 @@ def user_profile(request, user_id):
     # New color vision test results
     color_vision_tests = user.color_vision_tests.all().order_by('-date_taken')
 
+    blink_rates = BlinkRate.objects.filter(user=user).order_by('-timestamp')
+
     return render(request, 'user_profile.html', {
         'user': user,
         'test_results': test_results,
-        'color_vision_tests': color_vision_tests
+        'color_vision_tests': color_vision_tests,
+        'blink_rates': blink_rates,
     })
 
 @csrf_exempt

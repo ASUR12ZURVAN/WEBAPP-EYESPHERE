@@ -612,25 +612,21 @@
 
     window.submitResult = function() {
       const totalBlinks = parseInt(finalBlinksElement.textContent);
-      const blinksPerMinute = parseInt(blinkRateElement.textContent);
+      const rate = parseInt(blinkRateElement.textContent);
       
       // You can customize this to send data to your server
       const resultData = {
-        totalBlinks: totalBlinks,
-        blinksPerMinute: blinksPerMinute,
-        testDuration: 30,
-        timestamp: new Date().toISOString()
+        rate: totalBlinks,
       };
       
       // For now, just show an alert with the data
-      alert(`Result Submitted!\n\nTotal Blinks: ${totalBlinks}\nBlinks per Minute: ${blinksPerMinute}\nTest Duration: 30 seconds`);
+      //alert(`Result Submitted!\n\nTotal Blinks: ${totalBlinks}\nBlinks per Minute: ${blinksPerMinute}\nTest Duration: 30 seconds`);
       
-      // You can add actual submission logic here:
-      // fetch('/api/submit-blink-test', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(resultData)
-      // });
+      fetch('http://127.0.0.1:8000/blink/save_blink_rate/', {
+         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(resultData)
+      });
       
       console.log('Blink test result:', resultData);
     };

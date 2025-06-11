@@ -376,6 +376,15 @@
                         {% endfor %}
                     {% endif %}
 
+                    {%if blink_rates %}
+                        {%for test in blink_rates %}
+                            <div class="test-result">
+                                <span class="test-name">Blink Rate</span>
+                                <span class="test-percentage">{{ test.blink_rate }} blinks/min</span>
+                            </div>
+                        {% endfor %}
+                    {%endif%}
+
                     {% if not test_results and not color_vision_tests %}
                         <div class="empty-state">
                             <div class="empty-state-icon">📊</div>
