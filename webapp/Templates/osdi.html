@@ -219,6 +219,38 @@ body::before {
             border-radius: 10px;
             color: white;
         }
+         body {
+    padding-bottom: 80px; /* Add space at bottom to avoid Windows navbar */
+}
+
+.container {
+    padding-bottom: 100px; /* Extra padding for container */
+}
+
+.buttons-container {
+    margin-top: 1rem !important;
+    margin-bottom: 60px !important; /* Space above Windows navbar */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.buttons-container button,
+.buttons-container form {
+    margin: 8px 5px !important;
+}
+
+.buttons-container form {
+    margin: 0 !important;
+}
+
+/* Ensure result section has proper spacing */
+.result-section {
+    margin-bottom: 2rem;
+}
 
         .normal { background: linear-gradient(145deg, #27ae60, #2ecc71); }
         .mild { background: linear-gradient(145deg, #f39c12, #e67e22); }
