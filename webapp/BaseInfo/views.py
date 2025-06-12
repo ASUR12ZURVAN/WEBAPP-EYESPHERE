@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest
+from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest,DryEyeResult
 from .Serializers import UserSerializer,ResultSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -82,15 +82,18 @@ def user_profile(request, user_id):
     # New color vision test results
     color_vision_tests = user.color_vision_tests.all().order_by('-date_taken')
 
+    dryeye_results = user.dryeye_results.all().order_by('-date_taken')
+
     return render(request, 'user_profile.html', {
         'user': user,
         'test_results': test_results,
-        'color_vision_tests': color_vision_tests
+        'color_vision_tests': color_vision_tests,
+        'dryeye_results': dryeye_results
     })
+
 
 @csrf_exempt
 def submit_score(request):
-    
     if request.method != 'POST':
         return JsonResponse({'status': 'invalid request'}, status=405)
     
@@ -98,28 +101,37 @@ def submit_score(request):
         data = json.loads(request.body)
         test_type = data.get('test_type')
         final_score = data.get('final_score')
+        result_value = data.get('result_value')  # This contains "score - category"
         
-        # Get user_id from session
         user_id = request.session.get('user_id')
         if not user_id:
             return JsonResponse({'status': 'error', 'message': 'User ID not found in session'}, status=400)
         
-        # Fetch the user
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=404)
         
-        # Save test result - CREATE ONLY ONE RECORD
-        TestResult.objects.create(
-            user=user, 
-            test_type=test_type, 
-            final_score=final_score,
-            result_value=final_score  # Use the same value for both fields
-        )
+        if test_type == 'dryeye':
+            # Extract category from result_value (format: "score - category")
+            category = result_value.split(' - ')[1] if ' - ' in result_value else 'Normal'
+            
+            DryEyeResult.objects.create(
+                user=user,
+                osdi_score=final_score,
+                severity=category
+            )
+        else:
+            # Handle other test types with existing TestResult model
+            TestResult.objects.create(
+                user=user,
+                test_type=test_type,
+                final_score=final_score,
+                result_value=final_score
+            )
         
         return JsonResponse({'status': 'success'})
-    
+        
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
     except Exception as e:
@@ -168,7 +180,7 @@ def Colour_Blindness_Test(request):
 
 class ColorVisionTestView(APIView):
     def post(self, request):
-        data = request.data
+        data = request.data 
 
         # ✅ Get user_id from session first
         user_id = request.session.get('user_id')
