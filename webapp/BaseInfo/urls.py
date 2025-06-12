@@ -16,4 +16,5 @@ urlpatterns = [
     path('Colourblindness_Test/',views.Colour_Blindness_Test,name = 'Colourblindness_Test'),
     path('sign-in/', views.sign_in_user, name='sign_in_user'),
     path('main/<int:user_id>/',views.mainx,name='mainx'),
+    path('dryeye_test',views.osdi,name='osdi'),
 ]

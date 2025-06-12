@@ -19,6 +19,9 @@ def home(request):
 def index(request ):
     return render(request, 'hd.html', )
 
+def osdi(request):
+    return render(request,"osdi.html")
+
 def mainx(request,user_id):
     request.session['user_id'] = user_id  # store in session
     user = get_object_or_404(User, id=user_id)
@@ -87,33 +90,36 @@ def user_profile(request, user_id):
 
 @csrf_exempt
 def submit_score(request):
+    
     if request.method != 'POST':
         return JsonResponse({'status': 'invalid request'}, status=405)
-
+    
     try:
         data = json.loads(request.body)
         test_type = data.get('test_type')
         final_score = data.get('final_score')
-        result_value = final_score
-
+        
         # Get user_id from session
         user_id = request.session.get('user_id')
         if not user_id:
             return JsonResponse({'status': 'error', 'message': 'User ID not found in session'}, status=400)
-
+        
         # Fetch the user
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=404)
-        if test_type == 'Myopia':
-            TestResult.objects.create(user=user,test_type=test_type,final_score=result_value)
-
-        # Save test result
-        TestResult.objects.create(user=user, test_type=test_type, final_score=final_score,result_value =result_value)
-
+        
+        # Save test result - CREATE ONLY ONE RECORD
+        TestResult.objects.create(
+            user=user, 
+            test_type=test_type, 
+            final_score=final_score,
+            result_value=final_score  # Use the same value for both fields
+        )
+        
         return JsonResponse({'status': 'success'})
-
+    
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
     except Exception as e:
