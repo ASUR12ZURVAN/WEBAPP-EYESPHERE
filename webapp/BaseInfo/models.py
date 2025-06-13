@@ -27,6 +27,23 @@ class TestResult(models.Model):
         unit = "diopters" if self.test_type == "myopia" else "mmHg" if self.test_type == "glaucoma" else ""
         date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
         return f"{self.user.name} - {self.test_type.title()} - {self.result_value} {unit} ({date_str})"
+    
+class DryEyeResult(models.Model):
+    SEVERITY_CHOICES = (
+        ('Normal', 'Normal'),
+        ('Mild', 'Mild Dry Eye Disease'),
+        ('Moderate', 'Moderate Dry Eye Disease'),
+        ('Severe', 'Severe Dry Eye Disease'),
+    )
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dryeye_results')
+    osdi_score = models.DecimalField(max_digits=5, decimal_places=2)
+    severity = models.CharField(max_length=20, choices=SEVERITY_CHOICES)
+    date_taken = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
+        return f"{self.user.name} - Dry Eye - {self.osdi_score} ({self.severity}) - ({date_str})"
 
 class ColorVisionTest(models.Model):
     SEVERITY_CHOICES = (

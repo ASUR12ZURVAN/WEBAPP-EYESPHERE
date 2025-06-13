@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest
+from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest,DryEyeResult
 from .Serializers import UserSerializer,ResultSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -20,6 +20,9 @@ def home(request):
     return render(request,"home.html")
 def index(request ):
     return render(request, 'hd.html', )
+
+def osdi(request):
+    return render(request,"osdi.html")
 
 def mainx(request,user_id):
     request.session['user_id'] = user_id  # store in session
@@ -54,7 +57,7 @@ def create_user(request):
 
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return redirect('mainx',user_id=user_id)
+            return redirect('sign_in_user')
 
         # Invalid data
         if request.content_type == 'application/json':
@@ -90,35 +93,47 @@ def user_profile(request, user_id):
         'blink_rates': blink_rates,
     })
 
+
 @csrf_exempt
 def submit_score(request):
     if request.method != 'POST':
         return JsonResponse({'status': 'invalid request'}, status=405)
-
+    
     try:
         data = json.loads(request.body)
         test_type = data.get('test_type')
         final_score = data.get('final_score')
-        result_value = final_score
-
-        # Get user_id from session
+        result_value = data.get('result_value')  # This contains "score - category"
+        
         user_id = request.session.get('user_id')
         if not user_id:
             return JsonResponse({'status': 'error', 'message': 'User ID not found in session'}, status=400)
-
-        # Fetch the user
+        
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=404)
-        if test_type == 'Myopia':
-            TestResult.objects.create(user=user,test_type=test_type,final_score=result_value)
-
-        # Save test result
-        TestResult.objects.create(user=user, test_type=test_type, final_score=final_score,result_value =result_value)
-
+        
+        if test_type == 'dryeye':
+            # Extract category from result_value (format: "score - category")
+            category = result_value.split(' - ')[1] if ' - ' in result_value else 'Normal'
+            
+            DryEyeResult.objects.create(
+                user=user,
+                osdi_score=final_score,
+                severity=category
+            )
+        else:
+            # Handle other test types with existing TestResult model
+            TestResult.objects.create(
+                user=user,
+                test_type=test_type,
+                final_score=final_score,
+                result_value=final_score
+            )
+        
         return JsonResponse({'status': 'success'})
-
+        
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
     except Exception as e:
@@ -167,7 +182,7 @@ def Colour_Blindness_Test(request):
 
 class ColorVisionTestView(APIView):
     def post(self, request):
-        data = request.data
+        data = request.data 
 
         # ✅ Get user_id from session first
         user_id = request.session.get('user_id')
@@ -214,7 +229,7 @@ def sign_in_user(request):
                 serializer = UserSerializer(user)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             # Redirect to user profile page with user id as parameter
-            return redirect('user_profile', user_id=user.id)
+            return redirect('mainx',user_id=user.id)
         else:
             error = {'error': 'Incorrect password'}
             if request.content_type == 'application/json':

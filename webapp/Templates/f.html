@@ -220,6 +220,67 @@
             transform: scale(1.2) rotate(5deg);
         }
 
+        /* Profile button styling */
+        #profileBtn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #profileBtn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        #profileBtn:hover::before {
+            left: 100%;
+        }
+
+        #profileBtn:hover {
+            transform: translateX(10px) scale(1.02);
+            background: linear-gradient(145deg, rgba(0, 133, 165, 0.3), rgba(0, 64, 82, 0.3));
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        #profileBtn:active {
+            transform: translateX(5px) scale(1.01);
+        }
+
+        #profileBtn span {
+            font-size: 1.8rem;
+            display: inline-block;
+            transition: transform 0.3s ease;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        #profileBtn:hover span {
+            transform: scale(1.2) rotate(5deg);
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -246,6 +307,11 @@
             }
             
             .test-button {
+                padding: 1.2rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            #profileBtn {
                 padding: 1.2rem 1.5rem;
                 font-size: 1rem;
             }
@@ -279,6 +345,15 @@
             }
 
             .test-button span {
+                font-size: 1.5rem;
+            }
+
+            #profileBtn {
+                justify-content: center;
+                text-align: center;
+            }
+
+            #profileBtn span {
                 font-size: 1.5rem;
             }
         }
@@ -320,6 +395,13 @@
         <p>Choose from our comprehensive range of vision and eye health assessments. Each test is designed to provide valuable insights into your visual health and detect potential issues early.</p>
         
         <div class="test-buttons">
+            <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
+                <button type="submit" id="profileBtn"><span>👤</span> Go to Profile</button>
+            </form>
+            
+            <a href="{% url 'osdi'  %}" class="test-button">
+                <span>👓</span> Dry Eye Disease Test
+            </a>
             <a href="{% url 'base_myopia'  %}" class="test-button">
                 <span>📏</span> Vision Distance Test
             </a>
