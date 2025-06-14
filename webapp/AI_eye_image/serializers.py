@@ -5,4 +5,5 @@ from BaseInfo.models import User
 class UserImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_image
-        fields = ['id', 'user', 'left_eye', 'right_eye', 'responses']
+        fields = ['left_eye', 'right_eye']  # ❗ Exclude 'user' and 'responses'
+

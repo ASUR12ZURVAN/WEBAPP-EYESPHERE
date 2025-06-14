@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config
 
+API_KEY = config('API_KEY')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -61,7 +63,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'BaseInfo',
     'Myopia_Test',
-    'BlinkRate'
+    'BlinkRate',
+    'AI_eye_image',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eye Image Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f3f3f3;
+        }
+        h2 {
+            color: #333;
+        }
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+        }
+        input[type="file"] {
+            margin-top: 0.5rem;
+        }
+        button {
+            margin-top: 1.5rem;
+            padding: 0.6rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #response-box {
+            margin-top: 2rem;
+            white-space: pre-wrap;
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Eye Defect Detection</h2>
+        <form id="eyeForm" enctype="multipart/form-data">
+            <label for="left_eye">Upload Left Eye Image:</label>
+            <input type="file" id="left_eye" name="left_eye" accept="image/*" required>
+
+            <label for="right_eye">Upload Right Eye Image:</label>
+            <input type="file" id="right_eye" name="right_eye" accept="image/*" required>
+
+            <button type="submit">Analyze</button>
+        </form>
+
+        <div id="response-box" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('eyeForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            const responseBox = document.getElementById('response-box');
+            responseBox.style.display = 'none';
+            responseBox.innerText = "Analyzing...";
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/eye/analyze/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                responseBox.style.display = 'block';
+                if (response.ok) {
+                    responseBox.innerText = "🧠 Diagnosis:\n" + result.response;
+                } else {
+                    responseBox.innerText = "❌ Error:\n" + (result.error || "Unexpected error occurred.");
+                }
+            } catch (err) {
+                responseBox.style.display = 'block';
+                responseBox.innerText = "❌ Exception:\n" + err.message;
+            }
+        });
+    </script>
+</body>
+</html>
