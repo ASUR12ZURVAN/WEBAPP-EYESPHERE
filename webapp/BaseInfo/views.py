@@ -85,12 +85,14 @@ def user_profile(request, user_id):
     color_vision_tests = user.color_vision_tests.all().order_by('-date_taken')
 
     blink_rates = BlinkRate.objects.filter(user=user).order_by('-timestamp')
+    dryeye_results = user.dryeye_results.all().order_by('-date_taken')
 
     return render(request, 'user_profile.html', {
         'user': user,
         'test_results': test_results,
         'color_vision_tests': color_vision_tests,
         'blink_rates': blink_rates,
+        'dryeye_results': dryeye_results
     })
 
 
