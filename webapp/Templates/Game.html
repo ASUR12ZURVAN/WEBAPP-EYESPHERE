@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,13 +19,13 @@
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             margin: 0;
             padding: 0;
@@ -34,7 +35,7 @@
             height: 100vh;
             color: var(--light-color);
         }
-        
+
         /* Stars background */
         .stars {
             position: fixed;
@@ -44,7 +45,7 @@
             height: 100%;
             z-index: -1;
         }
-        
+
         .star {
             position: absolute;
             width: 2px;
@@ -54,13 +55,21 @@
             opacity: 0.3;
             animation: twinkle 4s infinite;
         }
-        
+
         @keyframes twinkle {
-            0% { opacity: 0.3; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0.3; }
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
         }
-        
+
         /* Start Screen Styles */
         #startScreen {
             position: fixed;
@@ -74,32 +83,42 @@
             align-items: center;
             z-index: 100;
         }
-        
+
         .start-container {
-            background-color: rgba(30, 42, 58, 0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 40px;
+            /* background-color: rgba(30, 42, 58, 0.9);
+            backdrop-filter: blur(15px); */
+            /* border-radius: 20px; */
+            position: relative;
+            /* top: 300px; */
+            padding: 1rem 1.5rem;
             max-width: 700px;
-            width: 90%;
+            /* width: 90%;
+            height: 100%; */
             text-align: center;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* box-shadow: var(--shadow-lg); */
+            /* border: 1px solid rgba(255, 255, 255, 0.1); */
             animation: slideInStart 0.8s ease-out;
         }
-        
+
         @keyframes slideInStart {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        
+
         .start-container h1 {
-            font-size: 32px;
+            font-size: 1.5rem;
             color: var(--light-color);
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .instructions {
             text-align: left;
             margin: 25px 0;
@@ -107,38 +126,52 @@
             line-height: 1.6;
             color: var(--light-color);
         }
-        
+
         .instructions h3 {
             color: var(--primary-color);
             margin-bottom: 15px;
             font-size: 20px;
             text-align: center;
         }
-        
+
         .instructions ul {
             list-style: none;
             padding: 0;
         }
-        
+
         .instructions li {
             margin: 12px 0;
             padding-left: 30px;
             position: relative;
         }
-        
+
         .instructions li::before {
             content: '👁️';
             position: absolute;
             left: 0;
             top: 0;
         }
-        
-        .instructions li:nth-child(2)::before { content: '🔢'; }
-        .instructions li:nth-child(3)::before { content: '✍️'; }
-        .instructions li:nth-child(4)::before { content: '📈'; }
-        .instructions li:nth-child(5)::before { content: '🎯'; }
-        .instructions li:nth-child(6)::before { content: '⚕️'; }
-        
+
+        .instructions li:nth-child(2)::before {
+            content: '🔢';
+        }
+
+        .instructions li:nth-child(3)::before {
+            content: '✍️';
+        }
+
+        .instructions li:nth-child(4)::before {
+            content: '📈';
+        }
+
+        .instructions li:nth-child(5)::before {
+            content: '🎯';
+        }
+
+        .instructions li:nth-child(6)::before {
+            content: '⚕️';
+        }
+
         .screen-distance-setup {
             background-color: rgba(67, 97, 238, 0.1);
             border: 1px solid rgba(67, 97, 238, 0.3);
@@ -147,12 +180,12 @@
             margin: 20px 0;
             text-align: center;
         }
-        
+
         .screen-distance-setup h4 {
             color: var(--primary-color);
             margin-bottom: 15px;
         }
-        
+
         .distance-input {
             display: flex;
             align-items: center;
@@ -160,7 +193,7 @@
             gap: 10px;
             margin: 10px 0;
         }
-        
+
         .distance-input input {
             padding: 8px 12px;
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -171,12 +204,18 @@
             width: 80px;
             text-align: center;
         }
-        
+
         .distance-input label {
             color: var(--light-color);
             font-size: 14px;
         }
-        
+
+        .impBtn{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         #startGameBtn {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -186,8 +225,8 @@
             font-weight: 600;
             border-radius: 12px;
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-lg);
+            /* transition: var(--transition);
+            box-shadow: var(--shadow-lg); */
             margin-top: 25px;
             display: flex;
             align-items: center;
@@ -195,17 +234,57 @@
             gap: 10px;
             margin: 25px auto 0;
         }
-        
+
         #startGameBtn:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
             background: linear-gradient(135deg, #3051d3, #2eae6d);
         }
-        
+
         #startGameBtn:active {
             transform: translateY(0);
         }
+
         
+
+        #homeBtn{
+            background: #18485a;
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            /* transition: var(--transition);
+            box-shadow: var(--shadow-lg); */
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px auto 0;
+        }
+
+        #profileBtn{
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            /* transition: var(--transition);
+            box-shadow: var(--shadow-lg); */
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px auto 0;
+        }
+
         #gameContainer {
             position: relative;
             width: 100%;
@@ -215,7 +294,7 @@
             align-items: center;
             z-index: 1;
         }
-        
+
         .header {
             position: absolute;
             top: 0;
@@ -228,21 +307,21 @@
             backdrop-filter: blur(8px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .header h1 {
             font-size: 28px;
             color: var(--light-color);
             margin-bottom: 5px;
             letter-spacing: 0.5px;
         }
-        
+
         .header p {
             font-size: 16px;
             color: var(--neutral-color);
             max-width: 600px;
             margin: 0 auto;
         }
-        
+
         .game-area {
             position: relative;
             width: 100%;
@@ -251,15 +330,16 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         #centerArea {
+            top: -130px;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            /* justify-content: center; */
         }
-        
+
         #centerDot {
             position: relative;
             width: 24px;
@@ -270,22 +350,24 @@
             animation: pulse 2s infinite;
             z-index: 5;
         }
-        
+
         @keyframes pulse {
             0% {
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
             }
+
             70% {
                 transform: scale(1.2);
                 box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
             }
+
             100% {
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
             }
         }
-        
+
         #focusText {
             position: relative;
             margin-top: 35px;
@@ -298,7 +380,7 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .number {
             position: absolute;
             font-weight: bold;
@@ -306,13 +388,23 @@
             animation: fadeInNumber 0.4s forwards ease-out;
             z-index: 3;
         }
-        
+
         @keyframes fadeInNumber {
-            from { opacity: 0; transform: scale(0.5); filter: blur(5px); }
-            to { opacity: 1; transform: scale(1); filter: blur(0); }
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+                filter: blur(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
         }
-        
+
         #inputSection {
+            z-index: 10;
             position: absolute;
             bottom: 30px;
             left: 50%;
@@ -320,21 +412,36 @@
             text-align: center;
             background-color: rgba(30, 42, 58, 0.8);
             backdrop-filter: blur(10px);
-            padding: 25px 35px;
+            padding: 20px 25px;
+            /* Increased padding top/bottom, slightly reduced left/right for more internal space */
             border-radius: 15px;
             box-shadow: var(--shadow-lg);
             max-width: 90%;
-            width: 450px;
+            /* This is crucial for responsiveness */
+            width: fit-content;
+            /* Allow content to dictate width, up to max-width */
+            min-width: 300px;
+            /* Ensure a minimum readable width */
             display: none;
+            /* Keep as is for initial hidden state */
             animation: slideUp 0.6s forwards;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-sizing: border-box;
+            /* Ensures padding is included in the element's total width and height */
         }
-        
+
         @keyframes slideUp {
-            from { transform: translate(-50%, 80px); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
+            from {
+                transform: translate(-50%, 80px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
         }
-        
+
         #levelText {
             font-size: 22px;
             font-weight: bold;
@@ -345,7 +452,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         #levelText::after {
             content: '';
             position: absolute;
@@ -356,226 +463,361 @@
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             border-radius: 3px;
         }
-        
+
         #inputSection p {
             margin: 12px 0;
-            font-size: 16px;
+            font-size: 0.95em;
             color: var(--light-color);
         }
-        
+
         .input-container {
-            position: relative;
-            margin: 15px 0;
+            width: 100%;
+            /* Ensure the container uses available width */
+            padding: 0 10px;
+            /* Add some horizontal padding to the container for the input */
+            box-sizing: border-box;
+            margin-bottom: 15px;
         }
-        
+
         #userInput {
             width: 100%;
-            padding: 14px 15px;
-            font-size: 18px;
-            border: 2px solid rgba(160, 174, 192, 0.3);
+            /* Make the input take full width of its container */
+            padding: 10px 15px;
+            /* Good padding for comfortable typing */
+            border: 1px solid #5a6a8a;
+            /* A subtle border */
             border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--light-color);
-            transition: var(--transition);
+            /* Slightly rounded corners */
+            background-color: rgba(0, 0, 0, 0.3);
+            /* Slightly darker background */
+            color: #fff;
+            /* White text */
+            font-size: 1.1em;
+            box-sizing: border-box;
+            /* Crucial for width calculation */
+            text-align: center;
+            /* Center the placeholder/text */
             outline: none;
         }
-        
+
         #userInput:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
             background-color: rgba(255, 255, 255, 0.1);
         }
-        
+
         #userInput::placeholder {
-            color: rgba(160, 174, 192, 0.7);
+            color: rgba(255, 255, 255, 0.6);
         }
-        
-            /* Enhanced button styles */
-.buttons-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
 
-/* Button base styles with enhanced design */
-button {
-    padding: 14px 28px;
-    font-size: 16px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-width: 150px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        /* Enhanced button styles */
+        .buttons-container {
+            display: flex;
+            /* Enable flexbox */
+            flex-wrap: wrap;
+            /* Allow items to wrap to the next line */
+            justify-content: center;
+            /* Center items horizontally */
+            gap: 10px;
+            /* Space between flex items (buttons) */
+            margin-top: 20px;
+            /* Space above the buttons */
+            margin-bottom: 20px;
+            /* Space below the buttons */
+        }
 
-/* Button hover shimmer effect */
-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s;
-}
+        /* Button base styles with enhanced design */
+        button {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            min-width: 150px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-button:hover::before {
-    left: 100%;
-}
+        .buttons-container button,
+        .buttons-container form button {
+            /* Target both direct buttons and buttons inside forms */
+            flex-grow: 1;
+            /* Allow buttons to grow to fill space */
+            flex-shrink: 1;
+            /* Allow buttons to shrink */
+            flex-basis: auto;
+            /* Default basis, will wrap if necessary */
+            min-width: 120px;
+            /* Ensure buttons don't get too small */
+            padding: 10px 15px;
+            /* Consistent padding */
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            /* Use flex for icon and text alignment */
+            align-items: center;
+            /* Vertically center icon and text */
+            justify-content: center;
+            /* Horizontally center icon and text */
+        }
 
-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
+        #checkBtn {
+            background-color: #28a745;
+            border: none;
+            color: white;
+        }
 
-button:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
+        /* Example green */
+        #checkBtn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
 
-/* Check button - Primary blue */
-#checkBtn {
-    background: linear-gradient(135deg, var(--primary-color), #3051d3);
-    color: white;
-}
+        #restartBtn {
+            background-color: #007bff;
+            border: none;
+            color: white;
+        }
 
-#checkBtn:hover {
-    background: linear-gradient(135deg, #3051d3, #2541b8);
-    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
-}
+        /* Example blue */
+        #restartBtn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
 
-/* Restart button - Secondary green */
-#restartBtn {
-    background: linear-gradient(135deg, var(--secondary-color), #2eae6d);
-    color: white;
-}
+        #saveBtn {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+        }
 
-#restartBtn:hover {
-    background: linear-gradient(135deg, #2eae6d, #259d5d);
-    box-shadow: 0 8px 25px rgba(59, 196, 125, 0.4);
-}
+        /* Example grey */
+        #saveBtn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
 
-/* Save button - Success green */
-#saveBtn {
-    background: linear-gradient(135deg, #28a745, #20c997);
-    color: white;
-}
+        #nextTestBtn {
+            background-color: #17a2b8;
+            border: none;
+            color: white;
+        }
 
-#saveBtn:hover {
-    background: linear-gradient(135deg, #218838, #1ba085);
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
-}
+        /* Example cyan */
+        #nextTestBtn:hover {
+            background-color: #138496;
+            transform: translateY(-2px);
+        }
 
-#saveBtn:disabled {
-    background: linear-gradient(135deg, #6c757d, #5a6268);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+        #profileBtn,
+        #HOMEBtn {
+            background-color: #6f42c1;
+            border: none;
+            color: white;
+        }
 
-/* Next Test button - Info blue */
-#nextTestBtn {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-}
+        /* Example purple */
+        #profileBtn:hover,
+        #HOMEBtn:hover {
+            background-color: #563d7c;
+            transform: translateY(-2px);
+        }
 
-#nextTestBtn:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-}
 
-/* Profile button - Purple */
-#profileBtn {
-    background: linear-gradient(135deg, #6f42c1, #5a2d91);
-    color: white;
-}
+        /* Ensure icons are correctly spaced */
+        .buttons-container button i {
+            margin-right: 8px;
+            /* Space between icon and text */
+        }
 
-#profileBtn:hover {
-    background: linear-gradient(135deg, #5a2d91, #4c1d6b);
-    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
-}
-#HOMEBtn {
-    background: linear-gradient(135deg, #6f42c1, #5a2d91);
-    color: white;
-}
+        /* For the forms around the buttons, make them inline-block or remove display: inline */
+        .buttons-container form {
+            display: inline-flex;
+            /* Treat form as an inline flex item, allowing its button to be centered */
+        }
 
-/* Button loading state */
-.btn-loading {
-    pointer-events: none;
-    opacity: 0.8;
-}
+        /* Button hover shimmer effect */
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
 
-.btn-loading::after {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    margin: auto;
-    border: 2px solid transparent;
-    border-top-color: #ffffff;
-    border-radius: 50%;
-    animation: button-loading-spinner 1s ease infinite;
-}
+        button:hover::before {
+            left: 100%;
+        }
 
-@keyframes button-loading-spinner {
-    from { transform: rotate(0turn); }
-    to { transform: rotate(1turn); }
-}
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
 
-/* Success feedback animation */
-.btn-success-feedback {
-    background: linear-gradient(135deg, #28a745, #20c997) !important;
-    animation: success-pulse 0.6s ease-in-out;
-}
+        button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
 
-@keyframes success-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
+        /* Check button - Primary blue */
+        #checkBtn {
+            background: linear-gradient(135deg, var(--primary-color), #3051d3);
+            color: white;
+        }
 
-/* Button icons */
-button i {
-    font-size: 16px;
-    transition: transform 0.2s ease;
-}
+        #checkBtn:hover {
+            background: linear-gradient(135deg, #3051d3, #2541b8);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
 
-button:hover i {
-    transform: scale(1.1);
-}
+        /* Restart button - Secondary green */
+        #restartBtn {
+            background: linear-gradient(135deg, var(--secondary-color), #2eae6d);
+            color: white;
+        }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .buttons-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        margin-top: 15px;
-    }
-    
-    button {
-        width: 100%;
-        max-width: 280px;
-        padding: 16px 24px;
-        font-size: 15px;
-        min-width: 0;
-    }
-}
-        
+        #restartBtn:hover {
+            background: linear-gradient(135deg, #2eae6d, #259d5d);
+            box-shadow: 0 8px 25px rgba(59, 196, 125, 0.4);
+        }
+
+        /* Save button - Success green */
+        #saveBtn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        #saveBtn:hover {
+            background: linear-gradient(135deg, #218838, #1ba085);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        #saveBtn:disabled {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Next Test button - Info blue */
+        #nextTestBtn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        #nextTestBtn:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+        }
+
+        /* Profile button - Purple */
+        #profileBtn {
+            background: linear-gradient(135deg, #6f42c1, #5a2d91);
+            color: white;
+        }
+
+        #profileBtn:hover {
+            background: linear-gradient(135deg, #5a2d91, #4c1d6b);
+            box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+        }
+
+        #HOMEBtn {
+            background: linear-gradient(135deg, #6f42c1, #5a2d91);
+            color: white;
+        }
+
+        /* Button loading state */
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s ease infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        /* Success feedback animation */
+        .btn-success-feedback {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            animation: success-pulse 0.6s ease-in-out;
+        }
+
+        @keyframes success-pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Button icons */
+        button i {
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        button:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                margin-top: 15px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 280px;
+                padding: 16px 24px;
+                font-size: 15px;
+                min-width: 0;
+            }
+        }
+
         #score {
             margin-top: 20px;
             font-size: 18px;
@@ -585,23 +827,32 @@ button:hover i {
             transition: var(--transition);
             opacity: 0;
         }
-        
+
         .score-highlight {
             background-color: rgba(59, 196, 125, 0.15);
             animation: highlight 1.5s ease-in-out forwards;
             opacity: 1 !important;
         }
-        
+
         @keyframes highlight {
-            0% { background-color: rgba(59, 196, 125, 0); }
-            30% { background-color: rgba(59, 196, 125, 0.25); }
-            100% { background-color: rgba(59, 196, 125, 0.15); }
+            0% {
+                background-color: rgba(59, 196, 125, 0);
+            }
+
+            30% {
+                background-color: rgba(59, 196, 125, 0.25);
+            }
+
+            100% {
+                background-color: rgba(59, 196, 125, 0.15);
+            }
         }
-        
+
         /* Level indicator */
         .level-indicator {
+            display: block;
             position: absolute;
-            top: 90px;
+            top: 100px;
             right: 20px;
             background-color: rgba(30, 42, 58, 0.8);
             padding: 10px 20px;
@@ -616,21 +867,22 @@ button:hover i {
             gap: 8px;
             z-index: 10;
         }
-        
+
         .level-indicator i {
             color: var(--primary-color);
         }
-        
+
         #levelDisplay {
             font-size: 18px;
             font-weight: 700;
             color: var(--light-color);
         }
-        
+
         /* Stats section */
         .stats-container {
+            display: block;
             position: absolute;
-            top: 90px;
+            top: 100px;
             left: 20px;
             background-color: rgba(30, 42, 58, 0.8);
             padding: 15px;
@@ -644,22 +896,23 @@ button:hover i {
             gap: 10px;
             min-width: 160px;
         }
-        
+
         .stat-item {
             display: flex;
-            justify-content: space-between;
+            justify-items: center;
+            gap: 10px;
             font-size: 14px;
         }
-        
+
         .stat-label {
             color: var(--neutral-color);
         }
-        
+
         .stat-value {
             font-weight: 600;
             color: var(--light-color);
         }
-        
+
         /* Progress indicator */
         .progress-bar {
             position: absolute;
@@ -672,14 +925,14 @@ button:hover i {
             border-radius: 3px;
             overflow: hidden;
         }
-        
+
         .progress-fill {
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             transition: width 0.5s ease;
         }
-        
+
         /* Help button */
         .help-btn {
             position: absolute;
@@ -701,72 +954,172 @@ button:hover i {
             z-index: 10;
             backdrop-filter: blur(8px);
         }
-        
+
         .help-btn:hover {
             color: var(--light-color);
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .start-container {
                 padding: 30px 20px;
                 margin: 20px;
             }
-            
+
             .start-container h1 {
                 font-size: 24px;
             }
-            
+
             .instructions {
                 font-size: 14px;
             }
-            
+
             .header h1 {
                 font-size: 22px;
             }
-            
+
             .header p {
                 font-size: 14px;
             }
-            
+
             #inputSection {
                 width: 90%;
                 padding: 20px;
             }
-            
+
             button {
                 padding: 10px 16px;
                 font-size: 14px;
             }
-            
+
             .stats-container {
-                top: auto;
+                top: 110px;
                 left: 20px;
-                bottom: 90px;
-                flex-direction: row;
-                flex-wrap: wrap;
+                /* flex-direction: row; */
+                /* flex-wrap: wrap; */
                 gap: 15px;
                 justify-content: space-around;
-                min-width: 0;
-                width: calc(100% - 40px);
+                min-width: 100px;
+                width: 159px;
             }
-            
+
             .stat-item {
-                width: 45%;
+                width: 147px;
             }
-            
+
             .level-indicator {
-                top: auto;
-                bottom: 150px;
+                top: 110px;
                 right: 20px;
             }
-            
+
             .progress-bar {
                 top: auto;
                 bottom: 20px;
                 width: calc(100% - 40px);
+            }
+        }
+
+
+        @media (max-width: 576px) {
+            .startScreen {
+                margin: 30px;
+            }
+
+            .start-container {
+                height: 700px;
+                top: 10px;
+            }
+
+            .start-container h1 {
+                font-size: 1.3rem;
+                color: var(--light-color);
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .instructions {
+                text-align: left;
+                margin: 10px 0;
+                font-size: 10px;
+                line-height: 1.2;
+                color: var(--light-color);
+            }
+
+            .instructions h3 {
+                color: var(--primary-color);
+                margin-bottom: 15px;
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .instructions ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .instructions li {
+                margin: 12px 0;
+                padding-left: 30px;
+                font-size: 12px;
+                position: relative;
+            }
+
+            .screen-distance-setup {
+                background-color: rgba(67, 97, 238, 0.1);
+                border: 1px solid rgba(67, 97, 238, 0.3);
+                border-radius: 10px;
+                padding: 15px;
+                margin: 15px 0;
+                text-align: center;
+            }
+
+            .screen-distance-setup h4 {
+                font-size: 13px;
+                color: var(--primary-color);
+                margin-bottom: 15px;
+            }
+
+            .screen-distance-setup p {
+                font-size: 13px;
+            }
+
+            .distance-input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin: 10px 0;
+            }
+
+            .distance-input input {
+                padding: 6px 8px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 5px;
+                background-color: rgba(255, 255, 255, 0.1);
+                color: var(--light-color);
+                font-size: 16px;
+                width: 60px;
+                text-align: center;
+            }
+
+            .distance-input label {
+                color: var(--light-color);
+                font-size: 14px;
+            }
+
+            #startGameBtn {
+                padding: 9px 18px;
+                font-size: 15px;
+            }
+
+            .stats-container {
+                display: none;
+            }
+
+            .stat-item {
+                width: 90px;
             }
         }
     </style>
@@ -776,7 +1129,7 @@ button:hover i {
 <body>
     <!-- Stars background -->
     <div class="stars" id="stars"></div>
-    
+
     <!-- Start Screen -->
     <div id="startScreen">
         <div class="start-container">
@@ -792,7 +1145,7 @@ button:hover i {
                     <li>Maintain consistent viewing distance for accurate results</li>
                 </ul>
             </div>
-            
+
             <div class="screen-distance-setup">
                 <h4>📏 Setup Instructions</h4>
                 <p>For accurate visual angle calculations, please:</p>
@@ -805,14 +1158,22 @@ button:hover i {
                     Sit approximately 60cm (arm's length) from your screen for optimal results.
                 </p>
             </div>
-            
-            <button id="startGameBtn">
-                <i class="fas fa-play"></i>
-                Start Test
-            </button>
+
+            <div class="impBtn">
+                <button id="startGameBtn">
+                    <i class="fas fa-play"></i>
+                    Start Test
+                </button>
+                <button id="homeBtn">
+                    Home
+                </button>
+                <button id="profileBtn">
+                    Profile
+                </button>
+            </div>
         </div>
     </div>
-    
+
     <div id="gameContainer" style="display: none;">
         <!-- UI Elements that should be hidden during gameplay -->
         <div id="gameUI">
@@ -820,11 +1181,11 @@ button:hover i {
                 <h1>Peripheral Vision Memory Test</h1>
                 <p>Keep your eyes on the center dot and try to remember the numbers that appear</p>
             </div>
-            
+
             <div class="level-indicator">
                 <i class="fas fa-layer-group"></i> Level <span id="levelDisplay">1</span>
             </div>
-            
+
             <div class="stats-container">
                 <div class="stat-item">
                     <span class="stat-label">Field Range:</span>
@@ -843,29 +1204,31 @@ button:hover i {
                     <span class="stat-value" id="distanceDisplay">60cm</span>
                 </div>
             </div>
-            
+
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
-        
+
         <!-- Game area - always visible during game -->
         <div class="game-area" id="gameArea">
             <div id="centerArea">
                 <div id="focusRing"></div>
-                <div id="centerDot"></div>
                 <div id="focusText">Focus on this dot</div>
+                <br>
+                <div id="centerDot"></div>
+                <br>
             </div>
             <!-- Numbers will be positioned within this container -->
             <div id="numbersContainer"></div>
         </div>
-        
+
         <input type="hidden" id="user-id" value="{{ user.id }}">
 
         <!-- Input section - hidden during gameplay -->
         <div id="inputSection" style="display: none;">
             <p id="levelText">Level 1</p>
-            <p>Enter the numbers you saw (separated by commas):</p>
+            <p>Enter the numbers you saw (separated by space):</p>
             <div class="input-container">
                 <input type="text" id="userInput" placeholder="e.g., 5,6,7" autocomplete="off">
             </div>
@@ -875,16 +1238,17 @@ button:hover i {
                 <button id="saveBtn" style="display: none;"><i class="fas fa-save"></i> Save Results</button>
                 <button id="nextTestBtn" style="display: none;"><i class="fas fa-arrow-right"></i> Next Test</button>
                 <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
-                    <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i> Go to Profile</button>
+                    <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i> Go to
+                        Profile</button>
                 </form>
                 <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline;">
-                  <button type="submit" id="HOMEBtn" style="display: none;"><i class="fas fa-user"></i> HOME</button>
+                    <button type="submit" id="HOMEBtn" style="display: none;"><i class="fas fa-user"></i> HOME</button>
                 </form>
             </div>
             <div id="score"></div>
             <div id="post-submit-actions" style="display: none;"></div>
         </div>
-        
+
         <button class="help-btn" id="helpBtn" style="display: none;"><i class="fas fa-question"></i></button>
     </div>
 
@@ -902,13 +1266,13 @@ button:hover i {
         let viewingDistanceCm = 60;
         let pixelsPerCm = 0;
         let isDisplayingNumbers = false;
-        
+
         const levelRanges = {
             1: { min: 5, max: 10, description: "0-10° (Central)" },
             2: { min: 10, max: 20, description: "10-20° (Paracentral)" },
             3: { min: 20, max: 30, description: "20-30° (Peripheral)" }
         };
-        
+
         // Hide UI elements during number display
         function hideUIForGameplay() {
             document.getElementById('gameUI').style.display = 'none';
@@ -916,48 +1280,58 @@ button:hover i {
             document.getElementById('inputSection').style.display = 'none';
             isDisplayingNumbers = true;
         }
-        
+
         // Show UI elements after number display
         function showUIAfterGameplay() {
             document.getElementById('gameUI').style.display = 'block';
             document.getElementById('helpBtn').style.display = 'block';
             isDisplayingNumbers = false;
         }
-        
+
         // Hide center dot and focus elements when test is complete
         function hideCenterElements() {
+            const statsContainers = document.getElementsByClassName('stats-container');
+            if (statsContainers.length > 0) {
+                statsContainers[0].style.display = "none"; // Assuming you only have one stats-container or want to hide the first one
+            }
+
+            const levelIndicators = document.getElementsByClassName('level-indicator');
+            if (levelIndicators.length > 0) {
+                levelIndicators[0].style.display = "none"; // Assuming you only have one level-indicatorr or want to hide the first one
+            }
+            document.getElementById('inputSection').style.top = "105px";
             document.getElementById('centerArea').style.display = 'none';
         }
-        
+
         // Show center dot and focus elements when test restarts
         function showCenterElements() {
             document.getElementById('centerArea').style.display = 'block';
         }
-        
+
         function calculatePixelsPerCm() {
             const screenWidthPx = window.screen.width;
             const screenHeightPx = window.screen.height;
             const screenDiagonalInches = 15;
             const aspectRatio = screenWidthPx / screenHeightPx;
-            
+
             const screenWidthInches = screenDiagonalInches * aspectRatio / Math.sqrt(aspectRatio * aspectRatio + 1);
             const screenHeightInches = screenDiagonalInches / Math.sqrt(aspectRatio * aspectRatio + 1);
-            
+
             const screenWidthCm = screenWidthInches * 2.54;
             const screenHeightCm = screenHeightInches * 2.54;
-            
+
             const pixelsPerCmWidth = screenWidthPx / screenWidthCm;
             const pixelsPerCmHeight = screenHeightPx / screenHeightCm;
-            
+
             return (pixelsPerCmWidth + pixelsPerCmHeight) / 2;
         }
-        
+
         function visualAngleToPixels(angleDegrees, distanceCm) {
             const angleRadians = angleDegrees * (Math.PI / 180);
             const physicalDistanceCm = Math.tan(angleRadians) * distanceCm;
             return physicalDistanceCm * pixelsPerCm;
         }
-        
+
         function calculateVisualAngle(pixelX, pixelY, centerX, centerY, distanceCm) {
             const deltaX = pixelX - centerX;
             const deltaY = pixelY - centerY;
@@ -968,7 +1342,7 @@ button:hover i {
             const angleDegrees = angleRadians * (180 / Math.PI);
             return angleDegrees;
         }
-        
+
         function generatePositionAtAngle(targetAngleDegrees) {
             const gameArea = document.getElementById('gameArea');
             const gameRect = gameArea.getBoundingClientRect();
@@ -976,23 +1350,23 @@ button:hover i {
             const centerY = gameRect.height / 2;
             const targetPixelDistance = visualAngleToPixels(targetAngleDegrees, viewingDistanceCm);
             const circularAngle = Math.random() * 2 * Math.PI;
-            
+
             const x = centerX + Math.cos(circularAngle) * targetPixelDistance;
             const y = centerY + Math.sin(circularAngle) * targetPixelDistance;
-            
+
             const margin = 50;
             const clampedX = Math.max(margin, Math.min(gameRect.width - margin, x));
             const clampedY = Math.max(margin, Math.min(gameRect.height - margin, y));
-            
+
             const actualAngle = calculateVisualAngle(clampedX, clampedY, centerX, centerY, viewingDistanceCm);
-            
+
             return { x: clampedX, y: clampedY, actualAngle: actualAngle };
         }
-        
+
         function createStars() {
             const starsContainer = document.getElementById('stars');
             const numberOfStars = 100;
-            
+
             for (let i = 0; i < numberOfStars; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
@@ -1002,20 +1376,20 @@ button:hover i {
                 starsContainer.appendChild(star);
             }
         }
-        
+
         function initializeDisplayCalculations() {
             pixelsPerCm = calculatePixelsPerCm();
             console.log(`Calculated pixels per cm: ${pixelsPerCm.toFixed(2)}`);
         }
-        
+
         function generateNumbers() {
             generatedNumbers = [];
             const range = levelRanges[currentLevel];
-            
+
             for (let i = 0; i < numberCount; i++) {
                 const targetAngle = Math.random() * (range.max - range.min) + range.min;
                 const position = generatePositionAtAngle(targetAngle);
-                
+
                 generatedNumbers.push({
                     value: Math.floor(Math.random() * 9) + 1,
                     x: position.x,
@@ -1023,22 +1397,22 @@ button:hover i {
                     angle: position.actualAngle
                 });
             }
-            
+
             console.log(`Level ${currentLevel} numbers:`, generatedNumbers.map(n => `${n.value} at ${n.angle.toFixed(1)}°`));
         }
-        
+
         async function displayNumbers() {
             // Hide UI elements during number display
             hideUIForGameplay();
-            
+
             const numbersContainer = document.getElementById('numbersContainer');
-            
+
             for (let i = 0; i < generatedNumbers.length; i++) {
                 const numberData = generatedNumbers[i];
                 const numberElement = document.createElement('div');
                 numberElement.className = 'number';
                 numberElement.textContent = numberData.value;
-                
+
                 numberElement.style.position = 'absolute';
                 numberElement.style.left = numberData.x + 'px';
                 numberElement.style.top = numberData.y + 'px';
@@ -1047,34 +1421,34 @@ button:hover i {
                 numberElement.style.fontWeight = 'bold';
                 numberElement.style.pointerEvents = 'none';
                 numberElement.style.zIndex = '100';
-                
+
                 numbersContainer.appendChild(numberElement);
-                
+
                 // Update progress (but don't show it during display)
                 const progress = ((i + 1) / numberCount) * 100;
                 document.getElementById('progressFill').style.width = progress + '%';
                 document.getElementById('progressStat').textContent = Math.round(progress) + '%';
-                
+
                 await new Promise(resolve => setTimeout(resolve, displayTime));
                 numberElement.remove();
             }
-            
+
             // Show UI elements after number display
             showUIAfterGameplay();
-            
+
             // Show input section
             document.getElementById('inputSection').style.display = 'block';
             document.getElementById('userInput').focus();
         }
-        
+
         function checkAnswer() {
             const userInput = document.getElementById('userInput').value.trim();
-            const userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+            const userNumbers = userInput.split(' ').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
             const correctNumbers = generatedNumbers.map(n => n.value);
-            
+
             let correct = 0;
             let total = correctNumbers.length;
-            
+
             for (let num of userNumbers) {
                 if (correctNumbers.includes(num)) {
                     correct++;
@@ -1082,11 +1456,11 @@ button:hover i {
                     correctNumbers.splice(index, 1);
                 }
             }
-            
+
             const levelScore = Math.round((correct / total) * 100);
             totalScore += levelScore;
             correctAnswers += correct;
-            
+
             const scoreElement = document.getElementById('score');
             const range = levelRanges[currentLevel];
             scoreElement.innerHTML = `
@@ -1097,9 +1471,9 @@ button:hover i {
                 Correct sequence: [${generatedNumbers.map(n => n.value).join(', ')}]
             `;
             scoreElement.classList.add('score-highlight');
-            
+
             updateLevelStats();
-            
+
             setTimeout(() => {
                 if (currentLevel < 3) {
                     nextLevel();
@@ -1108,14 +1482,14 @@ button:hover i {
                 }
             }, 3000);
         }
-        
+
         function updateLevelStats() {
             const range = levelRanges[currentLevel];
             document.getElementById('fieldRange').textContent = range.description.split(' ')[0];
             document.getElementById('currentLevelStat').textContent = `${currentLevel} / 3`;
             document.getElementById('levelDisplay').textContent = currentLevel;
         }
-        
+
         function nextLevel() {
             currentLevel++;
             document.getElementById('levelText').textContent = `Level ${currentLevel}`;
@@ -1124,22 +1498,22 @@ button:hover i {
             document.getElementById('score').classList.remove('score-highlight');
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('progressStat').textContent = '0%';
-            
+
             updateLevelStats();
-            
+
             setTimeout(() => {
                 generateNumbers();
                 displayNumbers();
             }, 1000);
         }
-        
+
         function showFinalResults() {
             const averageScore = Math.round(totalScore / 3);
             const totalCorrect = correctAnswers;
             const totalPossible = 15;
-            
+
             let recommendation = "Your peripheral vision appears to be functioning normally.";
-            
+
             if (averageScore < 30) {
                 severity = "Severe Defect";
                 recommendation = "Consider consulting an eye care professional for a comprehensive visual field examination.";
@@ -1150,10 +1524,10 @@ button:hover i {
                 severity = "Mild Defect";
                 recommendation = "Minor peripheral vision limitations. Monitor and consider professional evaluation.";
             }
-            
+
             // Hide center dot and focus elements when showing final results
             hideCenterElements();
-            
+
             const scoreElement = document.getElementById('score');
             scoreElement.innerHTML = `
                 <div style="text-align: center; padding: 20px;">
@@ -1172,7 +1546,7 @@ button:hover i {
                     </div>
                 </div>
             `;
-            
+
             // Show the new buttons
             document.getElementById('saveBtn').style.display = 'inline-block';
             document.getElementById('nextTestBtn').style.display = 'inline-block';
@@ -1180,16 +1554,16 @@ button:hover i {
             document.getElementById('HOMEBtn').style.display = 'inline-block';
             document.getElementById('checkBtn').style.display = 'none';
         }
-        
+
         function restartGame() {
             currentLevel = 1;
             totalScore = 0;
             correctAnswers = 0;
             generatedNumbers = [];
-            
+
             // Show center elements when restarting
             showCenterElements();
-            
+
             document.getElementById('levelText').textContent = 'Level 1';
             document.getElementById('userInput').value = '';
             document.getElementById('inputSection').style.display = 'none';
@@ -1202,32 +1576,32 @@ button:hover i {
             document.getElementById('HOMEBtn').style.display = 'none';
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('progressStat').textContent = '0%';
-            
+
             updateLevelStats();
-            
+
             setTimeout(() => {
                 generateNumbers();
                 displayNumbers();
             }, 1000);
         }
-        
+
         function startGame() {
             viewingDistanceCm = parseInt(document.getElementById('viewingDistance').value) || 60;
             document.getElementById('distanceDisplay').textContent = viewingDistanceCm + 'cm';
-            
+
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'block';
             gameStarted = true;
-            
+
             initializeDisplayCalculations();
             updateLevelStats();
-            
+
             setTimeout(() => {
                 generateNumbers();
                 displayNumbers();
             }, 1000);
         }
-        
+
         function showHelp() {
             alert(`Peripheral Vision Memory Test Help:
 
@@ -1244,12 +1618,12 @@ Visual Field Ranges:
 
 Tip: Maintain consistent viewing distance for accurate results!`);
         }
-        
+
         function submitResultsToBackend() {
             const resultData = {
                 final_score: Math.round(totalScore / 3),
                 test_type: "Glaucoma",
-                result_value:Math.round(totalScore / 3)
+                result_value: Math.round(totalScore / 3)
             };
 
             return fetch('/submit_score/', {
@@ -1259,21 +1633,21 @@ Tip: Maintain consistent viewing distance for accurate results!`);
                 },
                 body: JSON.stringify(resultData)
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Results saved successfully');
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Results saved successfully');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
-        
+
         // Event listeners
         document.getElementById('startGameBtn').addEventListener('click', startGame);
         document.getElementById('checkBtn').addEventListener('click', checkAnswer);
         document.getElementById('restartBtn').addEventListener('click', restartGame);
         document.getElementById('helpBtn').addEventListener('click', showHelp);
-        
+
         // Save button event listener
         document.getElementById('saveBtn').addEventListener('click', () => {
             submitResultsToBackend()
@@ -1291,21 +1665,22 @@ Tip: Maintain consistent viewing distance for accurate results!`);
         document.getElementById('nextTestBtn').addEventListener('click', () => {
             window.location.href = '/Colourblindness_Test/';
         });
-        
-        document.getElementById('userInput').addEventListener('keypress', function(e) {
+
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkAnswer();
             }
         });
-        
-        window.addEventListener('load', function() {
+
+        window.addEventListener('load', function () {
             createStars();
             initializeDisplayCalculations();
         });
-        
-        window.addEventListener('resize', function() {
+
+        window.addEventListener('resize', function () {
             initializeDisplayCalculations();
         });
     </script>
 </body>
+
 </html>

@@ -1,7 +1,8 @@
-{% load static %}
+<!-- {% load static %} -->
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', Arial, sans-serif;
             background-image: url("{% static 'eyei.jpg' %}");
@@ -25,7 +26,7 @@
             position: relative;
             line-height: 1.6;
         }
-        
+
         /* Improved overlay with gradient for better visual hierarchy */
         body::before {
             content: '';
@@ -37,381 +38,1293 @@
             background: linear-gradient(135deg, rgba(0, 64, 82, 0.4), rgba(0, 133, 165, 0.3));
             z-index: -1;
         }
-        
+
+        /* Basic Reset & Body Styling (optional, but good practice) */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            /* Ensures padding and border are included in the element's total width and height */
+        }
+
+        /* Navbar Styling */
         .navbar {
+            background-color: #f6f6f6;
+            color: #05394d;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 6%;
-            background-color: rgb(119, 118, 118);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            min-height: 60px;
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .logo img {
+
+        /* Logo Styling */
+        .navbar .logo img {
             height: 80px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Adjust as needed for your logo size */
+            vertical-align: middle;
+            /* Align image nicely with text if any */
         }
-        
-        .logo-text {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #004052;
-            letter-spacing: -0.5px;
-        }
-        
-        .nav-links {
+
+        /* Navigation Links Styling */
+        .navbar .nav-links {
             display: flex;
-            gap: 2.5rem;
-            align-items: center;
+            /* Display links in a row */
+            list-style: none;
+            /* Remove bullet points if it were a ul */
+            margin: 0;
+            padding: 0;
         }
-        
-        .nav-links a {
+
+        .navbar .nav-links a {
+            color: #05394d;
             text-decoration: none;
-            color: #004052;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
+            font-weight: 600;
+            /* Remove underline from links */
+            padding: 10px 15px;
+            /* Padding around each link */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            /* Smooth transition on hover */
+            border-radius: 5px;
+            /* Slightly rounded corners for links */
         }
-        
-        .nav-links a:hover {
-            color: #0085a5;
-            background-color: rgba(0, 133, 165, 0.1);
-            transform: translateY(-2px);
+
+        .navbar .nav-links a:hover,
+        .navbar .nav-links a.active {
+            /* Add an 'active' class for the current page */
+            background-color: #f6f7f5;
+            /* Slightly lighter background on hover/active */
+            color: #0a9ec6;
         }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background-color: #0085a5;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
+
+        /* Hamburger Icon Styling (for mobile) */
+        .hamburger {
+            display: none;
+            /* Hidden by default on larger screens */
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            /* Ensure it's above other content */
         }
-        
-        .nav-links a:hover::after {
-            width: 80%;
+
+        .hamburger .bar {
+            width: 100%;
+            height: 3px;
+            background-color: rgb(0, 0, 0);
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+            /* Smooth transition for hamburger animation */
         }
-        
+
+        /* JavaScript will add a 'open' class to .hamburger and .nav-links when clicked */
+        .hamburger.open .bar:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger.open .bar:nth-child(2) {
+            opacity: 0;
+            /* Hide the middle bar */
+        }
+
+        .hamburger.open .bar:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+
+            /* Adjust breakpoint as needed */
+            .navbar {
+                flex-wrap: wrap;
+                /* Allow items to wrap to the next line */
+            }
+
+            .navbar .logo {
+                flex-grow: 1;
+                /* Allow logo to take available space */
+            }
+
+            .navbar .nav-links {
+                display: none;
+                /* Hide navigation links by default on small screens */
+                flex-direction: column;
+                /* Stack links vertically */
+                width: 100%;
+                /* Take full width */
+                color: #05394d;
+                background-color: #ffffff;
+                /* Slightly different background for the dropdown */
+                position: absolute;
+                top: 60px;
+                /* Position below the navbar (adjust if navbar height changes) */
+                left: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease-in-out;
+                /* Smooth slide-down animation */
+                overflow: hidden;
+                /* Hide overflow content during transition */
+                max-height: 0;
+                /* Initially collapsed */
+            }
+
+            .navbar .nav-links.open {
+                display: flex;
+                /* Show links when the 'open' class is added */
+                max-height: 300px;
+                /* A value larger than the actual height to allow smooth transition */
+            }
+
+            .navbar .nav-links a {
+                padding: 15px 20px;
+                /* More padding for easier tapping */
+                text-align: center;
+                /* Center align links */
+                border-bottom: 1px solid #555;
+                /* Separator between links */
+            }
+
+            .navbar .nav-links a:last-child {
+                border-bottom: none;
+                /* No border for the last link */
+            }
+
+            .hamburger {
+                display: flex;
+                /* Show hamburger icon on small screens */
+            }
+        }
+
+        /* Optional: Even smaller screens adjustments */
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 8px 15px;
+            }
+
+            .navbar .logo img {
+                height: 35px;
+            }
+        }
+
+
+        /* --- Hero Section CSS --- */
         .hero {
-            padding: 10rem 6% 8rem;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://media.istockphoto.com/id/1357747808/vector/specialist-selects-glasses-or-contact-lenses-for-client-different-assortment-of-goods-in.jpg?s=612x612&w=0&k=20&c=T3LZ0rrgijeCC2LcGwcczJBk40iWMcfDM7n2Afba_2c=') no-repeat center center/cover;
+            /* Replace 'https://via.placeholder.com/1500x800/2980b9/ffffff?text=Eye+Care+Background' with your actual background image URL */
             color: white;
             text-align: center;
-            z-index: 1;
-            position: relative;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
-            z-index: -1;
-        }
-        
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
-            letter-spacing: -1px;
-            animation: fadeInUp 1s ease-out;
-        }
-        
-        .hero p {
-            font-size: 1.4rem;
-            font-weight: 300;
-            margin-bottom: 3rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
-            line-height: 1.8;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-        
-        .cta-buttons {
+            padding: 100px 20px;
+            /* Top/bottom and left/right padding */
             display: flex;
-            gap: 1.5rem;
+            flex-direction: column;
             justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 1s ease-out 0.4s both;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 1.2rem 2.5rem;
-            background: linear-gradient(135deg, rgba(74, 124, 136, 0.9), rgba(0, 133, 165, 0.9));
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .cta-button:hover {
-            background: linear-gradient(135deg, rgba(0, 64, 82, 0.9), rgba(74, 124, 136, 0.9));
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-        
-        .cta-button.secondary {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-        
-        .cta-button.secondary:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.2));
-            border-color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .features {
-            padding: 6rem 6% 4rem;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
-        
-        .features h2 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #004052;
-            letter-spacing: -1px;
-        }
-        
-        .features-subtitle {
-            font-size: 1.2rem;
-            color: #64748b;
-            margin-bottom: 4rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .feature-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .card {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #0085a5, #004052);
-        }
-        
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-        }
-        
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #0085a5, #004052);
-            border-radius: 15px;
-            margin: 0 auto 1.5rem;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
+            min-height: 87vh;
+            /* Minimum height, takes at least 60% of viewport height */
+            box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.1);
+            /* Subtle inner shadow at bottom */
         }
-        
-        .card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #004052;
+
+        .hero h1 {
+            font-size: 3.5em;
+            /* Large, prominent heading */
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            /* Text shadow for better readability */
+            max-width: 900px;
+            /* Limit heading width */
         }
-        
-        .card p {
-            color: #64748b;
-            line-height: 1.7;
-            font-size: 0.95rem;
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            max-width: 700px;
+            /* Limit paragraph width for readability */
+            line-height: 1.8;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
-        
-        .stats-section {
-            padding: 4rem 6%;
-            background: linear-gradient(135deg, rgba(0, 64, 82, 0.9), rgba(0, 133, 165, 0.9));
-            backdrop-filter: blur(10px);
-            color: white;
-            text-align: center;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .stat-item {
-            padding: 1rem;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        footer {
-            padding: 3rem 6% 2rem;
-            background: linear-gradient(135deg, rgba(0, 64, 82, 0.95), rgba(0, 40, 82, 0.95));
-            backdrop-filter: blur(10px);
-            color: white;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .footer-links {
+
+        .hero .cta-buttons {
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            /* Arrange buttons side-by-side */
+            gap: 20px;
+            /* Space between buttons */
             flex-wrap: wrap;
+            /* Allow buttons to wrap on smaller screens */
+            justify-content: center;
+            /* Center buttons when wrapped */
         }
-        
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
+
+        .hero .cta-button {
+            display: inline-block;
+            /* Allows padding and margin */
+            background-color: #0a9cc0;
+            /* Green for primary action */
+            color: white;
+            padding: 15px 30px;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
+            border-radius: 50px;
+            /* Pill-shaped buttons */
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            /* Smooth hover effects */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Subtle shadow for depth */
         }
-        
-        .footer-links a:hover {
+
+        .hero .cta-button:hover {
+            background-color: #0a9cc0;
+            /* Darker green on hover */
+            transform: translateY(-2px);
+            /* Slight lift effect */
+        }
+
+        .hero .cta-button.secondary {
+            background-color: transparent;
+            /* Transparent background for secondary */
+            border: 2px solid white;
+            /* White border */
             color: white;
         }
-        
-        .footer-copyright {
-            opacity: 0.7;
-            font-size: 0.9rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        .hero .cta-button.secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            /* Slight white background on hover */
+            border-color: #e0e0e0;
+            /* Slightly off-white border */
         }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+
+        /* Media Queries for Hero Section Responsiveness */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3em;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            .hero {
+                padding: 80px 20px;
+                min-height: 50vh;
             }
         }
-        
-        /* Responsive Design */
+
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.5em;
             }
-            
+
             .hero p {
-                font-size: 1.1rem;
+                font-size: 1em;
             }
-            
-            .cta-buttons {
+
+            .hero {
+                padding: 60px 15px;
+                min-height: 45vh;
+            }
+
+            .hero .cta-buttons {
                 flex-direction: column;
-                align-items: center;
+                /* Stack buttons vertically on small screens */
+                gap: 15px;
+                /* Adjust gap */
+                width: 100%;
+                /* Take full width */
+                max-width: 300px;
+                /* Limit button group width */
             }
-            
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            .features h2 {
-                font-size: 2rem;
-            }
-            
-            .navbar {
-                padding: 1rem 4%;
-            }
-            
-            .hero, .features, .stats-section {
-                padding-left: 4%;
-                padding-right: 4%;
+
+            .hero .cta-button {
+                width: 100%;
+                /* Make buttons full width when stacked */
             }
         }
-        
-        @media (max-width: 480px) {
-            .nav-links {
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2em;
+                margin-bottom: 15px;
+            }
+
+            .hero p {
+                font-size: 0.9em;
+                margin-bottom: 25px;
+            }
+
+            .hero {
+                padding: 50px 10px;
+                min-height: 40vh;
+            }
+        }
+
+
+        /* --- About Us Section CSS --- */
+
+        .solution-section {
+            background-color: white;
+            padding: 40px 20px;
+        }
+
+        .solution-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            max-width: 1200px;
+            margin: auto;
+            gap: 40px;
+        }
+
+        .solution-image {
+            flex: 1 1 40%;
+            min-width: 300px;
+        }
+
+        .solution-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .solution-text {
+            flex: 1 1 50%;
+            min-width: 300px;
+        }
+
+        .solution-text h2 {
+            font-size: 2rem;
+            color: #1d3557;
+            margin-bottom: 20px;
+        }
+
+        .solution-text .highlight {
+            color: #00a9c5;
+        }
+
+        .solution-text .highlight-light {
+            color: #00a9c5;
+            font-weight: 500;
+        }
+
+        .solution-text p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .about-list {
+            list-style: none;
+        }
+
+        .about-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            color: #1d3557;
+            font-weight: 500;
+        }
+
+        .about-list li::before {
+            content: '✔';
+            color: #00a9c5;
+            position: absolute;
+            left: 0;
+        }
+
+        /* ---------- Mobile Responsive ---------- */
+        @media (max-width: 768px) {
+            .solution-container {
+                flex-direction: column;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .solution-text h2 {
+                font-size: 1.6rem;
+            }
+
+            .solution-text,
+            .solution-image {
+                max-width: 100%;
+            }
+
+            .about-list li {
+                padding-left: 20px;
+            }
+
+            .about-list li::before {
+                left: 5px;
+            }
+        }
+
+        /* .about-us {
+            padding: 80px 20px;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .about-us-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            align-items: center;
+          
+        }
+
+        .about-us-image {
+            display: none;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .about-us-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        .about-us-content {
+            padding: 0 20px;
+        }
+
+        .about-us h2 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .about-us h2::after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 4px;
+            background-color: #28a745;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .about-us-tagline {
+            font-size: 1.8em;
+            color: #385576;
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .about-us p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .about-us p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        @media (min-width: 992px) {
+            .about-us-container {
+                grid-template-columns: 1.2fr 2fr;
+                gap: 40px;
+            }
+
+            .about-us-image {
+                display: block;
+            }
+
+            .about-us-content {
+                padding-left: 20px;
+            }
+
+            .about-us h2 {
+                text-align: left;
+            }
+
+            .about-us h2::after {
+                margin: 10px 0 0 0;
+            }
+
+            .about-us-tagline {
+                text-align: left;
+            }
+
+            .about-us p {
+                text-align: justify;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .about-us h2 {
+                font-size: 2.7em;
+                text-align: center;
+            }
+
+            .about-us-tagline {
+                font-size: 1.6em;
+                text-align: center;
+            }
+
+            .about-us-image {
                 display: none;
             }
-            
-            .hero {
-                padding-top: 6rem;
+
+            .about-us p {
+                font-size: 1.05em;
+                text-align: justify;
             }
-            
-            .cta-button {
-                padding: 1rem 2rem;
-                font-size: 0.9rem;
+
+            .about-us {
+                padding: 70px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-us {
+                padding: 60px 15px;
+            }
+
+            .about-us h2 {
+                font-size: 2.4em;
+                text-align: center;
+            }
+
+            .about-us-image {
+                display: none;
+            }
+
+            .about-us h2::after {
+                width: 60px;
+                margin: 10px auto 0;
+            }
+
+            .about-us-tagline {
+                font-size: 1.4em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .about-us p {
+                font-size: 1em;
+                margin-bottom: 15px;
+                text-align: justify;
+            }
+
+            .about-us-container {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .about-us {
+                padding: 50px 10px;
+            }
+
+            .about-us h2 {
+                font-size: 2em;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .about-us-image {
+                display: none;
+            }
+
+            .about-us h2::after {
+                margin: 10px auto 0;
+                width: 50px;
+                height: 3px;
+            }
+
+            .about-us-tagline {
+                text-align: center;
+                font-size: 1.2em;
+                margin-bottom: 25px;
+            }
+
+            .about-us p {
+                font-size: 0.95em;
+                line-height: 1.7;
+                text-align: justify;
+            }
+        } */
+
+
+        /* --- Features Section CSS --- */
+        .features {
+            padding: 60px 20px;
+            /* Ample padding top/bottom, some side padding */
+            text-align: center;
+            /* Center align headings and subtitle */
+            background-color: #f8f8f8;
+            /* Light background to make it stand out */
+        }
+
+        .features h2 {
+            font-size: 2.8em;
+            color: #2c3e50;
+            /* Dark blue/grey matching navbar */
+            margin-bottom: 15px;
+            position: relative;
+            /* For the underline effect */
+            display: inline-block;
+            /* Allows underline to fit content */
+        }
+
+        /* Underline effect for H2 */
+        .features h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            /* Width of the underline */
+            height: 4px;
+            /* Thickness of the underline */
+            background-color: #05394d;
+            /* Green accent color */
+            margin: 10px auto 0;
+            /* Center the underline below the text */
+            border-radius: 2px;
+        }
+
+        .features-subtitle {
+            font-size: 1.15em;
+            color: #666;
+            margin-bottom: 50px;
+            /* Space between subtitle and cards */
+            max-width: 800px;
+            /* Limit subtitle width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-cards {
+            display: grid;
+            /* Use CSS Grid for layout */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            /* Responsive grid columns */
+            gap: 30px;
+            /* Space between cards */
+            max-width: 1200px;
+            /* Max width for the cards container */
+            margin: 0 auto;
+            /* Center the grid container */
+        }
+
+        .card {
+            background-color: #05394d;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            /* More prominent shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* Smooth hover effects */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            /* Lift effect on hover */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            /* Enhanced shadow on hover */
+        }
+
+        .card-icon {
+            font-size: 3.5em;
+            /* Large icons */
+            margin-bottom: 20px;
+            color: #28a745;
+            /* Green accent color for icons */
+            background-color: #e6ffee;
+            /* Light green background for icon */
+            border-radius: 50%;
+            /* Make it circular */
+            width: 80px;
+            /* Fixed width and height for circular background */
+            height: 80px;
+            display: flex;
+            /* Use flex to center icon content */
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Inner shadow for depth */
+        }
+
+        .card h3 {
+            font-size: 1.8em;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 1em;
+            color: #fffcfc;
+            line-height: 1.7;
+        }
+
+        /* Media Queries for Features Section Responsiveness */
+        @media (max-width: 1024px) {
+            .feature-cards {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                /* Adjust min card width */
+            }
+
+            .features h2 {
+                font-size: 2.5em;
+            }
+
+            .features-subtitle {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                padding: 50px 15px;
+            }
+
+            .features h2 {
+                font-size: 2.2em;
+            }
+
+            .features-subtitle {
+                font-size: 1em;
+                margin-bottom: 40px;
+            }
+
+            .feature-cards {
+                grid-template-columns: 1fr;
+                /* Stack cards vertically on smaller screens */
+                gap: 25px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .card-icon {
+                font-size: 3em;
+                /* Slightly smaller icon */
+                width: 70px;
+                height: 70px;
+            }
+
+            .card h3 {
+                font-size: 1.6em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .features {
+                padding: 40px 10px;
+            }
+
+            .features h2 {
+                font-size: 1.8em;
+            }
+
+            .features h2::after {
+                width: 50px;
+                height: 3px;
+                margin: 8px auto 0;
+            }
+
+            .features-subtitle {
+                font-size: 0.95em;
+                margin-bottom: 30px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card-icon {
+                font-size: 2.5em;
+                width: 60px;
+                height: 60px;
+            }
+
+            .card h3 {
+                font-size: 1.4em;
+            }
+
+            .card p {
+                font-size: 0.9em;
+            }
+        }
+
+
+        .testimonials {
+            padding: 60px 20px;
+            text-align: center;
+            /* Center heading and subtitle */
+            background-color: #f8f8f8;
+            /* A very light blue for a fresh look */
+            color: #333;
+        }
+
+        .testimonials h2 {
+            font-size: 2.8em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            /* For the underline */
+        }
+
+        .testimonials h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #05394d;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .testimonials-subtitle {
+            font-size: 1.15em;
+            color: #666;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .testimonial-cards-container {
+            display: grid;
+            /* Responsive grid for testimonials */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            /* Space between testimonial cards */
+            max-width: 1200px;
+            margin: 0 auto;
+            /* Center the grid of cards */
+        }
+
+        .testimonial-card {
+            background-color: #05394d;
+            border: #818688 solid 4px;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Center content within the card */
+            text-align: center;
+            /* Center text within the card */
+        }
+
+        .testimonial-card:hover {
+            border: #05394d solid 4px;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .testimonial-card .rating {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            /* Size of the stars */
+            color: #f39c12;
+            /* Golden color for stars */
+        }
+
+        .testimonial-card .star {
+            margin: 0 2px;
+            /* Small space between stars */
+        }
+
+        .testimonial-card .review-text {
+            font-size: 1.1em;
+            color: #fff9f9;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic;
+            /* Make review text italic */
+        }
+
+        .testimonial-card .reviewer-name {
+            font-size: 1.3em;
+            color: #91c1f2;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .testimonial-card .reviewer-title {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 0;
+        }
+
+        /* Media Queries for Testimonials Section Responsiveness */
+        @media (max-width: 1024px) {
+            .testimonials h2 {
+                font-size: 2.5em;
+            }
+
+            .testimonials-subtitle {
+                font-size: 1.1em;
+            }
+
+            .testimonial-cards-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+
+            .testimonial-card {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .testimonials {
+                padding: 50px 15px;
+            }
+
+            .testimonials h2 {
+                font-size: 2.2em;
+            }
+
+            .testimonials-subtitle {
+                font-size: 1em;
+                margin-bottom: 40px;
+            }
+
+            .testimonial-cards-container {
+                grid-template-columns: 1fr;
+                /* Stack cards on mobile */
+                gap: 25px;
+            }
+
+            .testimonial-card .review-text {
+                font-size: 1em;
+            }
+
+            .testimonial-card .reviewer-name {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .testimonials {
+                padding: 40px 10px;
+            }
+
+            .testimonials h2 {
+                font-size: 1.8em;
+            }
+
+            .testimonials h2::after {
+                width: 50px;
+                height: 3px;
+                margin: 8px auto 0;
+            }
+
+            .testimonials-subtitle {
+                font-size: 0.95em;
+                margin-bottom: 30px;
+            }
+
+            .testimonial-card {
+                padding: 20px;
+            }
+
+            .testimonial-card .rating {
+                font-size: 1.3em;
+            }
+
+            .testimonial-card .review-text {
+                font-size: 0.95em;
+            }
+
+            .testimonial-card .reviewer-name {
+                font-size: 1.1em;
+            }
+
+            .testimonial-card .reviewer-title {
+                font-size: 0.8em;
+            }
+        }
+
+
+        /* -------------------------------------contact us ------------------------------------------- */
+
+        .appointment-section {
+            background-color: #ffffff;
+            padding: 40px 20px;
+        }
+
+        .appointment-container {
+            display: flex;
+            max-width: 1200px;
+            margin: auto;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .appointment-image {
+            flex: 1 1 50%;
+            min-width: 300px;
+        }
+
+        .appointment-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointment-form-card {
+            flex: 1 1 40%;
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border-left: 3px solid #00a9c5;
+        }
+
+        .appointment-form-card h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #1d3557;
+        }
+
+        .appointment-form .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .appointment-form .input-group input,
+        .appointment-form .input-group select {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .appointment-form .input-group i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .appointment-form .input-group.dual {
+            display: flex;
+            gap: 10px;
+        }
+
+        .appointment-form .dual .half-input {
+            position: relative;
+            flex: 1;
+        }
+
+        .submit-btn {
+            background-color: #1d3557;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0f2a4d;
+        }
+
+        /* ------------ Mobile Responsive -------------- */
+        @media (max-width: 768px) {
+            .appointment-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+
+            .appointment-form-card {
+                width: 100%;
+            }
+
+            .appointment-form .input-group.dual {
+                flex-direction: column;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+
+
+        /* -------------------------------------footer------------------------------------------------ */
+
+        .site-footer {
+            background: #033747 url('footer-bg.jpg') no-repeat center center/cover;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 50px 10%;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex: 1 1 200px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid #446e7c;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-col.brand img.footer-logo {
+            width: 200px;
+            margin-bottom: 15px;
+        }
+
+        .footer-col.brand p {
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        .footer-contact li {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .footer-contact i {
+            margin-right: 8px;
+            color: #00c7e2;
+        }
+
+        .footer-bottom {
+            background: #042e40;
+            padding: 20px 10%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .footer-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: #fff;
+            background: #0e4a5f;
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: #00c7e2;
+        }
+
+        /* .appointment-btn {
+            background: #00c7e2;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+        } */
+
+        .scroll-top {
+            background: #0e4a5f;
+            border-radius: 50%;
+            padding: 10px;
+            display: inline-block;
+            color: #fff;
+            transition: background 0.3s;
+        }
+
+        .scroll-top:hover {
+            background: #00c7e2;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer-top {
+                flex-direction: column;
+                padding: 30px 5%;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .footer-actions {
+                flex-wrap: wrap;
+                gap: 10px;
             }
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="{% static 'eyesphere.jpg' %}" alt="Eyesphere Logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
         </div>
         <div class="nav-links">
             <a href="#">Home</a>
@@ -420,16 +1333,75 @@
             <a href="#">Testimonials</a>
             <a href="#">Contact</a>
         </div>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
     </nav>
 
     <section class="hero">
         <h1>Vision Beyond Limits</h1>
-        <p>Experience comprehensive eye care with cutting-edge technology and compassionate professionals dedicated to your visual health and well-being.</p>
+        <p>Experience comprehensive eye care with cutting-edge technology and compassionate professionals dedicated to
+            your visual health and well-being.</p>
         <div class="cta-buttons">
             <a href="{% url 'sign_in_user' %}" class="cta-button">Sign In</a>
             <a href="{% url 'create-user' %}" class="cta-button secondary">Sign Up</a>
         </div>
     </section>
+
+    <!-- About Us Section Starts Here -->
+
+    <section class="solution-section">
+        <div class="solution-container">
+            <div class="solution-image">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Products.jpg" alt="Eye surgery" />
+            </div>
+            <div class="solution-text">
+                <h2>
+                    Introducing Our Diverse<br />
+                    Range of <span class="highlight">Solutions</span>
+                </h2>
+                <p>
+                    Eyesphere aims to become a beacon of light that illuminates the way for
+                    the future of eye care. We aim to become a
+                    <span class="highlight-light">one stop for all your eye care needs</span>
+                    and have a wide range of products to fulfil that goal.
+                </p>
+                <ul class="about-list">
+                    <li>Surgeries</li>
+                    <li>Preventive Senses Package</li>
+                    <li>At Home services</li>
+                    <li>International Care</li>
+                    <li>Corporate Camps</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- <section class="about-us">
+        <div class="about-us-container">
+            <div class="about-us-image">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Products.jpg"
+                    alt="Team of eye care professionals looking at an eye chart">
+            </div>
+            <div class="about-us-content">
+                <h2>About Us</h2>
+                <h3 class="about-us-tagline">We Brighten, Enhance, and Protect Your Visionary Path.</h3>
+                <p>As a pioneering beacon in the field of eye care, we are committed to blazing the route to a future in
+                    which visual health is prioritized and accessible to everyone. Whether you require routine
+                    check-ups, specialist treatments, or a carefully curated range of excellent eye goods, we are ready
+                    to fulfill your needs with skill and compassion.</p>
+                <p>Our experienced specialists include optometrists, ophthalmologists, and support personnel who share a
+                    commitment to improving your eyesight and enjoying your life. We believe in creating a warm and
+                    friendly environment in which you can feel respected, informed, and empowered during your journey
+                    with us.</p>
+                <p>Driven by a desire to innovate, we seek to remain at the forefront of technical breakthroughs in eye
+                    care.</p>
+            </div>
+        </div>
+    </section> -->
+    <!-- About Us Section Ends Here -->
 
 
     <section class="features">
@@ -439,34 +1411,202 @@
             <div class="card">
                 <div class="card-icon">👁️</div>
                 <h3>Comprehensive Eye Exams</h3>
-                <p>Thorough evaluations using the latest diagnostic technology to assess your overall eye health and vision. Our advanced screening methods detect issues early for optimal treatment outcomes.</p>
+                <p>Thorough evaluations using the latest diagnostic technology to assess your overall eye health and
+                    vision. Our advanced screening methods detect issues early for optimal treatment outcomes.</p>
             </div>
             <div class="card">
                 <div class="card-icon">🔍</div>
                 <h3>Vision Correction</h3>
-                <p>Advanced solutions for refractive errors including custom glasses, premium contact lenses, and state-of-the-art surgical options tailored to your lifestyle and preferences.</p>
+                <p>Advanced solutions for refractive errors including custom glasses, premium contact lenses, and
+                    state-of-the-art surgical options tailored to your lifestyle and preferences.</p>
             </div>
             <div class="card">
                 <div class="card-icon">⚕️</div>
                 <h3>Eye Disease Management</h3>
-                <p>Expert diagnosis and treatment of conditions like glaucoma, cataracts, macular degeneration, and diabetic retinopathy using cutting-edge medical technologies and proven treatment protocols.</p>
+                <p>Expert diagnosis and treatment of conditions like glaucoma, cataracts, macular degeneration, and
+                    diabetic retinopathy using cutting-edge medical technologies and proven treatment protocols.</p>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Careers</a>
-                <a href="#">Blog</a>
-                <a href="#">Support</a>
+    <section class="testimonials">
+        <h2>What Our Patients Say</h2>
+        <p class="testimonials-subtitle">Hear directly from those whose vision we've helped transform.</p>
+        <div class="testimonial-cards-container">
+            <div class="testimonial-card">
+                <div class="rating">
+                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
+                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="review-text">"Eyesphere has completely changed my perception of eye care. The staff are
+                    incredibly kind and knowledgeable, and their state-of-the-art equipment gave me a thorough
+                    understanding of my eye health. My vision has never been clearer!"</p>
+                <h4 class="reviewer-name">— Aisha Khan</h4>
+                <p class="reviewer-title">Software Engineer</p>
             </div>
-            <div class="footer-copyright">
-                <p>&copy; 2025 Eyesphere - Vision Beyond Limits. All rights reserved.</p>
+
+            <div class="testimonial-card">
+                <div class="rating">
+                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
+                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="review-text">"From the moment I walked in, I felt welcomed. Dr. Sharma was patient and
+                    explained every step of my treatment. I highly recommend Eyesphere for anyone seeking top-notch eye
+                    care."</p>
+                <h4 class="reviewer-name">— Rajesh Singh</h4>
+                <p class="reviewer-title">Small Business Owner</p>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="rating">
+                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
+                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9734;</span>
+                </div>
+                <p class="review-text">"The selection of glasses at Eyesphere is fantastic, and the fitting process was
+                    seamless. The only minor point was a short wait, but the quality of service more than made up for
+                    it."</p>
+                <h4 class="reviewer-name">— Priya Devi</h4>
+                <p class="reviewer-title">Graphic Designer</p>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="rating">
+                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
+                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+                </div>
+                <p class="review-text">"My kids love coming here! The optometrist is great with children, making eye
+                    exams fun and not intimidating. It's a huge relief to know their eyes are in good hands."</p>
+                <h4 class="reviewer-name">— David Chen</h4>
+                <p class="reviewer-title">Educator</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="appointment-section">
+        <div class="appointment-container">
+            <div class="appointment-image">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/04/Eye.jpg" alt="Eye Test" />
+            </div>
+            <div class="appointment-form-card">
+                <h2>Book An<br />Appointment</h2>
+
+                <form class="appointment-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Name*" required />
+                        <i class="fas fa-user"></i>
+                    </div>
+
+                    <div class="input-group dual">
+                        <div class="half-input">
+                            <input type="tel" placeholder="Phone*" required />
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="half-input">
+                            <input type="text" placeholder="Location*" required />
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <select required>
+                            <option value="" disabled selected>Select Symptoms*</option>
+                            <option>Blurry vision</option>
+                            <option>Dry eyes</option>
+                            <option>Eye pain</option>
+                            <option>Redness</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-col brand">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Group-147.png" alt="Eyesphere Logo" class="footer-logo" />
+                <p>
+                    EyeSphere is where the pinnacle of vision care excellence converges with
+                    the bespoke needs of your distinguished organization.
+                </p>
+                <ul class="footer-contact">
+                    <li><i class="fas fa-phone-alt"></i> +91 8287948191</li>
+                    <li><i class="fas fa-envelope"></i> connect@eyesphere.in</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Noida, India</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Mission</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialities</h4>
+                <ul>
+                    <li><a href="#">Surgery</a></li>
+                    <li><a href="#">Therapy</a></li>
+                    <li><a href="#">Treatment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Diseases</h4>
+                <ul>
+                    <li><a href="#">Amblyopia</a></li>
+                    <li><a href="#">Age related Macular Degeneration</a></li>
+                    <li><a href="#">Diabetic Retinopathy</a></li>
+                    <li><a href="#">Glaucoma</a></li>
+                    <li><a href="#">Strabismus / Squint</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Copyright © 2025 Eyesphere. All rights reserved.</p>
+            <div class="footer-actions">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+                <!-- <button class="appointment-btn">Book Appointment</button>
+                <a href="#" class="scroll-top"><i class="fas fa-arrow-up"></i></a> -->
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+
+            // Optional: Close menu when a link is clicked (for single-page apps)
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('open');
+                    navLinks.classList.remove('open');
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
