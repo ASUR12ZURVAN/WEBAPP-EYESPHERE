@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 API_KEY = config('API_KEY')
 
@@ -101,10 +102,7 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 """
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
@@ -116,7 +114,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 
 # Password validation
