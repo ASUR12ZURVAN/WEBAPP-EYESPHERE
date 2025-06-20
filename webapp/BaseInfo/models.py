@@ -44,6 +44,25 @@ class DryEyeResult(models.Model):
     def __str__(self):
         date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
         return f"{self.user.name} - Dry Eye - {self.osdi_score} ({self.severity}) - ({date_str})"
+    
+class GlaucomaResult(models.Model):
+    SEVERITY_CHOICES = (
+        ('Normal', 'Normal Vision'),
+        ('Mild Defect', 'Mild Peripheral Vision Defect'),
+        ('Moderate Defect', 'Moderate Peripheral Vision Defect'),
+        ('Severe Defect', 'Severe Peripheral Vision Defect'),
+    )
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='glaucoma_results')
+    total_score = models.DecimalField(max_digits=5, decimal_places=2)  # Average score across 3 levels
+    total_correct = models.IntegerField()  # Total correct answers out of 15
+    severity = models.CharField(max_length=20, choices=SEVERITY_CHOICES)
+    viewing_distance = models.IntegerField(default=60)  # Distance in cm
+    date_taken = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
+        return f"{self.user.name} - Glaucoma - {self.total_score}% ({self.severity}) - ({date_str})"
 
 class ColorVisionTest(models.Model):
     SEVERITY_CHOICES = (

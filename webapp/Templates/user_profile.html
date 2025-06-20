@@ -378,6 +378,15 @@
         </div>
     {% endfor %}
 {% endif %}
+<!-- Add this to your user_profile.html template -->
+{% if glaucoma_results %}
+    {% for result in glaucoma_results %}
+        <div class="test-result">
+            <span class="test-name">Peripheral Vision</span>
+            <span class="test-percentage">{{ result.total_score }}% - {{ result.severity }}</span>
+        </div>
+    {% endfor %}
+{% endif %}
 
                     {% if color_vision_tests %}
                         {% for test in color_vision_tests %}
