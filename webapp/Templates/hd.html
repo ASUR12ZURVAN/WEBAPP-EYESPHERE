@@ -114,24 +114,32 @@
             margin-right: 5px;
         }
 
-        input[type="number"] {
+        select, input[type="number"] {
             padding: 12px 15px;
             font-size: 16px;
-            width: 120px;
             border: 2px solid #dde1e7;
             border-radius: 10px;
             transition: all 0.3s ease;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            background: white;
         }
 
-        input[type="number"]:focus {
+        select {
+            width: 200px;
+        }
+
+        input[type="number"] {
+            width: 120px;
+        }
+
+        select:focus, input[type="number"]:focus {
             border-color: #3498db;
             outline: none;
             box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
             transform: scale(1.02);
         }
 
-        input[type="number"]:hover {
+        select:hover, input[type="number"]:hover {
             border-color: #adb5bd;
         }
 
@@ -225,27 +233,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        button::after {
-            content: attr(title);
-            position: absolute;
-            bottom: -28px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            color: #555;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            background: rgba(255,255,255,0.9);
-            padding: 5px 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        button:hover::after {
-            opacity: 1;
-        }
-
         #chartContainer {
             margin: 40px auto;
             transition: all 0.3s ease;
@@ -254,7 +241,7 @@
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             max-width: 90%;
-            display: none; /* Hide initially */
+            display: none;
         }
 
         #fullscreenBtn {
@@ -303,32 +290,6 @@
             margin: 15px 0;
         }
 
-        /* Dark mode toggle */
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 25px;
-            background:rgb(61, 66, 74);
-            border-radius: 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle-slider {
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-
         .message-box {
             background-color: rgba(52, 152, 219, 0.1);
             border-left: 5px solid #3498db;
@@ -348,74 +309,42 @@
             transform: translateY(-2px);
         }
 
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .form-container {
-                padding: 15px;
-                max-width: 90%;
-            }
-
-            input[type="number"] {
-                width: 100px;
-                font-size: 14px;
-                padding: 10px;
-            }
-
-            button {
-                font-size: 14px;
-                padding: 12px 20px;
-                margin: 8px;
-            }
-
-            #chartContainer {
-                padding: 15px;
-                margin: 20px auto;
-            }
-
-            .message-box {
-                max-width: 90%;
-                font-size: 14px;
-                padding: 12px;
-            }
-
-            .radio-group {
-                gap: 15px;
-            }
+        .current-eye-indicator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px 0;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8em;
-            }
-
-            form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            input[type="number"] {
-                width: 100%;
-            }
-
-            .actions-container {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
-                margin: 5px 0;
-            }
-
-            .radio-group {
-                justify-content: center;
-                gap: 10px;
-            }
+        .combined-results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
+
+        .combined-results h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        .eye-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
         .loading {
             display: none;
             position: fixed;
@@ -429,9 +358,6 @@
             align-items: center;
         }
 
-        body.dark-mode .loading {
-            background: rgba(0,0,0,0.8);
-        }
         .spinner {
             width: 50px;
             height: 50px;
@@ -441,19 +367,12 @@
             animation: spin 1s ease-in-out infinite;
         }
 
-        body.dark-mode .spinner {
-            border: 5px solid rgba(255,255,255,0.1);
-            border-top-color: #3498db;
-        }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    
-
     <div class="loading" id="loading">
         <div class="spinner"></div>
     </div>
@@ -465,7 +384,9 @@
             <strong>Vision Test Instructions:</strong> Start from the top and work your way down. Try to read up to the 10th line for a comprehensive assessment of your vision. The 10th line is a good benchmark for normal vision when viewed from 3 meter distance.
         </div>
 
-            
+        <div class="current-eye-indicator" id="currentEyeIndicator" style="display: none;">
+            Testing: <span id="currentEyeText"></span>
+        </div>
 
         <div class="actions-container">
             <button id="fullscreenBtn" style="display:none;">Go Fullscreen</button>
@@ -477,14 +398,26 @@
         <div class="form-container">
             <form id="setupForm">
                 <label for="diagonal">Screen Diagonal (inches):</label>
-                <input type="number" id="diagonal" name="diagonal" step="0.1" required>
-                <button type="submit">Generate Chart</button>
+                <select id="diagonal" name="diagonal" required>
+                    <option value="" disabled selected>Select screen size</option>
+                    <option value="6.5">6.5" (Mobile)</option>
+                    <option value="10.2">10.2" (Tablet)</option>
+                    <option value="13.3">13.3" (Laptop)</option>
+                    <option value="15.6">15.6" (Laptop)</option>
+                    <option value="21.5">21.5" (Monitor)</option>
+                    <option value="24">24" (Monitor)</option>
+                    <option value="27">27" (Monitor)</option>
+                    <option value="32">32" (TV/Monitor)</option>
+                    <option value="55">55" (TV)</option>
+                    <option value="65">65" (TV)</option>
+                </select>
+                <button type="submit">Start Eye Test</button>
             </form>
 
-            <form id="lineForm" style="display: none;" method="POST" action="{% url 'predict_diopters' %}">
-                {% csrf_token %}
-                <label for="lineNumber">Line Number (1–15):</label>
-                <input type="number" id="lineNumber" name="lineNumber" min="1" max="15" required>
+            <form id="lineForm" style="display: none;">
+                <input type="hidden" id="selectedEye" name="selectedEye" value="">
+                <label for="lineNumber">Line Number (1–12):</label>
+                <input type="number" id="lineNumber" name="lineNumber" min="1" max="12" required>
                 
                 <div id="headacheForm">
                     <label>Are you having headache or strain while reading this?</label>
@@ -500,8 +433,20 @@
                     </div>
                 </div>
                 
-                <button type="submit">Get Diopter</button>
+                <button type="submit" id="diopterBtn">Get Diopter</button>
             </form>
+        </div>
+    
+        <div id="combinedResults" class="combined-results" style="display: none;">
+            <h3>Complete Vision Test Results</h3>
+            <div class="eye-result">
+                <span>Left Eye:</span>
+                <span id="leftEyeResult">-</span>
+            </div>
+            <div class="eye-result">
+                <span>Right Eye:</span>
+                <span id="rightEyeResult">-</span>
+            </div>
         </div>
     </div>
 
@@ -516,6 +461,18 @@
 
         const width_px = window.screen.width;
         const height_px = window.screen.height;
+        let currentEye = 'left';
+        let pixelSizes = [];
+        let eyeResults = {
+            left: null,
+            right: null
+        };
+
+        function updateCurrentEyeDisplay() {
+            document.getElementById('currentEyeIndicator').style.display = 'inline-block';
+            document.getElementById('currentEyeText').textContent = currentEye.charAt(0).toUpperCase() + currentEye.slice(1) + ' Eye';
+            document.getElementById('selectedEye').value = currentEye;
+        }
 
         function getScreenPPI(diagonal_inch) {
             const diagonal_px = Math.sqrt(width_px ** 2 + height_px ** 2);
@@ -525,7 +482,6 @@
         function calculatePixelSizes(ppi) {
             const distance_m = 3.0;
             const base_height_m = 0.00435;
-
             const pixelSizes = [];
 
             for (let i = 0; i < 12; i++) {
@@ -544,10 +500,8 @@
         const lineForm = document.getElementById('lineForm');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const pdfBtn = document.getElementById('pdfBtn');
-        const themeToggle = document.getElementById('themeToggle');
         const loading = document.getElementById('loading');
-
-        let pixelSizes = [];
+        const combinedResults = document.getElementById('combinedResults');
 
         function renderChart(highlightIndex = null) {
             showLoading();
@@ -576,15 +530,195 @@
             
             hideLoading();
         }
+
         function showLoading() {
             loading.style.display = 'flex';
         }
+
         function hideLoading() {
             setTimeout(() => {
                 loading.style.display = 'none';
             }, 500);
         }
 
+        function showCombinedResults() {
+    document.getElementById('leftEyeResult').textContent = eyeResults.left + ' D';
+    document.getElementById('rightEyeResult').textContent = eyeResults.right + ' D';
+    combinedResults.style.display = 'block';
+    
+    // Add submit button
+    const submitBtn = document.createElement('button');
+    submitBtn.textContent = 'Save Results to Profile';
+    submitBtn.style.cssText = `
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        width: 100%;
+    `;
+    
+    submitBtn.onclick = function() {
+        submitResultsToBackend();
+    };
+    
+    combinedResults.appendChild(submitBtn);
+    combinedResults.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Add profile button
+const profileForm = document.createElement('form');
+profileForm.method = 'get';
+profileForm.action = "{% url 'user_profile' request.session.user_id %}";
+profileForm.style.cssText = 'display: inline; width: 100%; margin-top: 10px;';
+
+const profileBtn = document.createElement('button');
+profileBtn.type = 'submit';
+profileBtn.innerHTML = '<span>👤</span> Go to Profile';
+profileBtn.style.cssText = `
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+`;
+
+profileForm.appendChild(profileBtn);
+combinedResults.appendChild(profileForm);
+}
+
+function submitResultsToBackend() {
+    const resultData = {
+        test_type: 'myopia',
+        left_eye_diopter: eyeResults.left,
+        right_eye_diopter: eyeResults.right
+    };
+
+    fetch('/submit_score/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resultData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Results saved successfully to your profile!');
+        } else {
+            alert('Error saving results. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving results. Please try again.');
+    });
+}
+
+        setupForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            showLoading();
+            const diagonal_inch = parseFloat(document.getElementById('diagonal').value);
+            const ppi = getScreenPPI(diagonal_inch);
+            pixelSizes = calculatePixelSizes(ppi);
+
+            currentEye = 'left';
+            updateCurrentEyeDisplay();
+            
+            lineForm.style.display = 'block';
+            fullscreenBtn.style.display = 'inline-block';
+            pdfBtn.style.display = 'inline-block';
+            chartContainer.style.display = 'block';
+            setupForm.style.display = 'none';
+            
+            renderChart();
+
+            document.documentElement.requestFullscreen().catch((err) => {
+                console.warn(`Failed to enter fullscreen: ${err.message}`);
+                hideLoading();
+            });
+            fullscreenBtn.textContent = 'Exit Fullscreen';
+        });
+
+        lineForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            showLoading();
+            const formData = new FormData(lineForm);
+            const lineNumber = parseInt(formData.get('lineNumber'));
+            const headache = formData.get('headache');
+            
+            // Calculate diopter
+            const logmar = (10 - lineNumber) * 0.1;
+            const rawDiopters = -3.3 * logmar;
+            let prediction;
+            
+            if (headache === 'yes') {
+                prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
+            } else {
+                prediction = -Math.round(Math.abs(rawDiopters) * 2) / 2.0;
+            }
+            
+            // Store result
+            eyeResults[currentEye] = prediction;
+            
+            hideLoading();
+            
+            // Highlight the selected line
+            const lineIndex = lineNumber - 1;
+            renderChart(lineIndex);
+            
+            // Check if we need to move to next eye or show results
+            if (currentEye === 'left') {
+                // Show left eye result and right eye button
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'message-box';
+                resultDiv.style.backgroundColor = 'rgba(46, 204, 113, 0.1)';
+                resultDiv.style.borderLeftColor = '#2ecc71';
+                resultDiv.innerHTML = `
+                    <strong>Left Eye Complete!</strong><br>
+                    Result: <span style="font-size: 1.2em; font-weight: bold;">${prediction} D</span><br>
+                    <button id="startRightEyeBtn" style="margin-top: 15px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        Start Right Eye Test
+                    </button>
+                `;
+                
+                lineForm.parentNode.insertBefore(resultDiv, lineForm);
+                lineForm.style.display = 'none';
+                
+                // Add click event to right eye button
+                document.getElementById('startRightEyeBtn').addEventListener('click', function() {
+                    currentEye = 'right';
+                    updateCurrentEyeDisplay();
+                    
+                    // Reset form
+                    document.getElementById('lineNumber').value = '';
+                    document.getElementById('headacheNo').checked = true;
+                    
+                    // Clear chart highlight and show form
+                    renderChart();
+                    lineForm.style.display = 'block';
+                    resultDiv.remove();
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            } else {
+                // Both eyes complete - show combined results
+                setTimeout(() => {
+                    lineForm.style.display = 'none';
+                    document.getElementById('currentEyeIndicator').style.display = 'none';
+                    showCombinedResults();
+                }, 2000);
+            }
+        });
+
+        // Fullscreen and PDF functionality remain the same
         fullscreenBtn.addEventListener('click', function() {
             if (document.fullscreenElement) {
                document.exitFullscreen();
@@ -597,115 +731,56 @@
             }
         });
 
-  pdfBtn.addEventListener('click', async function () {
-     showLoading();
-
-    const highlightedLine = document.querySelector('.line.highlight');
-    const highlightIndex = highlightedLine
-        ? Array.from(highlightedLine.parentElement.parentElement.children).indexOf(highlightedLine.parentElement)
-        : null;
-
-     const pdfContent = document.createElement('div');
-     pdfContent.style.padding = '30px';
-     pdfContent.style.backgroundColor = '#fff';
-     pdfContent.style.color = '#000';
-     pdfContent.style.width = '100%';
-     pdfContent.style.maxWidth = '800px';
-     pdfContent.style.margin = '0 auto';
-     pdfContent.style.fontFamily = 'Arial, sans-serif';
-
-     const title = document.createElement('h2');
-     title.textContent = 'Snellen Eye Chart';
-     title.style.textAlign = 'center';
-     title.style.marginBottom = '30px';
-     pdfContent.appendChild(title);
-
-     chartLines.forEach((line, index) => {
-          const lineDiv = document.createElement('div');
-         lineDiv.textContent = line;
-         lineDiv.style.fontSize = pixelSizes[index] + 'px';
-         lineDiv.style.textAlign = 'center';
-         lineDiv.style.margin = '15px 0';
-         lineDiv.style.lineHeight = '1.2';
-
-         if (highlightIndex !== null && index === highlightIndex) {
-            lineDiv.style.color = '#e74c3c';
-            lineDiv.style.fontWeight = 'bold';
-            lineDiv.style.textShadow = '0 0 5px rgba(231, 76, 60, 0.3)';
-         }
-
-         const lineNumber = document.createElement('div');
-         lineNumber.textContent = `Line ${index + 1}`;
-         lineNumber.style.fontSize = '12px';
-          lineNumber.style.textAlign = 'center';
-          lineNumber.style.color = '#666';
-         lineNumber.style.marginBottom = '5px';
-
-         const container = document.createElement('div');
-         container.appendChild(lineNumber);
-         container.appendChild(lineDiv);
-         pdfContent.appendChild(container);
-    });
-
-    document.body.appendChild(pdfContent);
-
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    const opt = {
-        margin: [15, 10, 15, 10],
-        filename: 'snellen_chart.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'], before: '.pdf-pagebreak' }
-    };
-
-    try {
-        await html2pdf().set(opt).from(pdfContent).save();
-    } catch (err) {
-        console.error('PDF generation error:', err);
-        alert('Error generating PDF. Please try again.');
-    } finally {
-        document.body.removeChild(pdfContent);
-        hideLoading();
-    }
-});
-
-        setupForm.addEventListener('submit', function(event) {
-            event.preventDefault();
+        pdfBtn.addEventListener('click', async function () {
             showLoading();
-            const diagonal_inch = parseFloat(document.getElementById('diagonal').value);
-            const ppi = getScreenPPI(diagonal_inch);
-            pixelSizes = calculatePixelSizes(ppi);
 
-            lineForm.style.display = 'block';
-            fullscreenBtn.style.display = 'inline-block';
-            pdfBtn.style.display = 'inline-block';
-            chartContainer.style.display = 'block'; 
-            renderChart();
+            const pdfContent = document.createElement('div');
+            pdfContent.style.padding = '30px';
+            pdfContent.style.backgroundColor = '#fff';
+            pdfContent.style.color = '#000';
+            pdfContent.style.width = '100%';
+            pdfContent.style.maxWidth = '800px';
+            pdfContent.style.margin = '0 auto';
+            pdfContent.style.fontFamily = 'Arial, sans-serif';
 
-            document.documentElement.requestFullscreen().catch((err) => {
-                console.warn(`Failed to enter fullscreen: ${err.message}`);
+            const title = document.createElement('h2');
+            title.textContent = 'Complete Vision Test Results';
+            title.style.textAlign = 'center';
+            title.style.marginBottom = '30px';
+            pdfContent.appendChild(title);
+
+            const results = document.createElement('div');
+            results.innerHTML = `
+                <h3>Results Summary:</h3>
+                <p><strong>Left Eye:</strong> ${eyeResults.left} D</p>
+                <p><strong>Right Eye:</strong> ${eyeResults.right} D</p>
+            `;
+            pdfContent.appendChild(results);
+
+            document.body.appendChild(pdfContent);
+
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            const opt = {
+                margin: [15, 10, 15, 10],
+                filename: 'complete_vision_test_results.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            try {
+                await html2pdf().set(opt).from(pdfContent).save();
+            } catch (err) {
+                console.error('PDF generation error:', err);
+                alert('Error generating PDF. Please try again.');
+            } finally {
+                document.body.removeChild(pdfContent);
                 hideLoading();
-            });
-            fullscreenBtn.textContent = 'Exit Fullscreen';
+            }
         });
+        // Add this to your showCombinedResults function after displaying results:
 
-    function getCSRFToken() {
-    const name = 'csrftoken';
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        const c = cookie.trim();
-        if (c.startsWith(name + '=')) {
-            return decodeURIComponent(c.substring(name.length + 1));
-        }
-    }
-    return '';
-}
-        
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('dark-mode');
-        }
     </script>
 </body>
 </html>

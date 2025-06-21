@@ -7,6 +7,7 @@ admin.site.register(TestResult)
 admin.site.register(ColorVisionTest)
 admin.site.register(DryEyeResult)
 admin.site.register(GlaucomaResult)
+admin.site.register(MyopiaResult)
 
 
 
