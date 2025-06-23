@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest,DryEyeResult,GlaucomaResult
+from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest,DryEyeResult,GlaucomaResult,MyopiaResult
 from .Serializers import UserSerializer,ResultSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -87,6 +87,7 @@ def user_profile(request, user_id):
     blink_rates = BlinkRate.objects.filter(user=user).order_by('-timestamp')
     dryeye_results = user.dryeye_results.all().order_by('-date_taken')
     glaucoma_results = user.glaucoma_results.all().order_by('-date_taken')
+    myopia_results = user.myopia_results.all().order_by('-date_taken')
 
     return render(request, 'user_profile.html', {
         'user': user,
@@ -95,6 +96,7 @@ def user_profile(request, user_id):
         'blink_rates': blink_rates,
         'dryeye_results': dryeye_results,
         'glaucoma_results': glaucoma_results,
+        'myopia_results': myopia_results,
     })
 
 
@@ -127,6 +129,7 @@ def submit_score(request):
                 osdi_score=final_score,
                 severity=category
             )
+        
         elif test_type == 'Glaucoma':
             # Handle Glaucoma test - you'll need to pass additional data from frontend
             total_correct = data.get('total_correct', 0)
@@ -148,6 +151,18 @@ def submit_score(request):
                 total_correct=total_correct,
                 severity=severity,
                 viewing_distance=viewing_distance
+            )
+        
+        elif test_type == 'myopia':
+                 left_eye = data.get('left_eye_diopter')
+                 right_eye = data.get('right_eye_diopter')
+                 if left_eye is None or right_eye is None:
+                    return JsonResponse({'status': 'error', 'message': 'Missing eye diopter values'}, status=400)
+    
+                 MyopiaResult.objects.create(
+             user=user,
+             left_eye_diopter=left_eye,
+             right_eye_diopter=right_eye
             )
         else:
             # Handle other test types with existing TestResult model

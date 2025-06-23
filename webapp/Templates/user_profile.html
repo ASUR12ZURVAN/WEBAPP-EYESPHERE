@@ -368,7 +368,14 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-
+{% if myopia_results %}
+    {% for result in myopia_results %}
+        <div class="test-result">
+            <span class="test-name">Myopia Test</span>
+            <span class="test-percentage">L: {{ result.left_eye_diopter }}D, R: {{ result.right_eye_diopter }}D</span>
+        </div>
+    {% endfor %}
+{% endif %}
                     
 {% if dryeye_results %}
     {% for result in dryeye_results %}
