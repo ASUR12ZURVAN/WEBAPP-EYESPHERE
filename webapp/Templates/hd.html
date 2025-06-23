@@ -658,6 +658,7 @@ function submitResultsToBackend() {
             const rawDiopters = -3.3 * logmar;
             let prediction;
             
+            
             if (headache === 'yes') {
                 prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
             } else {

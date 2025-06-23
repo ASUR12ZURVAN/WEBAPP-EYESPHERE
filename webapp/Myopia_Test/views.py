@@ -15,11 +15,15 @@ def predict_diopters(request):
             
             # Apply sign based on headache response
             if headache == 'yes':
-                # If user has headache, make the value positive
-                prediction = round(abs(raw_diopters) * 2) / 2.0
+                if raw_diopters == 0:
+                    prediction = 0
+                else:
+                    prediction = round(abs(raw_diopters) * 2) / 2.0
             else:
-                # If user has no headache, keep the value negative
-                prediction = -round(abs(raw_diopters) * 2) / 2.0
+                if raw_diopters == 0:
+                    prediction = 0
+                else:
+                    prediction = -round(abs(raw_diopters) * 2) / 2.0
             
             user_id = request.session.get('user_id')
             if not user_id:
