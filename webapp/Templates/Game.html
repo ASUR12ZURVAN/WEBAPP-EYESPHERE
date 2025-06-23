@@ -1251,6 +1251,99 @@
 
         <button class="help-btn" id="helpBtn" style="display: none;"><i class="fas fa-question"></i></button>
     </div>
+<script type="module">
+
+        import {
+      FaceLandmarker,
+      FilesetResolver
+    } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
+
+    const fileset = await FilesetResolver.forVisionTasks(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+    );
+
+        const faceLandmarker = await FaceLandmarker.createFromOptions(fileset, {
+            baseOptions: {
+            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
+        },
+            outputFaceBlendshapes: true,
+            runningMode: "VIDEO",
+            numFaces: 1
+        });
+
+        const video = document.createElement("video");
+video.autoplay = true;
+video.playsInline = true;
+
+// ✅ Set fixed resolution (important for detection to work)
+video.width = 640;
+video.height = 480;
+
+document.body.appendChild(video);
+
+// ✅ Request video with fixed resolution as well
+navigator.mediaDevices.getUserMedia({
+    video: {
+        width: { ideal: 640 },
+        height: { ideal: 480 },
+        facingMode: "user" // 👈 optional, ensures front camera on phones
+    }
+}).then(stream => {
+    video.srcObject = stream;
+
+    video.onloadeddata = () => {
+        console.log("✅ Video loaded, starting detection...");
+        requestAnimationFrame(detectFrame);
+    };
+}).catch(err => {
+    console.error("❌ Could not access webcam:", err);
+});
+
+
+            async function detectFrame() {
+            const results = await faceLandmarker.detectForVideo(video, performance.now());
+
+            if (results.faceLandmarks.length > 0) {
+                const landmarks = results.faceLandmarks[0];
+
+                const leftEye = landmarks[468]; // Right iris center
+                const rightEye = landmarks[473]; // Left iris center
+                const eyeX = (leftEye.x + rightEye.x) / 2 * window.innerWidth;
+                const eyeY = (leftEye.y + rightEye.y) / 2 * window.innerHeight;
+                // Convert normalized coords to screen coords
+
+                checkFocus(eyeX, eyeY);
+            }
+
+            requestAnimationFrame(detectFrame);
+        }
+
+        let alertShown = false;
+
+        function checkFocus(eyeX, eyeY) {
+            const dot = document.getElementById("centerDot");
+            const rect = dot.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const dx = eyeX - centerX;
+            const dy = eyeY - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            const threshold = 100; // px
+
+            if (distance < threshold) {
+                dot.style.boxShadow = "0 0 25px lime";
+                alertShown = false; // reset if focus is regained
+            } else {
+                dot.style.boxShadow = "0 0 15px red";
+                if (!alertShown) {
+                    alertShown = true;
+                    alert("⚠️ Please keep your eyes on the center dot.");
+                }
+            }
+        }
+    </script>
 
     <script>
         let severity = "NA";
@@ -1272,6 +1365,8 @@
             2: { min: 10, max: 20, description: "10-20° (Paracentral)" },
             3: { min: 20, max: 30, description: "20-30° (Peripheral)" }
         };
+
+       
 
         // Hide UI elements during number display
         function hideUIForGameplay() {

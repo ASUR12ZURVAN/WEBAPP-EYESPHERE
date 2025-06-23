@@ -25,6 +25,16 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
+        .snellen_header{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .profileBtn{
+            background-color: #7f1acd;
+            padding: 0px 24px;
+            margin: 10px;
+        }
 
         h1 {
             text-align: center;
@@ -216,12 +226,16 @@
     </div>
 
     <div class="container">
-        <h1>Dynamic Snellen Chart</h1>
+        <div class="snellen_header">
+            <h1>Dynamic Snellen Chart</h1>
+            <button class="profileBtn">Profile</button>
+        </div>
 
         <div class="message-box">
             <strong>Vision Test Instructions:</strong> Start from the top and work your way down. Try to read up to the
             10th line for a comprehensive assessment of your vision. The 10th line is a good benchmark for normal vision
             when viewed from 3 meter distance.
+
         </div>
 
         <div class="actions-container">
@@ -238,10 +252,10 @@
         </div>
 
         <div id="resultBox" style="display: none; margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
-        <div id="diopterSection" style="display: none; text-align: center; margin-top: 20px;">
+        <!-- <div id="diopterSection" style="display: none; text-align: center; margin-top: 20px;">
             <button id="getDiopterBtn">Get Diopter</button>
             <div id="diopterOutput" style="margin-top: 15px; font-weight: bold; color: #1f4e79;"></div>
-        </div>
+        </div> -->
 
 
         <div class="form-container">
@@ -263,7 +277,7 @@
                 <button type="submit">Generate Chart</button>
             </form>
 
-            <form id="lineForm" style="display: none;" method="POST">
+            <form id="lineForm" style="display: none;" method="POST" action="{% url 'predict_diopters' %}">
                 <label for="lineNumber">Line Number (1–15):</label>
                 <input type="number" id="lineNumber" name="lineNumber" min="1" max="15" required>
 
@@ -454,18 +468,18 @@
             document.body.classList.add('dark-mode');
         }
 
-        getDiopterBtn.addEventListener('click', () => {
-            // Example calculation: average of line numbers mapped to basic diopter range
-            const averageLine = (leftEyeData.lineNumber + rightEyeData.lineNumber) / 2;
-            let diopter;
+        // getDiopterBtn.addEventListener('click', () => {
+        //     // Example calculation: average of line numbers mapped to basic diopter range
+        //     const averageLine = (leftEyeData.lineNumber + rightEyeData.lineNumber) / 2;
+        //     let diopter;
 
-            if (averageLine >= 10) diopter = '0 to -0.5 (Normal)';
-            else if (averageLine >= 7) diopter = '-0.5 to -1.5 (Mild)';
-            else if (averageLine >= 4) diopter = '-1.5 to -2.5 (Moderate)';
-            else diopter = '-2.5 or worse (Severe)';
+        //     if (averageLine >= 10) diopter = '0 to -0.5 (Normal)';
+        //     else if (averageLine >= 7) diopter = '-0.5 to -1.5 (Mild)';
+        //     else if (averageLine >= 4) diopter = '-1.5 to -2.5 (Moderate)';
+        //     else diopter = '-2.5 or worse (Severe)';
 
-            diopterOutput.textContent = `Estimated Diopter: ${diopter}`;
-        });
+        //     diopterOutput.textContent = `Estimated Diopter: ${diopter}`;
+        // });
 
     </script>
 </body>
