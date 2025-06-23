@@ -8,7 +8,10 @@ def predict_diopters(request):
             headache = request.POST.get('headache', 'no')  # Get headache value, default to 'no'
             
             logmar = (10 - line_number) * 0.1
-            raw_diopters = -3.3 * logmar
+            if line_number >= 10:
+                raw_diopters = 0.0
+            else:
+                raw_diopters = -3.3 * logmar
             
             # Apply sign based on headache response
             if headache == 'yes':

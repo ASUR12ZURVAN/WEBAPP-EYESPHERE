@@ -16,7 +16,10 @@ from pathlib import Path
 #from decouple import config
 #import dj_database_url
 
+<<<<<<< Updated upstream
 API_KEY = "ghghghghgh"
+=======
+>>>>>>> Stashed changes
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
