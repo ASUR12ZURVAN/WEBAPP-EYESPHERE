@@ -368,13 +368,29 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-
+{% if myopia_results %}
+    {% for result in myopia_results %}
+        <div class="test-result">
+            <span class="test-name">Myopia Test</span>
+            <span class="test-percentage">L: {{ result.left_eye_diopter }}D, R: {{ result.right_eye_diopter }}D</span>
+        </div>
+    {% endfor %}
+{% endif %}
                     
 {% if dryeye_results %}
     {% for result in dryeye_results %}
         <div class="test-result">
-            <span class="test-name">Dry Eye (OSDI)</span>
+            <span class="test-name">OSDI</span>
             <span class="test-percentage">{{ result.osdi_score }} - {{ result.severity }}</span>
+        </div>
+    {% endfor %}
+{% endif %}
+<!-- Add this to your user_profile.html template -->
+{% if glaucoma_results %}
+    {% for result in glaucoma_results %}
+        <div class="test-result">
+            <span class="test-name">Peripheral Vision</span>
+            <span class="test-percentage">{{ result.total_score }}% - {{ result.severity }}</span>
         </div>
     {% endfor %}
 {% endif %}

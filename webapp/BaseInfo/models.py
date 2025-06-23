@@ -27,6 +27,16 @@ class TestResult(models.Model):
         unit = "diopters" if self.test_type == "myopia" else "mmHg" if self.test_type == "glaucoma" else ""
         date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
         return f"{self.user.name} - {self.test_type.title()} - {self.result_value} {unit} ({date_str})"
+
+class MyopiaResult(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='myopia_results')
+    left_eye_diopter = models.FloatField()
+    right_eye_diopter = models.FloatField()
+    date_taken = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
+        return f"{self.user.name} - Myopia Test - L: {self.left_eye_diopter}D, R: {self.right_eye_diopter}D ({date_str})"
     
 class DryEyeResult(models.Model):
     SEVERITY_CHOICES = (
@@ -44,6 +54,25 @@ class DryEyeResult(models.Model):
     def __str__(self):
         date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
         return f"{self.user.name} - Dry Eye - {self.osdi_score} ({self.severity}) - ({date_str})"
+    
+class GlaucomaResult(models.Model):
+    SEVERITY_CHOICES = (
+        ('Normal', 'Normal Vision'),
+        ('Mild Defect', 'Mild Peripheral Vision Defect'),
+        ('Moderate Defect', 'Moderate Peripheral Vision Defect'),
+        ('Severe Defect', 'Severe Peripheral Vision Defect'),
+    )
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='glaucoma_results')
+    total_score = models.DecimalField(max_digits=5, decimal_places=2)  # Average score across 3 levels
+    total_correct = models.IntegerField()  # Total correct answers out of 15
+    severity = models.CharField(max_length=20, choices=SEVERITY_CHOICES)
+    viewing_distance = models.IntegerField(default=60)  # Distance in cm
+    date_taken = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        date_str = localtime(self.date_taken).strftime("%b %d, %Y %I:%M %p")
+        return f"{self.user.name} - Glaucoma - {self.total_score}% ({self.severity}) - ({date_str})"
 
 class ColorVisionTest(models.Model):
     SEVERITY_CHOICES = (

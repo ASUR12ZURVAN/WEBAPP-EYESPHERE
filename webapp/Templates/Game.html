@@ -1251,459 +1251,414 @@
 
         <button class="help-btn" id="helpBtn" style="display: none;"><i class="fas fa-question"></i></button>
     </div>
-<script type="module">
-
-        import {
-      FaceLandmarker,
-      FilesetResolver
-    } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
-
-    const fileset = await FilesetResolver.forVisionTasks(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-    );
-
-        const faceLandmarker = await FaceLandmarker.createFromOptions(fileset, {
-            baseOptions: {
-            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
-        },
-            outputFaceBlendshapes: true,
-            runningMode: "VIDEO",
-            numFaces: 1
-        });
-
-        const video = document.createElement("video");
-video.autoplay = true;
-video.playsInline = true;
-
-// ✅ Set fixed resolution (important for detection to work)
-video.width = 640;
-video.height = 480;
-
-document.body.appendChild(video);
-
-// ✅ Request video with fixed resolution as well
-navigator.mediaDevices.getUserMedia({
-    video: {
-        width: { ideal: 640 },
-        height: { ideal: 480 },
-        facingMode: "user" // 👈 optional, ensures front camera on phones
-    }
-}).then(stream => {
-    video.srcObject = stream;
-
-    video.onloadeddata = () => {
-        console.log("✅ Video loaded, starting detection...");
-        requestAnimationFrame(detectFrame);
-    };
-}).catch(err => {
-    console.error("❌ Could not access webcam:", err);
-});
-
-
-            async function detectFrame() {
-            const results = await faceLandmarker.detectForVideo(video, performance.now());
-
-            if (results.faceLandmarks.length > 0) {
-                const landmarks = results.faceLandmarks[0];
-
-                const leftEye = landmarks[468]; // Right iris center
-                const rightEye = landmarks[473]; // Left iris center
-                const eyeX = (leftEye.x + rightEye.x) / 2 * window.innerWidth;
-                const eyeY = (leftEye.y + rightEye.y) / 2 * window.innerHeight;
-                // Convert normalized coords to screen coords
-
-                checkFocus(eyeX, eyeY);
-            }
-
-            requestAnimationFrame(detectFrame);
-        }
-
-        let alertShown = false;
-
-        function checkFocus(eyeX, eyeY) {
-            const dot = document.getElementById("centerDot");
-            const rect = dot.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            const dx = eyeX - centerX;
-            const dy = eyeY - centerY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            const threshold = 100; // px
-
-            if (distance < threshold) {
-                dot.style.boxShadow = "0 0 25px lime";
-                alertShown = false; // reset if focus is regained
-            } else {
-                dot.style.boxShadow = "0 0 15px red";
-                if (!alertShown) {
-                    alertShown = true;
-                    alert("⚠️ Please keep your eyes on the center dot.");
-                }
-            }
-        }
-    </script>
 
     <script>
-        let severity = "NA";
-        const userId = document.getElementById('user-id').value;
-        const colors = ['#ff6b6b', '#4cc9f0', '#4361ee', '#3bc47d', '#f72585'];
-        const displayTime = 1500; // ms per number
-        const numberCount = 5;
-        let generatedNumbers = [];
-        let currentLevel = 1;
-        let totalScore = 0;
-        let correctAnswers = 0;
-        let gameStarted = false;
-        let viewingDistanceCm = 60;
-        let pixelsPerCm = 0;
-        let isDisplayingNumbers = false;
+       let severity = "NA";
+const userId = document.getElementById('user-id').value;
+const colors = ['#ff6b6b', '#4cc9f0', '#4361ee', '#3bc47d', '#f72585'];
+const displayTime = 1500; // ms per number
+const numberCount = 5;
+let generatedNumbers = [];
+let currentLevel = 1;
+let totalScore = 0;
+let correctAnswers = 0;
+let gameStarted = false;
+let viewingDistanceCm = 60;
+let pixelsPerCm = 0;
+let isDisplayingNumbers = false;
 
-        const levelRanges = {
-            1: { min: 5, max: 10, description: "0-10° (Central)" },
-            2: { min: 10, max: 20, description: "10-20° (Paracentral)" },
-            3: { min: 20, max: 30, description: "20-30° (Peripheral)" }
-        };
+const levelRanges = {
+    1: { min: 5, max: 10, description: "0-10° (Central)" },
+    2: { min: 10, max: 20, description: "10-20° (Paracentral)" },
+    3: { min: 20, max: 30, description: "20-30° (Peripheral)" }
+};
 
-       
+// Hide UI elements during number display
+function hideUIForGameplay() {
+    document.getElementById('gameUI').style.display = 'none';
+    document.getElementById('helpBtn').style.display = 'none';
+    document.getElementById('inputSection').style.display = 'none';
+    isDisplayingNumbers = true;
+}
 
-        // Hide UI elements during number display
-        function hideUIForGameplay() {
-            document.getElementById('gameUI').style.display = 'none';
-            document.getElementById('helpBtn').style.display = 'none';
-            document.getElementById('inputSection').style.display = 'none';
-            isDisplayingNumbers = true;
+// Show UI elements after number display
+function showUIAfterGameplay() {
+    document.getElementById('gameUI').style.display = 'block';
+    document.getElementById('helpBtn').style.display = 'block';
+    isDisplayingNumbers = false;
+}
+
+// Hide center dot and focus elements when test is complete
+function hideCenterElements() {
+    const statsContainers = document.getElementsByClassName('stats-container');
+    if (statsContainers.length > 0) {
+        statsContainers[0].style.display = "none";
+    }
+
+    const levelIndicators = document.getElementsByClassName('level-indicator');
+    if (levelIndicators.length > 0) {
+        levelIndicators[0].style.display = "none";
+    }
+    document.getElementById('inputSection').style.top = "105px";
+    document.getElementById('centerArea').style.display = 'none';
+}
+
+// Show center dot and focus elements when test restarts
+function showCenterElements() {
+    const statsContainers = document.getElementsByClassName('stats-container');
+    if (statsContainers.length > 0) {
+        statsContainers[0].style.display = "flex";
+    }
+
+    const levelIndicators = document.getElementsByClassName('level-indicator');
+    if (levelIndicators.length > 0) {
+        levelIndicators[0].style.display = "block";
+    }
+    document.getElementById('centerArea').style.display = 'block';
+}
+
+function calculatePixelsPerCm() {
+    const screenWidthPx = window.screen.width;
+    const screenHeightPx = window.screen.height;
+    const screenDiagonalInches = 15;
+    const aspectRatio = screenWidthPx / screenHeightPx;
+
+    const screenWidthInches = screenDiagonalInches * aspectRatio / Math.sqrt(aspectRatio * aspectRatio + 1);
+    const screenHeightInches = screenDiagonalInches / Math.sqrt(aspectRatio * aspectRatio + 1);
+
+    const screenWidthCm = screenWidthInches * 2.54;
+    const screenHeightCm = screenHeightInches * 2.54;
+
+    const pixelsPerCmWidth = screenWidthPx / screenWidthCm;
+    const pixelsPerCmHeight = screenHeightPx / screenHeightCm;
+
+    return (pixelsPerCmWidth + pixelsPerCmHeight) / 2;
+}
+
+function visualAngleToPixels(angleDegrees, distanceCm) {
+    const angleRadians = angleDegrees * (Math.PI / 180);
+    const physicalDistanceCm = Math.tan(angleRadians) * distanceCm;
+    return physicalDistanceCm * pixelsPerCm;
+}
+
+function calculateVisualAngle(pixelX, pixelY, centerX, centerY, distanceCm) {
+    const deltaX = pixelX - centerX;
+    const deltaY = pixelY - centerY;
+    const deltaXCm = deltaX / pixelsPerCm;
+    const deltaYCm = deltaY / pixelsPerCm;
+    const radialDistanceCm = Math.sqrt(deltaXCm * deltaXCm + deltaYCm * deltaYCm);
+    const angleRadians = Math.atan(radialDistanceCm / distanceCm);
+    const angleDegrees = angleRadians * (180 / Math.PI);
+    return angleDegrees;
+}
+
+function generatePositionAtAngle(targetAngleDegrees) {
+    const gameArea = document.getElementById('gameArea');
+    // Use offsetWidth/offsetHeight for proper centering
+    const centerX = gameArea.offsetWidth / 2;
+    const centerY = gameArea.offsetHeight / 2;
+    
+    const targetPixelDistance = visualAngleToPixels(targetAngleDegrees, viewingDistanceCm);
+    const circularAngle = Math.random() * 2 * Math.PI;
+
+    const x = centerX + Math.cos(circularAngle) * targetPixelDistance;
+    const y = centerY + Math.sin(circularAngle) * targetPixelDistance;
+
+    const margin = 50;
+    const clampedX = Math.max(margin, Math.min(gameArea.offsetWidth - margin, x));
+    const clampedY = Math.max(margin, Math.min(gameArea.offsetHeight - margin, y));
+
+    const actualAngle = calculateVisualAngle(clampedX, clampedY, centerX, centerY, viewingDistanceCm);
+
+    return { x: clampedX, y: clampedY, actualAngle: actualAngle };
+}
+
+function createStars() {
+    const starsContainer = document.getElementById('stars');
+    const numberOfStars = 100;
+
+    for (let i = 0; i < numberOfStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 4 + 's';
+        starsContainer.appendChild(star);
+    }
+}
+
+function initializeDisplayCalculations() {
+    pixelsPerCm = calculatePixelsPerCm();
+    console.log(`Calculated pixels per cm: ${pixelsPerCm.toFixed(2)}`);
+}
+
+function updateCenterDotPosition() {
+    const gameArea = document.getElementById('gameArea');
+    const centerArea = document.getElementById('centerArea');
+    
+    if (centerArea) {
+        centerArea.style.position = 'absolute';
+        centerArea.style.left = '50%';
+        centerArea.style.top = '50%';
+        centerArea.style.transform = 'translate(-50%, -50%)';
+        centerArea.style.textAlign = 'center';
+    }
+}
+
+function generateNumbers() {
+    generatedNumbers = [];
+    const range = levelRanges[currentLevel];
+
+    for (let i = 0; i < numberCount; i++) {
+        const targetAngle = Math.random() * (range.max - range.min) + range.min;
+        const position = generatePositionAtAngle(targetAngle);
+
+        generatedNumbers.push({
+            value: Math.floor(Math.random() * 9) + 1,
+            x: position.x,
+            y: position.y,
+            angle: position.actualAngle
+        });
+    }
+
+    console.log(`Level ${currentLevel} generated numbers:`, 
+        generatedNumbers.map(n => `${n.value} at ${n.angle.toFixed(1)}°`));
+    console.log('Generated values only:', generatedNumbers.map(n => n.value));
+}
+
+async function displayNumbers() {
+    hideUIForGameplay();
+
+    const numbersContainer = document.getElementById('numbersContainer');
+
+    for (let i = 0; i < generatedNumbers.length; i++) {
+        const numberData = generatedNumbers[i];
+        const numberElement = document.createElement('div');
+        numberElement.className = 'number';
+        numberElement.textContent = numberData.value;
+
+        numberElement.style.position = 'absolute';
+        numberElement.style.left = numberData.x + 'px';
+        numberElement.style.top = numberData.y + 'px';
+        numberElement.style.fontSize = '40px';
+        numberElement.style.color = colors[i % colors.length];
+        numberElement.style.fontWeight = 'bold';
+        numberElement.style.pointerEvents = 'none';
+        numberElement.style.zIndex = '100';
+
+        numbersContainer.appendChild(numberElement);
+
+        const progress = ((i + 1) / numberCount) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressStat').textContent = Math.round(progress) + '%';
+
+        await new Promise(resolve => setTimeout(resolve, displayTime));
+        numberElement.remove();
+    }
+
+    showUIAfterGameplay();
+    document.getElementById('inputSection').style.display = 'block';
+    document.getElementById('userInput').focus();
+}
+
+function checkAnswer() {
+    const userInput = document.getElementById('userInput').value.trim();
+    
+    // Handle both comma and space separation
+    let userNumbers;
+    if (userInput.includes(',')) {
+        userNumbers = userInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    } else {
+        userNumbers = userInput.split(/\s+/).map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    }
+    
+    const correctNumbers = generatedNumbers.map(n => n.value);
+    
+    console.log('User input raw:', userInput);
+    console.log('User numbers parsed:', userNumbers);
+    console.log('Correct numbers:', correctNumbers);
+    
+    // Create frequency maps to handle duplicates properly
+    const correctFreq = {};
+    correctNumbers.forEach(num => {
+        correctFreq[num] = (correctFreq[num] || 0) + 1;
+    });
+    
+    const userFreq = {};
+    userNumbers.forEach(num => {
+        userFreq[num] = (userFreq[num] || 0) + 1;
+    });
+    
+    console.log('Correct frequency:', correctFreq);
+    console.log('User frequency:', userFreq);
+    
+    // Count correct matches (minimum of what user entered vs what was correct)
+    let correct = 0;
+    for (let num in correctFreq) {
+        if (userFreq[num]) {
+            const matches = Math.min(correctFreq[num], userFreq[num]);
+            correct += matches;
+            console.log(`Number ${num}: user had ${userFreq[num]}, correct had ${correctFreq[num]}, matches: ${matches}`);
         }
+    }
+    
+    const total = correctNumbers.length;
+    const levelScore = Math.round((correct / total) * 100);
+    totalScore += levelScore;
+    correctAnswers += correct;
+    
+    console.log(`Level ${currentLevel}: ${correct}/${total} correct, Level Score: ${levelScore}%`);
+    console.log(`Total Score so far: ${totalScore}, Total Correct: ${correctAnswers}`);
 
-        // Show UI elements after number display
-        function showUIAfterGameplay() {
-            document.getElementById('gameUI').style.display = 'block';
-            document.getElementById('helpBtn').style.display = 'block';
-            isDisplayingNumbers = false;
+    const scoreElement = document.getElementById('score');
+    const range = levelRanges[currentLevel];
+    scoreElement.innerHTML = `
+        <strong>Level ${currentLevel} Results:</strong><br>
+        Field Range: ${range.description}<br>
+        Correct: ${correct}/${total} (${levelScore}%)<br>
+        Your input: [${userNumbers.join(', ')}]<br>
+        Correct sequence: [${correctNumbers.join(', ')}]
+    `;
+    scoreElement.classList.add('score-highlight');
+
+    updateLevelStats();
+
+    setTimeout(() => {
+        if (currentLevel < 3) {
+            nextLevel();
+        } else {
+            showFinalResults();
         }
+    }, 3000);
+}
 
-        // Hide center dot and focus elements when test is complete
-        function hideCenterElements() {
-            const statsContainers = document.getElementsByClassName('stats-container');
-            if (statsContainers.length > 0) {
-                statsContainers[0].style.display = "none"; // Assuming you only have one stats-container or want to hide the first one
-            }
+function updateLevelStats() {
+    const range = levelRanges[currentLevel];
+    document.getElementById('fieldRange').textContent = range.description.split(' ')[0];
+    document.getElementById('currentLevelStat').textContent = `${currentLevel} / 3`;
+    document.getElementById('levelDisplay').textContent = currentLevel;
+}
 
-            const levelIndicators = document.getElementsByClassName('level-indicator');
-            if (levelIndicators.length > 0) {
-                levelIndicators[0].style.display = "none"; // Assuming you only have one level-indicatorr or want to hide the first one
-            }
-            document.getElementById('inputSection').style.top = "105px";
-            document.getElementById('centerArea').style.display = 'none';
-        }
+function nextLevel() {
+    currentLevel++;
+    document.getElementById('levelText').textContent = `Level ${currentLevel}`;
+    document.getElementById('userInput').value = '';
+    document.getElementById('inputSection').style.display = 'none';
+    document.getElementById('score').classList.remove('score-highlight');
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressStat').textContent = '0%';
 
-        // Show center dot and focus elements when test restarts
-        function showCenterElements() {
-            document.getElementById('centerArea').style.display = 'block';
-        }
+    updateLevelStats();
 
-        function calculatePixelsPerCm() {
-            const screenWidthPx = window.screen.width;
-            const screenHeightPx = window.screen.height;
-            const screenDiagonalInches = 15;
-            const aspectRatio = screenWidthPx / screenHeightPx;
+    setTimeout(() => {
+        generateNumbers();
+        displayNumbers();
+    }, 1000);
+}
 
-            const screenWidthInches = screenDiagonalInches * aspectRatio / Math.sqrt(aspectRatio * aspectRatio + 1);
-            const screenHeightInches = screenDiagonalInches / Math.sqrt(aspectRatio * aspectRatio + 1);
+function showFinalResults() {
+    const averageScore = Math.round(totalScore / 3);
+    const totalCorrect = correctAnswers;
+    const totalPossible = 15;
 
-            const screenWidthCm = screenWidthInches * 2.54;
-            const screenHeightCm = screenHeightInches * 2.54;
+    let recommendation = "Your peripheral vision appears to be functioning normally.";
 
-            const pixelsPerCmWidth = screenWidthPx / screenWidthCm;
-            const pixelsPerCmHeight = screenHeightPx / screenHeightCm;
+    if (averageScore < 30) {
+        severity = "Severe Defect";
+        recommendation = "Consider consulting an eye care professional for a comprehensive visual field examination.";
+    } else if (averageScore < 60) {
+        severity = "Moderate Defect";
+        recommendation = "Some peripheral vision limitations detected. Professional evaluation recommended.";
+    } else if (averageScore < 90) {
+        severity = "Mild Defect";
+        recommendation = "Minor peripheral vision limitations. Monitor and consider professional evaluation.";
+    } else {
+        severity = "Normal";
+    }
 
-            return (pixelsPerCmWidth + pixelsPerCmHeight) / 2;
-        }
+    hideCenterElements();
 
-        function visualAngleToPixels(angleDegrees, distanceCm) {
-            const angleRadians = angleDegrees * (Math.PI / 180);
-            const physicalDistanceCm = Math.tan(angleRadians) * distanceCm;
-            return physicalDistanceCm * pixelsPerCm;
-        }
+    const scoreElement = document.getElementById('score');
+    scoreElement.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <h3 style="color: var(--primary-color); margin-bottom: 15px;">🎯 Test Complete!</h3>
+            <div style="margin: 15px 0;">
+                <strong>Overall Performance:</strong><br>
+                ${totalCorrect}/${totalPossible} correct (${averageScore}%)
+            </div>
+            <div style="margin: 15px 0;">
+                <strong>Assessment:</strong> ${severity}<br>
+                <em style="font-size: 14px; color: var(--neutral-color);">${recommendation}</em>
+            </div>
+            <div style="font-size: 12px; color: var(--neutral-color); margin-top: 15px;">
+                <strong>Disclaimer:</strong> This is a screening tool, not a diagnostic test. 
+                Consult a qualified eye care professional for medical advice.
+            </div>
+        </div>
+    `;
 
-        function calculateVisualAngle(pixelX, pixelY, centerX, centerY, distanceCm) {
-            const deltaX = pixelX - centerX;
-            const deltaY = pixelY - centerY;
-            const deltaXCm = deltaX / pixelsPerCm;
-            const deltaYCm = deltaY / pixelsPerCm;
-            const radialDistanceCm = Math.sqrt(deltaXCm * deltaXCm + deltaYCm * deltaYCm);
-            const angleRadians = Math.atan(radialDistanceCm / distanceCm);
-            const angleDegrees = angleRadians * (180 / Math.PI);
-            return angleDegrees;
-        }
+    document.getElementById('saveBtn').style.display = 'inline-block';
+    document.getElementById('nextTestBtn').style.display = 'inline-block';
+    document.getElementById('profileBtn').style.display = 'inline-block';
+    document.getElementById('HOMEBtn').style.display = 'inline-block';
+    document.getElementById('checkBtn').style.display = 'none';
+}
 
-        function generatePositionAtAngle(targetAngleDegrees) {
-            const gameArea = document.getElementById('gameArea');
-            const gameRect = gameArea.getBoundingClientRect();
-            const centerX = gameRect.width / 2;
-            const centerY = gameRect.height / 2;
-            const targetPixelDistance = visualAngleToPixels(targetAngleDegrees, viewingDistanceCm);
-            const circularAngle = Math.random() * 2 * Math.PI;
+function restartGame() {
+    currentLevel = 1;
+    totalScore = 0;
+    correctAnswers = 0;
+    generatedNumbers = [];
+    severity = "NA";
 
-            const x = centerX + Math.cos(circularAngle) * targetPixelDistance;
-            const y = centerY + Math.sin(circularAngle) * targetPixelDistance;
+    showCenterElements();
 
-            const margin = 50;
-            const clampedX = Math.max(margin, Math.min(gameRect.width - margin, x));
-            const clampedY = Math.max(margin, Math.min(gameRect.height - margin, y));
+    document.getElementById('levelText').textContent = 'Level 1';
+    document.getElementById('userInput').value = '';
+    document.getElementById('inputSection').style.display = 'none';
+    document.getElementById('score').classList.remove('score-highlight');
+    document.getElementById('score').innerHTML = '';
+    document.getElementById('checkBtn').style.display = 'block';
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('nextTestBtn').style.display = 'none';
+    document.getElementById('profileBtn').style.display = 'none';
+    document.getElementById('HOMEBtn').style.display = 'none';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressStat').textContent = '0%';
 
-            const actualAngle = calculateVisualAngle(clampedX, clampedY, centerX, centerY, viewingDistanceCm);
+    updateLevelStats();
 
-            return { x: clampedX, y: clampedY, actualAngle: actualAngle };
-        }
+    setTimeout(() => {
+        generateNumbers();
+        displayNumbers();
+    }, 1000);
+}
 
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const numberOfStars = 100;
+function startGame() {
+    viewingDistanceCm = parseInt(document.getElementById('viewingDistance').value) || 60;
+    document.getElementById('distanceDisplay').textContent = viewingDistanceCm + 'cm';
 
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 4 + 's';
-                starsContainer.appendChild(star);
-            }
-        }
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('gameContainer').style.display = 'block';
+    gameStarted = true;
 
-        function initializeDisplayCalculations() {
-            pixelsPerCm = calculatePixelsPerCm();
-            console.log(`Calculated pixels per cm: ${pixelsPerCm.toFixed(2)}`);
-        }
+    initializeDisplayCalculations();
+    updateCenterDotPosition();
+    updateLevelStats();
 
-        function generateNumbers() {
-            generatedNumbers = [];
-            const range = levelRanges[currentLevel];
+    setTimeout(() => {
+        generateNumbers();
+        displayNumbers();
+    }, 1000);
+}
 
-            for (let i = 0; i < numberCount; i++) {
-                const targetAngle = Math.random() * (range.max - range.min) + range.min;
-                const position = generatePositionAtAngle(targetAngle);
-
-                generatedNumbers.push({
-                    value: Math.floor(Math.random() * 9) + 1,
-                    x: position.x,
-                    y: position.y,
-                    angle: position.actualAngle
-                });
-            }
-
-            console.log(`Level ${currentLevel} numbers:`, generatedNumbers.map(n => `${n.value} at ${n.angle.toFixed(1)}°`));
-        }
-
-        async function displayNumbers() {
-            // Hide UI elements during number display
-            hideUIForGameplay();
-
-            const numbersContainer = document.getElementById('numbersContainer');
-
-            for (let i = 0; i < generatedNumbers.length; i++) {
-                const numberData = generatedNumbers[i];
-                const numberElement = document.createElement('div');
-                numberElement.className = 'number';
-                numberElement.textContent = numberData.value;
-
-                numberElement.style.position = 'absolute';
-                numberElement.style.left = numberData.x + 'px';
-                numberElement.style.top = numberData.y + 'px';
-                numberElement.style.fontSize = '40px';
-                numberElement.style.color = colors[i % colors.length];
-                numberElement.style.fontWeight = 'bold';
-                numberElement.style.pointerEvents = 'none';
-                numberElement.style.zIndex = '100';
-
-                numbersContainer.appendChild(numberElement);
-
-                // Update progress (but don't show it during display)
-                const progress = ((i + 1) / numberCount) * 100;
-                document.getElementById('progressFill').style.width = progress + '%';
-                document.getElementById('progressStat').textContent = Math.round(progress) + '%';
-
-                await new Promise(resolve => setTimeout(resolve, displayTime));
-                numberElement.remove();
-            }
-
-            // Show UI elements after number display
-            showUIAfterGameplay();
-
-            // Show input section
-            document.getElementById('inputSection').style.display = 'block';
-            document.getElementById('userInput').focus();
-        }
-
-        function checkAnswer() {
-            const userInput = document.getElementById('userInput').value.trim();
-            const userNumbers = userInput.split(' ').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-            const correctNumbers = generatedNumbers.map(n => n.value);
-
-            let correct = 0;
-            let total = correctNumbers.length;
-
-            for (let num of userNumbers) {
-                if (correctNumbers.includes(num)) {
-                    correct++;
-                    const index = correctNumbers.indexOf(num);
-                    correctNumbers.splice(index, 1);
-                }
-            }
-
-            const levelScore = Math.round((correct / total) * 100);
-            totalScore += levelScore;
-            correctAnswers += correct;
-
-            const scoreElement = document.getElementById('score');
-            const range = levelRanges[currentLevel];
-            scoreElement.innerHTML = `
-                <strong>Level ${currentLevel} Results:</strong><br>
-                Field Range: ${range.description}<br>
-                Correct: ${correct}/${total} (${levelScore}%)<br>
-                Your input: [${userInput}]<br>
-                Correct sequence: [${generatedNumbers.map(n => n.value).join(', ')}]
-            `;
-            scoreElement.classList.add('score-highlight');
-
-            updateLevelStats();
-
-            setTimeout(() => {
-                if (currentLevel < 3) {
-                    nextLevel();
-                } else {
-                    showFinalResults();
-                }
-            }, 3000);
-        }
-
-        function updateLevelStats() {
-            const range = levelRanges[currentLevel];
-            document.getElementById('fieldRange').textContent = range.description.split(' ')[0];
-            document.getElementById('currentLevelStat').textContent = `${currentLevel} / 3`;
-            document.getElementById('levelDisplay').textContent = currentLevel;
-        }
-
-        function nextLevel() {
-            currentLevel++;
-            document.getElementById('levelText').textContent = `Level ${currentLevel}`;
-            document.getElementById('userInput').value = '';
-            document.getElementById('inputSection').style.display = 'none';
-            document.getElementById('score').classList.remove('score-highlight');
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('progressStat').textContent = '0%';
-
-            updateLevelStats();
-
-            setTimeout(() => {
-                generateNumbers();
-                displayNumbers();
-            }, 1000);
-        }
-
-        function showFinalResults() {
-            const averageScore = Math.round(totalScore / 3);
-            const totalCorrect = correctAnswers;
-            const totalPossible = 15;
-
-            let recommendation = "Your peripheral vision appears to be functioning normally.";
-
-            if (averageScore < 30) {
-                severity = "Severe Defect";
-                recommendation = "Consider consulting an eye care professional for a comprehensive visual field examination.";
-            } else if (averageScore < 60) {
-                severity = "Moderate Defect";
-                recommendation = "Some peripheral vision limitations detected. Professional evaluation recommended.";
-            } else if (averageScore < 90) {
-                severity = "Mild Defect";
-                recommendation = "Minor peripheral vision limitations. Monitor and consider professional evaluation.";
-            }
-
-            // Hide center dot and focus elements when showing final results
-            hideCenterElements();
-
-            const scoreElement = document.getElementById('score');
-            scoreElement.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">🎯 Test Complete!</h3>
-                    <div style="margin: 15px 0;">
-                        <strong>Overall Performance:</strong><br>
-                        ${totalCorrect}/${totalPossible} correct (${averageScore}%)
-                    </div>
-                    <div style="margin: 15px 0;">
-                        <strong>Assessment:</strong> ${severity}<br>
-                        <em style="font-size: 14px; color: var(--neutral-color);">${recommendation}</em>
-                    </div>
-                    <div style="font-size: 12px; color: var(--neutral-color); margin-top: 15px;">
-                        <strong>Disclaimer:</strong> This is a screening tool, not a diagnostic test. 
-                        Consult a qualified eye care professional for medical advice.
-                    </div>
-                </div>
-            `;
-
-            // Show the new buttons
-            document.getElementById('saveBtn').style.display = 'inline-block';
-            document.getElementById('nextTestBtn').style.display = 'inline-block';
-            document.getElementById('profileBtn').style.display = 'inline-block';
-            document.getElementById('HOMEBtn').style.display = 'inline-block';
-            document.getElementById('checkBtn').style.display = 'none';
-        }
-
-        function restartGame() {
-            currentLevel = 1;
-            totalScore = 0;
-            correctAnswers = 0;
-            generatedNumbers = [];
-
-            // Show center elements when restarting
-            showCenterElements();
-
-            document.getElementById('levelText').textContent = 'Level 1';
-            document.getElementById('userInput').value = '';
-            document.getElementById('inputSection').style.display = 'none';
-            document.getElementById('score').classList.remove('score-highlight');
-            document.getElementById('score').innerHTML = '';
-            document.getElementById('checkBtn').style.display = 'block';
-            document.getElementById('saveBtn').style.display = 'none';
-            document.getElementById('nextTestBtn').style.display = 'none';
-            document.getElementById('profileBtn').style.display = 'none';
-            document.getElementById('HOMEBtn').style.display = 'none';
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('progressStat').textContent = '0%';
-
-            updateLevelStats();
-
-            setTimeout(() => {
-                generateNumbers();
-                displayNumbers();
-            }, 1000);
-        }
-
-        function startGame() {
-            viewingDistanceCm = parseInt(document.getElementById('viewingDistance').value) || 60;
-            document.getElementById('distanceDisplay').textContent = viewingDistanceCm + 'cm';
-
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'block';
-            gameStarted = true;
-
-            initializeDisplayCalculations();
-            updateLevelStats();
-
-            setTimeout(() => {
-                generateNumbers();
-                displayNumbers();
-            }, 1000);
-        }
-
-        function showHelp() {
-            alert(`Peripheral Vision Memory Test Help:
+function showHelp() {
+    alert(`Peripheral Vision Memory Test Help:
 
 1. Keep your eyes focused on the red center dot at all times
 2. Numbers will appear at specific visual angles around your peripheral vision
 3. Try to remember the numbers without looking directly at them
-4. Enter the numbers you remember separated by commas
+4. Enter the numbers you remember separated by spaces or commas
 5. Complete all 3 levels to get your assessment
 
 Visual Field Ranges:
@@ -1712,69 +1667,72 @@ Visual Field Ranges:
 • Level 3: 20-30° (Peripheral vision)
 
 Tip: Maintain consistent viewing distance for accurate results!`);
+}
+
+function submitResultsToBackend() {
+    const finalScore = Math.round(totalScore / 3);
+    const resultData = {
+        final_score: finalScore,
+        test_type: "Glaucoma",
+        result_value: finalScore,
+        total_correct: correctAnswers,
+        viewing_distance: viewingDistanceCm
+    };
+
+    return fetch('/submit_score/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resultData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('Results saved successfully');
         }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
-        function submitResultsToBackend() {
-            const resultData = {
-                final_score: Math.round(totalScore / 3),
-                test_type: "Glaucoma",
-                result_value: Math.round(totalScore / 3)
-            };
+// Event listeners
+document.getElementById('startGameBtn').addEventListener('click', startGame);
+document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+document.getElementById('restartBtn').addEventListener('click', restartGame);
+document.getElementById('helpBtn').addEventListener('click', showHelp);
 
-            return fetch('/submit_score/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(resultData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        console.log('Results saved successfully');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        // Event listeners
-        document.getElementById('startGameBtn').addEventListener('click', startGame);
-        document.getElementById('checkBtn').addEventListener('click', checkAnswer);
-        document.getElementById('restartBtn').addEventListener('click', restartGame);
-        document.getElementById('helpBtn').addEventListener('click', showHelp);
-
-        // Save button event listener
-        document.getElementById('saveBtn').addEventListener('click', () => {
-            submitResultsToBackend()
-                .then(() => {
-                    alert('Results saved successfully!');
-                    document.getElementById('saveBtn').style.display = 'none';
-                })
-                .catch(error => {
-                    console.error('Failed to save results:', error);
-                    alert('Failed to save results. Please try again.');
-                });
+// Save button event listener
+document.getElementById('saveBtn').addEventListener('click', () => {
+    submitResultsToBackend()
+        .then(() => {
+            alert('Results saved successfully!');
+            document.getElementById('saveBtn').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Failed to save results:', error);
+            alert('Failed to save results. Please try again.');
         });
+});
 
-        // Next test button event listener
-        document.getElementById('nextTestBtn').addEventListener('click', () => {
-            window.location.href = '/Colourblindness_Test/';
-        });
+// Next test button event listener
+document.getElementById('nextTestBtn').addEventListener('click', () => {
+    window.location.href = '/Colourblindness_Test/';
+});
 
-        document.getElementById('userInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
+document.getElementById('userInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        checkAnswer();
+    }
+});
 
-        window.addEventListener('load', function () {
-            createStars();
-            initializeDisplayCalculations();
-        });
+window.addEventListener('load', function () {
+    createStars();
+    initializeDisplayCalculations();
+});
 
-        window.addEventListener('resize', function () {
-            initializeDisplayCalculations();
-        });
+window.addEventListener('resize', function () {
+    initializeDisplayCalculations();
+});
     </script>
 </body>
 
