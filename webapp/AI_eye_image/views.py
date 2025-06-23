@@ -12,11 +12,7 @@ from .serializers import UserImageSerializer
 from decouple import config
 import base64
 
-<<<<<<< Updated upstream
-api_key = "ghghghgh" # Ensure you have set your OpenAI API key in your environment variables
-=======
 api_key = "ghghghghghhg" # Ensure you have set your OpenAI API key in your environment variables
->>>>>>> Stashed changes
 
 def eye_upload_form(request):
     return render(request, 'analyze.html')
