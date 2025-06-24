@@ -266,24 +266,7 @@
             margin: 25px auto 0;
         }
 
-        #profileBtn{
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 18px 36px;
-            font-size: 20px;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            /* transition: var(--transition);
-            box-shadow: var(--shadow-lg); */
-            margin-top: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px auto 0;
-        }
+       
 
         #gameContainer {
             position: relative;
@@ -1164,12 +1147,6 @@
                     <i class="fas fa-play"></i>
                     Start Test
                 </button>
-                <button id="homeBtn">
-                    Home
-                </button>
-                <button id="profileBtn">
-                    Profile
-                </button>
             </div>
         </div>
     </div>
@@ -1238,7 +1215,7 @@
                 <button id="saveBtn" style="display: none;"><i class="fas fa-save"></i> Save Results</button>
                 <button id="nextTestBtn" style="display: none;"><i class="fas fa-arrow-right"></i> Next Test</button>
                 <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
-                    <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i> Go to
+                    <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i>
                         Profile</button>
                 </form>
                 <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline;">
@@ -1569,7 +1546,7 @@ function showFinalResults() {
     } else if (averageScore < 60) {
         severity = "Moderate Defect";
         recommendation = "Some peripheral vision limitations detected. Professional evaluation recommended.";
-    } else if (averageScore < 90) {
+    } else if (averageScore < 80) {
         severity = "Mild Defect";
         recommendation = "Minor peripheral vision limitations. Monitor and consider professional evaluation.";
     } else {

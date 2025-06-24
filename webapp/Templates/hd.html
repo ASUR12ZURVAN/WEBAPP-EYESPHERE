@@ -654,15 +654,18 @@ function submitResultsToBackend() {
             const headache = formData.get('headache');
             
             // Calculate diopter
-            const logmar = (10 - lineNumber) * 0.1;
-            const rawDiopters = -3.3 * logmar;
-            let prediction;
-            
-            if (headache === 'yes') {
-                prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
-            } else {
-                prediction = -Math.round(Math.abs(rawDiopters) * 2) / 2.0;
-            }
+            if (lineNumber === 11 || lineNumber === 12) {
+    prediction = 0;
+} else {
+    const logmar = (10 - lineNumber) * 0.1;
+    const rawDiopters = -3.3 * logmar;
+    
+    if (headache === 'yes') {
+        prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
+    } else {
+        prediction = -Math.round(Math.abs(rawDiopters) * 2) / 2.0;
+    }
+}
             
             // Store result
             eyeResults[currentEye] = prediction;
