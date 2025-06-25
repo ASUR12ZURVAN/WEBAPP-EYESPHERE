@@ -57,7 +57,7 @@ def create_user(request):
 
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return redirect('sign_in_user')
+            return render(request, 'f.html', {'user': serializer.instance})
 
         # Invalid data
         if request.content_type == 'application/json':
