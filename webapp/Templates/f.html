@@ -398,7 +398,9 @@
             <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
                 <button type="submit" id="profileBtn"><span>👤</span> Go to Profile</button>
             </form>
-            
+            <a href="{% url 'chat_page'  %}" class="test-button">
+                <span>🤖</span> chatBot
+            </a>
             <a href="{% url 'osdi'  %}" class="test-button">
                 <span>👓</span> Osdi Test
             </a>
@@ -416,5 +418,6 @@
             </a>
         </div>
     </section>
+    
 </body>
 </html>

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -380,8 +381,16 @@
     <div class="container">
         <h1>Dynamic Snellen Chart</h1>
 
-        <div class="message-box">
-            <strong>Vision Test Instructions:</strong> Start from the top and work your way down. Try to read up to the 10th line for a comprehensive assessment of your vision. The 10th line is a good benchmark for normal vision when viewed from 3 meter distance.
+          <div class="message-box">
+            <strong>Vision Test Instructions:</strong><br><br>
+            <strong>your divice should be kept at distance of 3 meter</strong><br><br>
+            <strong>Step 1:</strong> First, cover your right eye with your hand as shown below and test your left eye. Scroll down Write the line number until you can read clearly:<br>
+            <img src="{% static 'left.jpg' %}" alt="Cover right eye" style="max-width: 100px; margin: 10px auto; display: block;"><br>
+            
+            <strong>Step 2:</strong> After submitting your left eye result, cover your left eye with your hand as shown below and test your right eye. Scroll down Write the line number until you can read clearly:<br>
+            <img src="{% static 'right.jpg' %}" alt="Cover left eye" style="max-width: 100px; margin: 10px auto; display: block;"><br>
+            
+            <strong>Important:</strong> Start from the top and work your way down. Try to read up to the 10th line for a comprehensive assessment of your vision. The 10th line is a good benchmark for normal vision when viewed from 3 meter distance.
         </div>
 
         <div class="current-eye-indicator" id="currentEyeIndicator" style="display: none;">
@@ -623,6 +632,9 @@ function submitResultsToBackend() {
             event.preventDefault();
             
             showLoading();
+            document.querySelector('.message-box').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             const diagonal_inch = parseFloat(document.getElementById('diagonal').value);
             const ppi = getScreenPPI(diagonal_inch);
             pixelSizes = calculatePixelSizes(ppi);
@@ -654,16 +666,18 @@ function submitResultsToBackend() {
             const headache = formData.get('headache');
             
             // Calculate diopter
-            const logmar = (10 - lineNumber) * 0.1;
-            const rawDiopters = -3.3 * logmar;
-            let prediction;
-            
-            
-            if (headache === 'yes') {
-                prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
-            } else {
-                prediction = -Math.round(Math.abs(rawDiopters) * 2) / 2.0;
-            }
+            if (lineNumber === 11 || lineNumber === 12) {
+    prediction = 0;
+} else {
+    const logmar = (10 - lineNumber) * 0.1;
+    const rawDiopters = -3.3 * logmar;
+    
+    if (headache === 'yes') {
+        prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
+    } else {
+        prediction = -Math.round(Math.abs(rawDiopters) * 2) / 2.0;
+    }
+}
             
             // Store result
             eyeResults[currentEye] = prediction;

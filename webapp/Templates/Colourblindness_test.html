@@ -546,7 +546,7 @@
 <main>
   <h1>Color Blindness Test</h1>
   <div class="instructions" id="instructions">
-    <p>Welcome! This test consists of 38 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
+    <p>Welcome! This test consists of 17 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
   </div>
   <div id="start-section" style="text-align: center;">
     <button id="start-test">Start Test</button>
@@ -570,7 +570,7 @@
       <button id="submit-btn" class="hidden">Submit</button>
     </div>
     <div class="progress-section">
-      <div id="progress-text" aria-live="polite">Plate 1 of 38</div>
+      <div id="progress-text" aria-live="polite">Plate 1 of 17</div>
       <div class="progress-container">
         <div id="progress-fill"></div>
       </div>
@@ -616,6 +616,13 @@
     <form action="{% url 'user_profile' request.session.user_id %}" method="get">
       <button type="submit">Go to Profile</button>
     </form>
+    <form action="{% url 'mainx' request.session.user_id %}" method="get">
+      <button type="submit">Home</button>
+    </form>
+    <form action="{% url 'Blink_Page' %}" method="get">
+      <button type="submit">Next Test</button>
+    </form>
+    
 
     <div style="text-align: center; margin-top: 2rem;">
       <button id="restart-btn">Restart Test</button>
@@ -647,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { plateNumber: 5, normalView: 57, redGreenDeficiency: 35, type: 'number' },
     { plateNumber: 6, normalView: 5, redGreenDeficiency: 2, type: 'number' },
     { plateNumber: 7, normalView: 3, redGreenDeficiency: 5, type: 'number' },
-    { plateNumber: 8, normalView: 15, redGreenDeficiency: 17, type: 'number' }, // Fixed from null to 17
+    { plateNumber: 8, normalView: 15, redGreenDeficiency: 17, type: 'number' },
     { plateNumber: 9, normalView: 74, redGreenDeficiency: 21, type: 'number' },
     { plateNumber: 10, normalView: 2, redGreenDeficiency: null, type: 'number' },
     { plateNumber: 11, normalView: 6, redGreenDeficiency: null, type: 'number' },
@@ -656,28 +663,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { plateNumber: 14, normalView: 5, redGreenDeficiency: null, type: 'number' },
     { plateNumber: 15, normalView: 7, redGreenDeficiency: null, type: 'number' },
     { plateNumber: 16, normalView: 16, redGreenDeficiency: null, type: 'number' },
-    { plateNumber: 17, normalView: 73, redGreenDeficiency: null, type: 'number' },
-    { plateNumber: 18, normalView: null, redGreenDeficiency: 5, type: 'number' },
-    { plateNumber: 19, normalView: null, redGreenDeficiency: 2, type: 'number' },
-    { plateNumber: 20, normalView: null, redGreenDeficiency: 45, type: 'number' },
-    { plateNumber: 21, normalView: null, redGreenDeficiency: 73, type: 'number' },
-    { plateNumber: 22, normalView: 26, protanopia: 6, deuteranopia: 2, type: 'number' },
-    { plateNumber: 23, normalView: 42, protanopia: 2, deuteranopia: 4, type: 'number' },
-    { plateNumber: 24, normalView: 35, protanopia: 5, deuteranopia: 3, type: 'number' },
-    { plateNumber: 25, normalView: 96, protanopia: 6, deuteranopia: 9, type: 'number' },
-    { plateNumber: 26, normalView: 'both', protanopia: 'purple', deuteranopia: 'red', type: 'line' },
-    { plateNumber: 27, normalView: 'both', protanopia: 'purple', deuteranopia: 'red', type: 'line' },
-    { plateNumber: 28, normalView: 'none', redGreenDeficiency: 'line', type: 'line' },
-    { plateNumber: 29, normalView: 'none', redGreenDeficiency: 'line', type: 'line' },
-    { plateNumber: 30, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
-    { plateNumber: 31, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
-    { plateNumber: 32, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
-    { plateNumber: 33, normalView: 'line', redGreenDeficiency: 'none', type: 'line' },
-    { plateNumber: 34, normalView: 'blue-green-yellow', redGreenDeficiency: 'red-violet', type: 'line' },
-    { plateNumber: 35, normalView: 'blue-green-yellow', redGreenDeficiency: 'blue-violet', type: 'line' },
-    { plateNumber: 36, normalView: 'violet-orange', redGreenDeficiency: 'blue-violet', type: 'line' },
-    { plateNumber: 37, normalView: 'violet-orange', redGreenDeficiency: 'blue-violet', type: 'line' },
-    { plateNumber: 38, normalView: 'line', redGreenDeficiency: 'line', type: 'line' }
+    { plateNumber: 17, normalView: 73, redGreenDeficiency: null, type: 'number' }
 ];
 
     const startTestBtn = document.getElementById('start-test');
@@ -697,14 +683,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentPlate = 1;
     const userAnswers = {};
-    const totalPlates = 38;
+    const totalPlates = 17;
 
-    for (let i = 2; i <= 25; i++) {
+    for (let i = 2; i <= 17; i++) {
         createNumberPlate(i);
     }
-    for (let i = 26; i <= 38; i++) {
-        createLinePlate(i);
-    }
+    
 
   function createNumberPlate(plateNumber) {
     const plateDiv = document.createElement('div');
@@ -890,7 +874,7 @@ function createLinePlate(plateNumber) {
         Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
 
         for (let i = 1; i <= totalPlates; i++) {
-            if (i <= 25) {
+            if (i <= 17) {
                 const input = document.getElementById(`answer-${i}`);
                 if (input) input.value = '';
             } else {
@@ -944,320 +928,189 @@ function createLinePlate(plateNumber) {
     deuteranopiaIndicators = 0;
     resultsHTML = '';
 
-    // Calculate for number plates (1-25)
-    for (let i = 1; i <= 25; i++) {
+    // Process all 17 plates
+    for (let i = 1; i <= 17; i++) {
         const plate = testData[i-1];
         const userAnswer = userAnswers[i] ?? null;
         let result = 'incorrect';
-        let expected = plate.normalView;
+        let expected = '';
 
         if (i === 1) {
-            // Plate 1 - everyone should see 12
+            // Plate 1 - Control plate (everyone should see 12)
             if (userAnswer === 12) {
                 normalCorrect++;
                 result = 'correct';
             }
-            expected = '12 (Everyone)';
+            expected = '12 (Control)';
+            
         } else if (i >= 2 && i <= 9) {
-            // Plates 2-9 - have both normal and red-green deficiency answers
+            // Plates 2-9 - Discrimination plates
             if (userAnswer === plate.normalView) {
                 normalCorrect++;
                 result = 'correct';
             } else if (userAnswer === plate.redGreenDeficiency) {
                 redGreenErrors++;
                 result = 'red-green deficiency';
+                
+                // Specific deficiency indicators
+                if ([2, 4, 6].includes(i)) {
+                    protanopiaIndicators++;
+                } else if ([3, 5, 7, 8, 9].includes(i)) {
+                    deuteranopiaIndicators++;
+                }
             }
-            expected = `${plate.normalView} (Normal), ${plate.redGreenDeficiency} (Red-Green Deficiency)`;
+            expected = `${plate.normalView} (Normal) / ${plate.redGreenDeficiency} (Deficient)`;
+            
         } else if (i >= 10 && i <= 17) {
-            // Plates 10-17 - normal people see number, red-green deficient see nothing
+            // Plates 10-17 - Hidden digit plates (only normal vision sees numbers)
             if (userAnswer === plate.normalView) {
                 normalCorrect++;
                 result = 'correct';
-            } else if (userAnswer === null || userAnswer === 0) {
+            } else {
+                // Any wrong answer (including null, 0, or different number) indicates deficiency
                 redGreenErrors++;
                 result = 'red-green deficiency';
             }
-            expected = `${plate.normalView} (Normal), Nothing (Red-Green Deficiency)`;
-        } else if (i >= 18 && i <= 21) {
-            // Plates 18-21 - normal people see nothing, red-green deficient see number
-            if (userAnswer === null || userAnswer === 0) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === plate.redGreenDeficiency) {
-                redGreenErrors++;
-                result = 'red-green deficiency';
-            }
-            expected = `Nothing (Normal), ${plate.redGreenDeficiency} (Red-Green Deficiency)`;
-        } else if (i >= 22 && i <= 25) {
-            // Plates 22-25 - differentiate between protanopia and deuteranopia
-            if (userAnswer === plate.normalView) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === plate.protanopia) {
-                protanopiaIndicators++;
-                redGreenErrors++;
-                result = 'protanopia';
-            } else if (userAnswer === plate.deuteranopia) {
-                deuteranopiaIndicators++;
-                redGreenErrors++;
-                result = 'deuteranopia';
-            }
-            expected = `${plate.normalView} (Normal), ${plate.protanopia} (Protanopia), ${plate.deuteranopia} (Deuteranopia)`;
+            expected = `${plate.normalView} (Normal) / Nothing (Deficient)`;
         }
 
+        // Build results table row
         resultsHTML += `
-            <tr>
+            <tr class="${result.replace(' ', '-')}">
                 <td>${i}</td>
-                <td>${userAnswer !== null ? userAnswer : 'No answer'}</td>
+                <td>${userAnswer !== null && userAnswer !== '' ? userAnswer : 'No answer'}</td>
                 <td>${expected}</td>
-                <td class="${result}">${result}</td>
-            </tr>`;
-    }
-
-    // Calculate for line plates (26-38)
-    for (let i = 26; i <= 38; i++) {
-        const plate = testData[i - 1];
-        const userAnswer = userAnswers[i];
-        let result = 'incorrect';
-        let expectedText = '';
-        let userAnswerText = '';
-
-        if (i >= 26 && i <= 27) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Purple line only'; break;
-                case 2: userAnswerText = 'Red line only'; break;
-                case 3: userAnswerText = 'Both purple and red lines'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'Both purple and red lines (Normal), Purple line only (Protanopia), Red line only (Deuteranopia)';
-            if (userAnswer === 3) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === 1) {
-                protanopiaIndicators++;
-                redGreenErrors++;
-                result = 'protanopia';
-            } else if (userAnswer === 2) {
-                deuteranopiaIndicators++;
-                redGreenErrors++;
-                result = 'deuteranopia';
-            }
-        } else if (i >= 28 && i <= 29) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Line visible'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'No lines visible (Normal), Line visible (Red-Green Deficiency)';
-            if (userAnswer === 0) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === 1) {
-                redGreenErrors++;
-                result = 'red-green deficiency';
-            }
-        } else if (i >= 30 && i <= 33) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Line visible'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'Line visible (Normal), No lines visible (Red-Green Deficiency)';
-            if (userAnswer === 1) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === 0) {
-                redGreenErrors++;
-                result = 'red-green deficiency';
-            }
-        } else if (i === 34) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Blue-green and yellow-green lines'; break;
-                case 2: userAnswerText = 'Red-green and violet lines'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'Blue-green and yellow-green lines (Normal), Red-green and violet lines (Red-Green Deficiency)';
-            if (userAnswer === 1) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === 2) {
-                redGreenErrors++;
-                result = 'red-green deficiency';
-            }
-        } else if (i === 35) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Blue-green and yellow-green lines'; break;
-                case 2: userAnswerText = 'Blue-green and violet lines'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'Blue-green and yellow-green lines (Normal), Blue-green and violet lines (Red-Green Deficiency)';
-            if (userAnswer === 1) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === 2) {
-                redGreenErrors++;
-                result = 'red-green deficiency';
-            }
-        } else if (i >= 36 && i <= 37) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Violet and orange lines'; break;
-                case 2: userAnswerText = 'Blue-green and violet lines'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'Violet and orange lines (Normal), Blue-green and violet lines (Red-Green Deficiency)';
-            if (userAnswer === 1) {
-                normalCorrect++;
-                result = 'correct';
-            } else if (userAnswer === 2) {
-                redGreenErrors++;
-                result = 'red-green deficiency';
-            }
-        } else if (i === 38) {
-            switch (userAnswer) {
-                case 0: userAnswerText = 'No lines visible'; break;
-                case 1: userAnswerText = 'Line visible'; break;
-                default: userAnswerText = 'No answer';
-            }
-            expectedText = 'Line visible (Everyone)';
-            if (userAnswer === 1) {
-                result = 'correct';
-                normalCorrect++;
-            }
-        }
-
-        resultsHTML += `
-            <tr>
-                <td>${i}</td>
-                <td>${userAnswerText}</td>
-                <td>${expectedText}</td>
-                <td class="${result}">${result}</td>
+                <td>${result}</td>
             </tr>`;
     }
 
     resultsTableBody.innerHTML = resultsHTML;
-    determineDiagnosis(normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators);
-    showDeficiencyInfo(redGreenErrors, protanopiaIndicators, deuteranopiaIndicators);
+    determineDiagnosis();
+    showDeficiencyInfo();
 }
 
-  function determineDiagnosis(normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators) {
+ function determineDiagnosis() {
     let diagnosis = '';
     let severity = 'none';
-
-    console.log('Diagnosis input:', { normalCorrect, redGreenErrors, protanopiaIndicators, deuteranopiaIndicators });
-
-    // Calculate total answered questions
-    const totalAnswered = Object.keys(userAnswers).filter(key => userAnswers[key] !== null).length;
-    const errorRate = totalAnswered > 0 ? (redGreenErrors / totalAnswered) * 100 : 0;
-
-    console.log('Error rate:', errorRate, 'Total answered:', totalAnswered);
-
-    if (redGreenErrors <= 2 || errorRate <= 10) {
+    
+    // Calculate total incorrect answers (not just red-green errors)
+    const totalIncorrect = 17 - normalCorrect;
+    
+    console.log('Diagnosis calculation:', {
+        normalCorrect,
+        totalIncorrect,
+        redGreenErrors,
+        protanopiaIndicators,
+        deuteranopiaIndicators
+    });
+    
+    // Severity based on total incorrect answers
+    if (totalIncorrect <= 2) {
         severity = 'none';
-        diagnosis = 'Your color vision appears to be normal. You may have minor difficulty with some color distinctions, but this is within the normal range.';
+        diagnosis = 'Your color vision appears to be normal.';
+    } else if (totalIncorrect <= 5) {
+        severity = 'weak';
+    } else if (totalIncorrect <= 10) {
+        severity = 'moderate';
     } else {
-        // Improved severity classification
-        if (errorRate >= 70 || redGreenErrors >= 25) {
-            severity = 'strong';
-        } else if (errorRate >= 40 || redGreenErrors >= 15) {
-            severity = 'moderate';
-        } else if (errorRate >= 20 || redGreenErrors >= 8) {
-            severity = 'mild';
+        severity = 'strong';
+    }
+    
+    // Diagnosis based on specific deficiency patterns
+    if (severity !== 'none') {
+        let deficiencyType = '';
+        
+        if (protanopiaIndicators >= 2 && protanopiaIndicators > deuteranopiaIndicators) {
+            deficiencyType = 'protanopia/protanomaly';
+        } else if (deuteranopiaIndicators >= 2 && deuteranopiaIndicators > protanopiaIndicators) {
+            deficiencyType = 'deuteranopia/deuteranomaly';
+        } else if (redGreenErrors >= 3) {
+            deficiencyType = 'red-green color blindness';
         } else {
-            severity = 'weak';
+            deficiencyType = 'color vision deficiency';
         }
-
-        diagnosis = `You have <strong>${severity}</strong> red-green color blindness.`;
-
-        // Determine specific type
-        if (protanopiaIndicators >= 3 && protanopiaIndicators > deuteranopiaIndicators) {
-            diagnosis += '<br><br>The results indicate <strong>Protanopia or Protanomaly</strong> (reduced sensitivity to red light).';
-        } else if (deuteranopiaIndicators >= 3 && deuteranopiaIndicators > protanopiaIndicators) {
-            diagnosis += '<br><br>The results indicate <strong>Deuteranopia or Deuteranomaly</strong> (reduced sensitivity to green light).';
-        } else if (protanopiaIndicators > 0 || deuteranopiaIndicators > 0) {
-            diagnosis += '<br><br>The results show general red-green color vision deficiency with mixed indicators.';
-        } else {
-            diagnosis += '<br><br>The results show general red-green color vision deficiency.';
-        }
-
-        // Add severity explanation
+        
+        diagnosis = `You have <strong>${severity}</strong> ${deficiencyType}.`;
+        
+        // Add severity descriptions
         switch(severity) {
             case 'weak':
-                diagnosis += '<br><br><em>Weak deficiency: You may have difficulty distinguishing certain shades of red and green, but can often identify colors correctly in good lighting.</em>';
-                break;
-            case 'mild':
-                diagnosis += '<br><br><em>Mild deficiency: You have noticeable difficulty with red-green color discrimination in various situations.</em>';
+                diagnosis += '<br><br><em>Weak deficiency: You may have difficulty distinguishing certain shades in specific conditions.</em>';
                 break;
             case 'moderate':
-                diagnosis += '<br><br><em>Moderate deficiency: You have significant difficulty distinguishing between red and green colors.</em>';
+                diagnosis += '<br><br><em>Moderate deficiency: You have noticeable difficulty with color discrimination in various situations.</em>';
                 break;
             case 'strong':
-                diagnosis += '<br><br><em>Strong deficiency: You have severe difficulty with red-green color discrimination.</em>';
+                diagnosis += '<br><br><em>Strong deficiency: You have significant difficulty with color discrimination.</em>';
                 break;
         }
     }
-
-    console.log('Final severity:', severity);
-
+    
+    // Update display
     diagnosisDiv.innerHTML = diagnosis;
-
-    // Update severity display
+    
+    // Highlight severity level
     document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
     const severityEl = document.getElementById(`severity-${severity}`);
     if (severityEl) severityEl.classList.add('selected');
+    
+    return {
+        severity,
+        normalCorrect,
+        totalIncorrect,
+        redGreenErrors,
+        protanopiaIndicators,
+        deuteranopiaIndicators
+    };
 }
 
-    function showDeficiencyInfo(redGreenErrors, protanopiaIndicators, deuteranopiaIndicators) {
-        deficiencyTypes.forEach(type => {
-            type.style.borderLeft = '4px solid #4CAF50';
-        });
-
-        if (redGreenErrors > 2) {
-            if (protanopiaIndicators > deuteranopiaIndicators) {
-                document.getElementById('protanopia').style.borderLeft = '4px solid #FF5733';
-            } else if (deuteranopiaIndicators > protanopiaIndicators) {
-                document.getElementById('deuteranopia').style.borderLeft = '4px solid #FF5733';
-            } else {
-                document.getElementById('general').style.borderLeft = '4px solid #FF5733';
-            }
+function showDeficiencyInfo() {
+    // Reset all deficiency type highlights
+    deficiencyTypes.forEach(type => {
+        type.style.borderLeft = '5px solid #4CAF50';
+    });
+    
+    // Highlight specific deficiency type based on indicators
+    if (redGreenErrors >= 3) {
+        if (protanopiaIndicators >= 2 && protanopiaIndicators > deuteranopiaIndicators) {
+            document.getElementById('protanopia').style.borderLeft = '5px solid #f44336';
+        } else if (deuteranopiaIndicators >= 2 && deuteranopiaIndicators > protanopiaIndicators) {
+            document.getElementById('deuteranopia').style.borderLeft = '5px solid #4CAF50';
+        } else {
+            document.getElementById('general').style.borderLeft = '5px solid #FF9800';
         }
     }
+}
 
     function resetTest() {
-        currentPlate = 1;
-        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+    currentPlate = 1;
+    Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
 
-        for (let i = 1; i <= totalPlates; i++) {
-            if (i <= 25) {
-                const input = document.getElementById(`answer-${i}`);
-                if (input) input.value = '';
-            } else {
-                const select = document.getElementById(`answer-${i}`);
-                if (select) select.selectedIndex = 0;
-            }
-        }
-
-        document.querySelectorAll('.test-plate').forEach(plate => plate.classList.remove('active'));
-        const plate1Div = document.getElementById('plate-1');
-        if (plate1Div) plate1Div.classList.add('active');
-
-        prevBtn.disabled = true;
-        nextBtn.classList.remove('hidden');
-        submitBtn.classList.add('hidden');
-
-        resultsDiv.style.display = 'none';
-        testContainer.classList.remove('hidden');
-        instructionsDiv.classList.add('hidden');
-        document.getElementById('start-section').classList.add('hidden');
-        updateProgress();
-
-        diagnosisDiv.innerHTML = '';
-        document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
-        deficiencyTypes.forEach(type => type.style.borderLeft = '4px solid #4CAF50');
+    // Only reset number plates 1-17
+    for (let i = 1; i <= 17; i++) {
+        const input = document.getElementById(`answer-${i}`);
+        if (input) input.value = '';
     }
+
+    document.querySelectorAll('.test-plate').forEach(plate => plate.classList.remove('active'));
+    const plate1Div = document.getElementById('plate-1');
+    if (plate1Div) plate1Div.classList.add('active');
+
+    prevBtn.disabled = true;
+    nextBtn.classList.remove('hidden');
+    submitBtn.classList.add('hidden');
+
+    resultsDiv.style.display = 'none';
+    testContainer.classList.remove('hidden');
+    instructionsDiv.classList.add('hidden'); 
+    startTestBtn.classList.add('hidden'); 
+
+    updateProgress();
+
+    diagnosisDiv.innerHTML = '';
+    document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+    deficiencyTypes.forEach(type => type.style.borderLeft = '4px solid #4CAF50');
+}
 
     // Event listeners
     startTestBtn.addEventListener('click', () => {

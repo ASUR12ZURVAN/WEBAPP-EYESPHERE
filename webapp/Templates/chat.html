@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Test Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .home-button-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .home-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .home-button:hover {
+            background: #c0392b;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .bot-message {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+
+        .test-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .test-button {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .test-button:hover {
+            background: #218838;
+        }
+
+        .test-button span {
+            margin-right: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .chat-input button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .chat-input button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-button-container">
+        <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline;">
+            <button type="submit" class="home-button">HOME</button>
+        </form>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Eye Test Chatbot</h2>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                What is your eye issue?
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Describe your eye problem..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Send to API
+            fetch('/chat/api/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let reply = data.reply;
+                addBotMessageWithButtons(reply);
+            })
+            .catch(error => {
+                addMessage('Sorry, something went wrong.', 'bot');
+            });
+        }
+
+        function addMessage(content, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.textContent = content;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addBotMessageWithButtons(content) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            
+            // Add the text content
+            const textDiv = document.createElement('div');
+            textDiv.textContent = content;
+            messageDiv.appendChild(textDiv);
+            
+            // Add test buttons based on the response
+            if (content.includes('Vision Distance Test') || content.includes('OSDI Test') || content.includes('Eye Pressure') || content.includes('Colour Vision Test')) {
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = 'test-buttons';
+                
+                // Define test order and counter
+                const tests = [];
+                let counter = 1;
+                
+                // Always add Vision Distance Test first if present
+                if (content.includes('Vision Distance Test')) {
+                    tests.push({
+                        href: "{% url 'base_myopia' %}",
+                        icon: '📏',
+                        name: 'Vision Distance Test',
+                        order: counter++
+                    });
+                }
+                
+                // Add other tests in order
+                if (content.includes('OSDI Test')) {
+                    tests.push({
+                        href: "{% url 'osdi' %}",
+                        icon: '👓',
+                        name: 'OSDI Test',
+                        order: counter++
+                    });
+                }
+                
+                if (content.includes('Eye Pressure')) {
+                    tests.push({
+                        href: "{% url 'base_glaucoma' %}",
+                        icon: '🎯',
+                        name: 'Eye Pressure Check',
+                        order: counter++
+                    });
+                }
+                
+                if (content.includes('Colour Vision Test')) {
+                    tests.push({
+                        href: "{% url 'Colourblindness_Test' %}",
+                        icon: '🌈',
+                        name: 'Color Vision Test',
+                        order: counter++
+                    });
+                }
+                
+                // Create buttons with proper ordering
+                tests.forEach(test => {
+                    const button = document.createElement('a');
+                    button.href = test.href;
+                    button.className = 'test-button';
+                    
+                    let orderText = '';
+                    if (test.order === 1) orderText = '1st: ';
+                    else if (test.order === 2) orderText = '2nd: ';
+                    else if (test.order === 3) orderText = '3rd: ';
+                    else orderText = `${test.order}th: `;
+                    
+                    button.innerHTML = `<span>${test.icon}</span> ${orderText}${test.name} - Click Here`;
+                    buttonsDiv.appendChild(button);
+                });
+                
+                messageDiv.appendChild(buttonsDiv);
+            }
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>

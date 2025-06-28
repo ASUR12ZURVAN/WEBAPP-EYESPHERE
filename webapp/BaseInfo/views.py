@@ -129,7 +129,7 @@ def submit_score(request):
                 osdi_score=final_score,
                 severity=category
             )
-        
+
         elif test_type == 'Glaucoma':
             # Handle Glaucoma test - you'll need to pass additional data from frontend
             total_correct = data.get('total_correct', 0)
@@ -140,7 +140,7 @@ def submit_score(request):
                 severity = 'Severe Defect'
             elif final_score < 60:
                 severity = 'Moderate Defect'
-            elif final_score < 90:
+            elif final_score < 80:
                 severity = 'Mild Defect'
             else:
                 severity = 'Normal'
