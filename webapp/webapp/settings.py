@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'Myopia_Test',
     'BlinkRate',
     'AI_eye_image',
+    'chatbot'
 ]
 
 MIDDLEWARE = [

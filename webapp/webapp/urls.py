@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('predict/', views.predict_diopters, name='predict_diopters'),
     path('', include("BaseInfo.urls")),
+    path('chat/',include("chatbot.urls")),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('blink/',include("BlinkRate.urls")),
