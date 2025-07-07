@@ -268,3 +268,94 @@ This web-based game is an interactive tool designed to help identify early signs
 - Introduce **dark mode** or **accessibility features**.
 - Enable **adaptive difficulty** based on performance.
 - Offer **localized translations** for international use.
+
+# 👁️ Blink Rate Detection - Eye Care Web Feature
+
+This module provides real-time **blink rate detection** using [MediaPipe FaceLandmarker](https://developers.google.com/mediapipe) and the device’s webcam. It's a feature aimed at improving **digital eye health** by helping users monitor and regulate their blinking during screen use.
+
+---
+
+## 🚀 Features
+
+- Real-time face and blink tracking in the browser
+- MediaPipe-based `FaceLandmarker` WebAssembly model
+- Easy integration with any front-end project
+- Works with webcam on all modern browsers
+- Helps reduce digital eye strain
+
+---
+
+## 📁 Code Snippet (JS Integration)
+
+```javascript
+const loadLandmarker = async () => {
+    try {
+        btnText.textContent = 'Loading...';
+        loading.style.display = 'inline-block';
+        startBtn.disabled = true;
+
+        const filesetResolver = await FilesetResolver.forVisionTasks(
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+        );
+
+        faceLandmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+            baseOptions: {
+                modelAssetPath: "https://storage.googleapis.com/mediapipe-assets/face_landmarker.task",
+            },
+            outputFaceBlendshapes: false,
+            runningMode: "VIDEO",
+            numFaces: 1,
+        });
+
+        btnText.textContent = 'Start Test';
+        loading.style.display = 'none';
+        startBtn.disabled = false;
+        isLoading = false;
+
+        document.body.classList.add('instructions-active');
+    } catch (error) {
+        console.error('Error loading:', error);
+        btnText.textContent = 'Error Loading';
+        loading.style.display = 'none';
+    }
+};
+
+const startCamera = async () => {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            }
+        });
+
+        video.srcObject = stream;
+        smallVideo.srcObject = stream;
+
+        return new Promise((resolve) => {
+            video.onloadedmetadata = () => {
+                video.play();
+                smallVideo.play();
+                video.style.display = 'block';
+                requestAnimationFrame(processVideo);
+                resolve();
+            };
+        });
+    } catch (error) {
+        console.error('Camera error:', error);
+        alert('Please allow camera access to use this application.');
+        throw error;
+    }
+};
+```
+## Code Implementation
+-This tracks the eye lids of an user by attaching points to it and tracks realtime distance between those points
+-Once that distance turns to zero the blink is detected
+
+
+# 🧠 Eye-Care & Vision Screening Web Services
+
+This repository includes two browser-based services for vision health:
+
+1. **Blink Rate Detection** – Helps monitor blinking frequency using the webcam
+2. **Ishihara Color Blindness Test** – A web-based implementation of the Ishihara test for detecting color vision deficiency
