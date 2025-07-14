@@ -474,6 +474,33 @@
       bottom: 10px;
     }
   }
+  .navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.navigation-buttons form {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .navigation-buttons form {
+        width: 100%;
+    }
+    
+    .navigation-buttons button {
+        width: 100%;
+    }
+}
 
   @media (max-width: 600px) {
     main {
@@ -546,7 +573,7 @@
 <main>
   <h1>Color Blindness Test</h1>
   <div class="instructions" id="instructions">
-    <p>Welcome! This test consists of 17 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
+    <p>Welcome! This test consists of 15 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
   </div>
   <div id="start-section" style="text-align: center;">
     <button id="start-test">Start Test</button>
@@ -611,22 +638,24 @@
         <p>Some characteristics of red-green color vision deficiency but not specific.</p>
       </div>
     </div>
-      <button id="saveResultBtn">Save Results to Database</button>
     <div id="saveStatus" style="margin-top: 10px;"></div>
-    <form action="{% url 'user_profile' request.session.user_id %}" method="get">
-      <button type="submit">Go to Profile</button>
+    <div class="navigation-buttons" style="text-align: center; margin-top: 2rem;">
+    <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline-block; margin: 0 0.5rem;">
+        <button type="submit">Go to Profile</button>
     </form>
-    <form action="{% url 'mainx' request.session.user_id %}" method="get">
-      <button type="submit">Home</button>
+    <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline-block; margin: 0 0.5rem;">
+        <button type="submit">Home</button>
     </form>
-    <form action="{% url 'Blink_Page' %}" method="get">
-      <button type="submit">Next Test</button>
+    <form action="{% url 'Blink_Page' %}" method="get" style="display: inline-block; margin: 0 0.5rem;">
+        <button type="submit">Next Test</button>
     </form>
+</div>
     
 
     <div style="text-align: center; margin-top: 2rem;">
       <button id="restart-btn">Restart Test</button>
     </div>
+    
   </div>
 </main>
 </body>
@@ -662,8 +691,6 @@ document.addEventListener('DOMContentLoaded', function() {
     { plateNumber: 13, normalView: 45, redGreenDeficiency: null, type: 'number' },
     { plateNumber: 14, normalView: 5, redGreenDeficiency: null, type: 'number' },
     { plateNumber: 15, normalView: 7, redGreenDeficiency: null, type: 'number' },
-    { plateNumber: 16, normalView: 16, redGreenDeficiency: null, type: 'number' },
-    { plateNumber: 17, normalView: 73, redGreenDeficiency: null, type: 'number' }
 ];
 
     const startTestBtn = document.getElementById('start-test');
@@ -683,9 +710,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentPlate = 1;
     const userAnswers = {};
-    const totalPlates = 17;
+    const totalPlates = 15;
 
-    for (let i = 2; i <= 17; i++) {
+    for (let i = 2; i <= 15; i++) {
         createNumberPlate(i);
     }
     
@@ -874,7 +901,7 @@ function createLinePlate(plateNumber) {
         Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
 
         for (let i = 1; i <= totalPlates; i++) {
-            if (i <= 17) {
+            if (i <= 15) {
                 const input = document.getElementById(`answer-${i}`);
                 if (input) input.value = '';
             } else {
@@ -921,22 +948,21 @@ function createLinePlate(plateNumber) {
         }
     }
 
-  function calculateResults() {
+   function calculateResults() {
     normalCorrect = 0;
     redGreenErrors = 0;
     protanopiaIndicators = 0;
     deuteranopiaIndicators = 0;
     resultsHTML = '';
 
-    // Process all 17 plates
-    for (let i = 1; i <= 17; i++) {
+    // Process all 15 plates (your existing calculation logic)
+    for (let i = 1; i <= 15; i++) {
         const plate = testData[i-1];
         const userAnswer = userAnswers[i] ?? null;
         let result = 'incorrect';
         let expected = '';
 
         if (i === 1) {
-            // Plate 1 - Control plate (everyone should see 12)
             if (userAnswer === 12) {
                 normalCorrect++;
                 result = 'correct';
@@ -944,7 +970,6 @@ function createLinePlate(plateNumber) {
             expected = '12 (Control)';
             
         } else if (i >= 2 && i <= 9) {
-            // Plates 2-9 - Discrimination plates
             if (userAnswer === plate.normalView) {
                 normalCorrect++;
                 result = 'correct';
@@ -952,7 +977,6 @@ function createLinePlate(plateNumber) {
                 redGreenErrors++;
                 result = 'red-green deficiency';
                 
-                // Specific deficiency indicators
                 if ([2, 4, 6].includes(i)) {
                     protanopiaIndicators++;
                 } else if ([3, 5, 7, 8, 9].includes(i)) {
@@ -961,20 +985,17 @@ function createLinePlate(plateNumber) {
             }
             expected = `${plate.normalView} (Normal) / ${plate.redGreenDeficiency} (Deficient)`;
             
-        } else if (i >= 10 && i <= 17) {
-            // Plates 10-17 - Hidden digit plates (only normal vision sees numbers)
+        } else if (i >= 10 && i <= 15) {
             if (userAnswer === plate.normalView) {
                 normalCorrect++;
                 result = 'correct';
             } else {
-                // Any wrong answer (including null, 0, or different number) indicates deficiency
                 redGreenErrors++;
                 result = 'red-green deficiency';
             }
             expected = `${plate.normalView} (Normal) / Nothing (Deficient)`;
         }
 
-        // Build results table row
         resultsHTML += `
             <tr class="${result.replace(' ', '-')}">
                 <td>${i}</td>
@@ -987,6 +1008,49 @@ function createLinePlate(plateNumber) {
     resultsTableBody.innerHTML = resultsHTML;
     determineDiagnosis();
     showDeficiencyInfo();
+    
+    // Automatically save results after calculation
+    autoSaveResults();
+}
+async function autoSaveResults() {
+    const diagnosisText = diagnosisDiv.innerText;
+    const severityLevel = document.querySelector('.severity-level.selected')?.id?.replace('severity-', '') || 'none';
+
+    const data = {
+        normal_correct: normalCorrect,
+        red_green_errors: redGreenErrors,
+        protanopia_indicators: protanopiaIndicators,
+        deuteranopia_indicators: deuteranopiaIndicators,
+        severity_level: severityLevel,
+        diagnosis_text: diagnosisText,
+    };
+
+    try {
+        const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
+            ? 'http://127.0.0.1:8000'
+            : 'https://netrascreen.in';
+
+        const response = await fetch(`${baseUrl}/api/color-vision-tests/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            console.log('Results saved successfully!');
+            // Optionally show a brief success message
+            showSaveStatus('✅ Results saved successfully!', 'success');
+        } else {
+            console.error('Failed to save results');
+            showSaveStatus('❌ Failed to save results', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving results:', error);
+        showSaveStatus('❌ Error occurred while saving', 'error');
+    }
 }
 
  function determineDiagnosis() {
@@ -1087,7 +1151,7 @@ function showDeficiencyInfo() {
     Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
 
     // Only reset number plates 1-17
-    for (let i = 1; i <= 17; i++) {
+    for (let i = 1; i <= 15; i++) {
         const input = document.getElementById(`answer-${i}`);
         if (input) input.value = '';
     }

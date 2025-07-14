@@ -1,4 +1,4 @@
-<!-- {% load static %} -->
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eyesphere - Vision Beyond Limits</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -15,9 +16,8 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: 'Inter', Arial, sans-serif;
+            font-family: 'Inter', Arial, sans-serif; 
             background-image: url("{% static 'eyei.jpg' %}");
             background-size: cover;
             background-position: center;
@@ -27,17 +27,19 @@
             line-height: 1.6;
         }
 
-        /* Improved overlay with gradient for better visual hierarchy */
+
+
+        /* Professional medical overlay */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 64, 82, 0.4), rgba(0, 133, 165, 0.3));
-            z-index: -1;
-        }
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(173, 216, 230, 0.8) 0%, rgba(135, 206, 235, 0.7) 100%);
+    z-index: -1;
+}
 
         /* Basic Reset & Body Styling (optional, but good practice) */
         body {
@@ -55,7 +57,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 5px rgba(209, 218, 224, 0.2);
             position: relative;
             min-height: 60px;
         }
@@ -214,7 +216,7 @@
 
         /* --- Hero Section CSS --- */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://media.istockphoto.com/id/1357747808/vector/specialist-selects-glasses-or-contact-lenses-for-client-different-assortment-of-goods-in.jpg?s=612x612&w=0&k=20&c=T3LZ0rrgijeCC2LcGwcczJBk40iWMcfDM7n2Afba_2c=') no-repeat center center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('image.jpg') no-repeat center center/cover;
             /* Replace 'https://via.placeholder.com/1500x800/2980b9/ffffff?text=Eye+Care+Background' with your actual background image URL */
             color: white;
             text-align: center;
@@ -226,7 +228,7 @@
             align-items: center;
             min-height: 87vh;
             /* Minimum height, takes at least 60% of viewport height */
-            box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 -5px 10px rgba(56, 90, 146, 0.1);
             /* Subtle inner shadow at bottom */
         }
 
@@ -263,42 +265,48 @@
 
         .hero .cta-button {
             display: inline-block;
-            /* Allows padding and margin */
-            background-color: #0a9cc0;
-            /* Green for primary action */
+            background-color: #032736;
             color: white;
-            padding: 15px 30px;
+            padding: 20px 64px;
+            margin-top: 2rem;
             text-decoration: none;
-            border-radius: 50px;
-            /* Pill-shaped buttons */
-            font-size: 1.1em;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            /* Smooth hover effects */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            /* Subtle shadow for depth */
+            border-radius: 12px;
+            font-size: 1.4em;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+            letter-spacing: 0.5px;
+        }
+
+        .hero .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .hero .cta-button:hover {
-            background-color: #0a9cc0;
-            /* Darker green on hover */
+            background-color: #021b25;
             transform: translateY(-2px);
-            /* Slight lift effect */
+            box-shadow: 0 10px 25px rgba(3, 39, 54, 0.3);
         }
 
-        .hero .cta-button.secondary {
-            background-color: transparent;
-            /* Transparent background for secondary */
-            border: 2px solid white;
-            /* White border */
-            color: white;
+        .hero .cta-button:hover:before {
+            width: 300px;
+            height: 300px;
         }
 
-        .hero .cta-button.secondary:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            /* Slight white background on hover */
-            border-color: #e0e0e0;
-            /* Slightly off-white border */
+        .hero .cta-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(5, 57, 77, 0.2);
         }
 
         /* Media Queries for Hero Section Responsiveness */
@@ -368,101 +376,7 @@
 
         /* --- About Us Section CSS --- */
 
-        .solution-section {
-            background-color: white;
-            padding: 40px 20px;
-        }
 
-        .solution-container {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            max-width: 1200px;
-            margin: auto;
-            gap: 40px;
-        }
-
-        .solution-image {
-            flex: 1 1 40%;
-            min-width: 300px;
-        }
-
-        .solution-image img {
-            width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .solution-text {
-            flex: 1 1 50%;
-            min-width: 300px;
-        }
-
-        .solution-text h2 {
-            font-size: 2rem;
-            color: #1d3557;
-            margin-bottom: 20px;
-        }
-
-        .solution-text .highlight {
-            color: #00a9c5;
-        }
-
-        .solution-text .highlight-light {
-            color: #00a9c5;
-            font-weight: 500;
-        }
-
-        .solution-text p {
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        .about-list {
-            list-style: none;
-        }
-
-        .about-list li {
-            position: relative;
-            padding-left: 25px;
-            margin-bottom: 12px;
-            color: #1d3557;
-            font-weight: 500;
-        }
-
-        .about-list li::before {
-            content: '✔';
-            color: #00a9c5;
-            position: absolute;
-            left: 0;
-        }
-
-        /* ---------- Mobile Responsive ---------- */
-        @media (max-width: 768px) {
-            .solution-container {
-                flex-direction: column;
-                gap: 30px;
-                text-align: center;
-            }
-
-            .solution-text h2 {
-                font-size: 1.6rem;
-            }
-
-            .solution-text,
-            .solution-image {
-                max-width: 100%;
-            }
-
-            .about-list li {
-                padding-left: 20px;
-            }
-
-            .about-list li::before {
-                left: 5px;
-            }
-        }
 
         /* .about-us {
             padding: 80px 20px;
@@ -1067,115 +981,6 @@
 
         /* -------------------------------------contact us ------------------------------------------- */
 
-        .appointment-section {
-            background-color: #ffffff;
-            padding: 40px 20px;
-        }
-
-        .appointment-container {
-            display: flex;
-            max-width: 1200px;
-            margin: auto;
-            gap: 40px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .appointment-image {
-            flex: 1 1 50%;
-            min-width: 300px;
-        }
-
-        .appointment-image img {
-            width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .appointment-form-card {
-            flex: 1 1 40%;
-            background-color: #f9f9f9;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            border-left: 3px solid #00a9c5;
-        }
-
-        .appointment-form-card h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #1d3557;
-        }
-
-        .appointment-form .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .appointment-form .input-group input,
-        .appointment-form .input-group select {
-            width: 100%;
-            padding: 12px 40px 12px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .appointment-form .input-group i {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-        }
-
-        .appointment-form .input-group.dual {
-            display: flex;
-            gap: 10px;
-        }
-
-        .appointment-form .dual .half-input {
-            position: relative;
-            flex: 1;
-        }
-
-        .submit-btn {
-            background-color: #1d3557;
-            color: #fff;
-            font-weight: bold;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 30px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background-color: #0f2a4d;
-        }
-
-        /* ------------ Mobile Responsive -------------- */
-        @media (max-width: 768px) {
-            .appointment-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 30px;
-            }
-
-            .appointment-form-card {
-                width: 100%;
-            }
-
-            .appointment-form .input-group.dual {
-                flex-direction: column;
-            }
-
-            .submit-btn {
-                width: 100%;
-            }
-        }
 
 
         /* -------------------------------------footer------------------------------------------------ */
@@ -1277,16 +1082,6 @@
             background: #00c7e2;
         }
 
-        /* .appointment-btn {
-            background: #00c7e2;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            color: #fff;
-            cursor: pointer;
-        } */
-
         .scroll-top {
             background: #0e4a5f;
             border-radius: 50%;
@@ -1322,6 +1117,105 @@
 </head>
 
 <body>
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" style="display: none;">
+        <div class="welcome-content">
+            <h2>Welcome to EyeSphere</h2>
+            <a href="{% url 'sign_in_user' %}" class="auth-btn login">Log into Existing Account</a>
+<a href="{% url 'create-user' %}" class="auth-btn signup">Create New Account</a>
+            <div class="close-btn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .welcome-screen {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 -4px 6px rgba(157, 200, 219, 0.1);
+        }
+
+        .welcome-content {
+            padding: 40px;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .welcome-content h2 {
+            color: #000;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        .welcome-content p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 0;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin: 10px 0;
+            background-color: #000;
+            color: white;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #000;
+        }
+
+        .auth-btn.login {
+            background-color:rgb(113, 165, 186);
+            color: white;
+        }
+
+        .auth-btn.signup {
+            background-color: white;
+            color: #000;
+            border: 2px solid #000;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+
     <nav class="navbar">
         <div class="logo">
             <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
@@ -1345,39 +1239,13 @@
         <p>Experience comprehensive eye care with cutting-edge technology and compassionate professionals dedicated to
             your visual health and well-being.</p>
         <div class="cta-buttons">
-            <a href="{% url 'sign_in_user' %}" class="cta-button">Sign In</a>
-            <a href="{% url 'create-user' %}" class="cta-button secondary">Sign Up</a>
+            <a href="#" class="cta-button">Get Started</a>
         </div>
     </section>
 
     <!-- About Us Section Starts Here -->
 
-    <section class="solution-section">
-        <div class="solution-container">
-            <div class="solution-image">
-                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Products.jpg" alt="Eye surgery" />
-            </div>
-            <div class="solution-text">
-                <h2>
-                    Introducing Our Diverse<br />
-                    Range of <span class="highlight">Solutions</span>
-                </h2>
-                <p>
-                    Eyesphere aims to become a beacon of light that illuminates the way for
-                    the future of eye care. We aim to become a
-                    <span class="highlight-light">one stop for all your eye care needs</span>
-                    and have a wide range of products to fulfil that goal.
-                </p>
-                <ul class="about-list">
-                    <li>Surgeries</li>
-                    <li>Preventive Senses Package</li>
-                    <li>At Home services</li>
-                    <li>International Care</li>
-                    <li>Corporate Camps</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+
 
     <!-- <section class="about-us">
         <div class="about-us-container">
@@ -1404,125 +1272,610 @@
     <!-- About Us Section Ends Here -->
 
 
-    <section class="features">
+    <section class="services">
         <h2>Our Services</h2>
-        <p class="features-subtitle">Comprehensive eye care solutions tailored to your unique needs</p>
-        <div class="feature-cards">
-            <div class="card">
-                <div class="card-icon">👁️</div>
-                <h3>Comprehensive Eye Exams</h3>
-                <p>Thorough evaluations using the latest diagnostic technology to assess your overall eye health and
-                    vision. Our advanced screening methods detect issues early for optimal treatment outcomes.</p>
+        <p class="services-subtitle">Comprehensive eye care solutions tailored to your unique needs</p>
+        <div class="service-list">
+            <div class="service-item">
+                <div class="service-header">
+                    <div class="service-icon"><i class="fas fa-eye"></i></div>
+                    <h3>Near & Far Vision Test</h3>
+                    <div class="expand-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="service-content">
+                    <div class="service-image">
+                        <img src="{% static 'neareye.png' %}" alt="Near & Far Vision Test">
+                    </div>
+                    <p>Comprehensive evaluation of your vision at various distances using state-of-the-art equipment.</p>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-icon">🔍</div>
-                <h3>Vision Correction</h3>
-                <p>Advanced solutions for refractive errors including custom glasses, premium contact lenses, and
-                    state-of-the-art surgical options tailored to your lifestyle and preferences.</p>
+            <div class="service-item">
+                <div class="service-header">
+                    <div class="service-icon" style="color: #ff69b4;"><i class="fas fa-eye"></i></div>
+                    <h3>Peripheral Vision Test</h3>
+                    <div class="expand-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="service-content">
+                    <div class="service-image">
+                        <img src="{% static 'peripheral.png' %}" alt="Peripheral Vision Test">
+                    </div>
+                    <p>Assessment of your side vision to detect any potential vision field defects.</p>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-icon">⚕️</div>
-                <h3>Eye Disease Management</h3>
-                <p>Expert diagnosis and treatment of conditions like glaucoma, cataracts, macular degeneration, and
-                    diabetic retinopathy using cutting-edge medical technologies and proven treatment protocols.</p>
+            <div class="service-item">
+                <div class="service-header">
+                    <div class="service-icon" style="color: #00bfff;"><i class="fas fa-tint"></i></div>
+                    <h3>Dry Eye & Blink Rate Analysis</h3>
+                    <div class="expand-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="service-content">
+                    <div class="service-image">
+                        <img src="{% static 'dryeye.png' %}" alt="Dry Eye Analysis">
+                    </div>
+                    <p>Evaluation of tear production and blink patterns to diagnose and treat dry eye conditions.</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <div class="service-header">
+                    <div class="service-icon" style="color: #ffa07a;"><i class="fas fa-palette"></i></div>
+                    <h3>Color Blindness Test</h3>
+                    <div class="expand-icon"><i class="fas fa-chevron-down"></i></div>
+                </div>
+                <div class="service-content">
+                    <div class="service-image">
+                        <img src="{% static 'colour.png' %}" alt="Color Blindness Test">
+                    </div>
+                    <p>Advanced color vision testing to identify and assess various types of color vision deficiencies.</p>
+                </div>
             </div>
         </div>
     </section>
+
+    <style>
+    .services {
+        padding: 4rem 2rem;
+        background-color: #fff;
+    }
+
+    .services h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 2.5em;
+    }
+
+    .services-subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 3rem;
+        font-size: 1.1em;
+    }
+
+    .service-list {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .service-item {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .service-header {
+        display: flex;
+        align-items: center;
+        padding: 1.2rem;
+        cursor: pointer;
+    }
+
+    .service-icon {
+        font-size: 1.5rem;
+        margin-right: 1.5rem;
+        width: 40px;
+        text-align: center;
+    }
+
+    .service-header h3 {
+        flex-grow: 1;
+        margin: 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .expand-icon {
+        font-size: 1rem;
+        color: #666;
+        transition: transform 0.3s ease;
+    }
+
+    .service-item:hover {
+        background-color: #e9ecef;
+    }
+
+    /* Changes made: Added service content with smooth transition and overflow handling */
+    .service-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: #fff;
+        padding: 0 1.5rem 0 4rem;
+    }
+
+    .service-content p {
+        margin: 1.5rem 0;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .service-image {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Changes made: Added responsive image styling with hover zoom effect */
+    .service-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .service-image img:hover {
+        transform: scale(1.05);
+    }
+
+    .service-item.active .service-content {
+        max-height: 500px;
+    }
+
+    .service-item.active .expand-icon i {
+        transform: rotate(180deg);
+    }
+
+    @media (max-width: 768px) {
+        .services {
+            padding: 3rem 1rem;
+        }
+
+        .service-header {
+            padding: 1rem;
+        }
+
+        .service-icon {
+            font-size: 1.25rem;
+        }
+
+        .service-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .service-image img {
+            height: 150px;
+        }
+    }
+    </style>
 
     <section class="testimonials">
         <h2>What Our Patients Say</h2>
-        <p class="testimonials-subtitle">Hear directly from those whose vision we've helped transform.</p>
-        <div class="testimonial-cards-container">
-            <div class="testimonial-card">
-                <div class="rating">
-                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
-                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+        <p class="testimonials-subtitle">Hear directly from those who've experienced our expert eye care</p>
+        
+        <div class="testimonials-container">
+            <button class="nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+            
+            <div class="testimonials-slider">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The selection of glasses is fantastic, the fitting process was seamless!"</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Priya Devi</p>
+                        <p class="author-title">Graphic Designer</p>
+                    </div>
                 </div>
-                <p class="review-text">"Eyesphere has completely changed my perception of eye care. The staff are
-                    incredibly kind and knowledgeable, and their state-of-the-art equipment gave me a thorough
-                    understanding of my eye health. My vision has never been clearer!"</p>
-                <h4 class="reviewer-name">— Aisha Khan</h4>
-                <p class="reviewer-title">Software Engineer</p>
+
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"My kids love coming here! The team was great with children."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— David Chen</p>
+                        <p class="author-title">Educator</p>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Outstanding experience with advanced equipment and excellent support!"</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Sophia Mehta</p>
+                        <p class="author-title">Marketing Specialist</p>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"I had a great experience with my LASIK surgery. The team was professional and caring throughout the process."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Anil Kumar</p>
+                        <p class="author-title">Entrepreneur</p>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The staff is incredibly knowledgeable and took the time to explain everything thoroughly."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Sarah Johnson</p>
+                        <p class="author-title">Software Engineer</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="testimonial-card">
-                <div class="rating">
-                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
-                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
-                </div>
-                <p class="review-text">"From the moment I walked in, I felt welcomed. Dr. Sharma was patient and
-                    explained every step of my treatment. I highly recommend Eyesphere for anyone seeking top-notch eye
-                    care."</p>
-                <h4 class="reviewer-name">— Rajesh Singh</h4>
-                <p class="reviewer-title">Small Business Owner</p>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="rating">
-                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
-                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9734;</span>
-                </div>
-                <p class="review-text">"The selection of glasses at Eyesphere is fantastic, and the fitting process was
-                    seamless. The only minor point was a short wait, but the quality of service more than made up for
-                    it."</p>
-                <h4 class="reviewer-name">— Priya Devi</h4>
-                <p class="reviewer-title">Graphic Designer</p>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="rating">
-                    <span class="star">&#9733;</span><span class="star">&#9733;</span><span
-                        class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
-                </div>
-                <p class="review-text">"My kids love coming here! The optometrist is great with children, making eye
-                    exams fun and not intimidating. It's a huge relief to know their eyes are in good hands."</p>
-                <h4 class="reviewer-name">— David Chen</h4>
-                <p class="reviewer-title">Educator</p>
-            </div>
+            <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
         </div>
     </section>
 
+    <style>
+    /* Changes made: Added modern testimonials section with side-scrolling functionality */
+    .testimonials {
+        padding: 4rem 2rem;
+        background-color: #f8f9fa;
+    }
 
-    <section class="appointment-section">
-        <div class="appointment-container">
-            <div class="appointment-image">
-                <img src="https://eyesphere.in/wp-content/uploads/2024/04/Eye.jpg" alt="Eye Test" />
-            </div>
-            <div class="appointment-form-card">
-                <h2>Book An<br />Appointment</h2>
+    .testimonials h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 2.5em;
+    }
 
-                <form class="appointment-form">
-                    <div class="input-group">
-                        <input type="text" placeholder="Name*" required />
-                        <i class="fas fa-user"></i>
-                    </div>
+    .testimonials-subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 3rem;
+        font-size: 1.1em;
+    }
 
-                    <div class="input-group dual">
-                        <div class="half-input">
-                            <input type="tel" placeholder="Phone*" required />
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div class="half-input">
-                            <input type="text" placeholder="Location*" required />
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                    </div>
+    .testimonials-container {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+    }
 
-                    <div class="input-group">
-                        <select required>
-                            <option value="" disabled selected>Select Symptoms*</option>
-                            <option>Blurry vision</option>
-                            <option>Dry eyes</option>
-                            <option>Eye pain</option>
-                            <option>Redness</option>
-                        </select>
-                    </div>
+    .testimonials-slider {
+        display: flex;
+        gap: 2rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 1rem 0;
+    }
 
-                    <button type="submit" class="submit-btn">Submit Request</button>
-                </form>
-            </div>
-        </div>
-    </section>
+    .testimonials-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+    .testimonial-card {
+        flex: 0 0 300px;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stars {
+        color: #ffd700;
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-text {
+        color: #333;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+
+    .testimonial-author {
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
+    }
+
+    .author-name {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .author-title {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+        background: #007bff;
+        color: white;
+    }
+
+    .prev-btn {
+        left: 0;
+    }
+
+    .next-btn {
+        right: 0;
+    }
+
+    @media (max-width: 768px) {
+        .testimonials {
+            padding: 3rem 1rem;
+        }
+
+        .testimonials-container {
+            padding: 0 30px;
+        }
+
+        .testimonial-card {
+            flex: 0 0 260px;
+            padding: 1.5rem;
+        }
+    }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Services accordion functionality
+        const serviceItems = document.querySelectorAll('.service-item');
+
+        serviceItems.forEach(item => {
+            const header = item.querySelector('.service-header');
+            const content = item.querySelector('.service-content');
+
+            header.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Close all service items
+                serviceItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                });
+
+                // Toggle current item
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Testimonials slider functionality
+        const slider = document.querySelector('.testimonials-slider');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const cardWidth = 300 + 32; // card width + gap
+
+        prevBtn.addEventListener('click', () => {
+            slider.scrollLeft -= cardWidth;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            slider.scrollLeft += cardWidth;
+        });
+    });
+    </script>
+
+    <style>
+    .services {
+        padding: 4rem 2rem;
+        background-color: #fff;
+    }
+
+    .services h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .services-subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 3rem;
+    }
+
+    .accordion {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .accordion-item {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .accordion-header {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .accordion-header:hover {
+        background-color: #e9ecef;
+    }
+
+    .service-icon {
+        font-size: 1.5rem;
+        color: #007bff;
+        margin-right: 1rem;
+    }
+
+    .accordion-header h3 {
+        flex-grow: 1;
+        margin: 0;
+        font-size: 1.25rem;
+        color: #333;
+    }
+
+    .expand-icon {
+        font-size: 1rem;
+        color: #666;
+        transition: transform 0.3s ease;
+    }
+
+    .accordion-item.active .expand-icon {
+        transform: rotate(180deg);
+    }
+
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: #fff;
+    }
+
+    .accordion-item.active .accordion-content {
+        max-height: 500px;
+    }
+
+    .service-details {
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+    }
+
+    .service-details p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    .service-details img {
+        width: 100%;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .services {
+            padding: 3rem 1rem;
+        }
+
+        .accordion-header {
+            padding: 1rem;
+        }
+
+        .service-icon {
+            font-size: 1.25rem;
+        }
+
+        .accordion-header h3 {
+            font-size: 1.1rem;
+        }
+    }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accordionItems = document.querySelectorAll('.accordion-item');
+
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            const content = item.querySelector('.accordion-content');
+
+            header.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Close all accordion items
+                accordionItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.accordion-content').style.maxHeight = '0';
+                });
+
+                // Toggle current item
+                if (!isActive) {
+                    item.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+
+            // Keyboard accessibility
+            header.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    header.click();
+                }
+            });
+
+            // Add ARIA attributes
+            header.setAttribute('role', 'button');
+            header.setAttribute('tabindex', '0');
+            header.setAttribute('aria-expanded', 'false');
+            content.setAttribute('aria-hidden', 'true');
+        });
+    });
+    </script>
+
+
+
+
+
 
 
 
@@ -1582,11 +1935,99 @@
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
-                <!-- <button class="appointment-btn">Book Appointment</button>
-                <a href="#" class="scroll-top"><i class="fas fa-arrow-up"></i></a> -->
+                <a href="#" class="scroll-top"><i class="fas fa-arrow-up"></i></a>
             </div>
         </div>
     </footer>
+    <!-- Updated auth buttons section -->
+
+
+<!-- Additional CSS to ensure anchor tags look like buttons -->
+<style>
+.auth-btn {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 0;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    margin: 10px 0;
+    background-color: #000;
+    color: white;
+}
+
+.auth-btn.login {
+    background-color:rgb(78, 123, 141);
+    color: white;
+}
+
+.auth-btn.signup {
+    background-color: white;
+    color: #000;
+    border: 2px solid #000;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.auth-btn:visited {
+    color: inherit;
+}
+</style>
+
+<!-- Updated JavaScript to remove the close functionality from buttons -->
+<script>
+// Welcome Screen Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const welcomeScreen = document.querySelector('.welcome-screen');
+    const getStartedBtn = document.querySelector('.cta-button');
+    
+    // Initially hide welcome screen
+    welcomeScreen.style.display = 'none';
+
+    // Show welcome screen when Get Started is clicked
+    getStartedBtn.addEventListener('click', () => {
+        welcomeScreen.style.display = 'flex';
+        welcomeScreen.style.animation = 'fadeIn 0.5s ease-in-out';
+        welcomeScreen.querySelector('.welcome-content').style.animation = 'slideUp 0.5s ease-out';
+    });
+
+    // Only close button closes the welcome screen now
+    const closeBtn = document.querySelector('.close-btn');
+    
+    const closeWelcomeScreen = () => {
+        welcomeScreen.style.animation = 'fadeOut 0.5s ease-in-out forwards';
+        setTimeout(() => {
+            welcomeScreen.style.display = 'none';
+        }, 500);
+    };
+
+    closeBtn.addEventListener('click', closeWelcomeScreen);
+
+    // Hamburger Menu Animation
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        navLinks.classList.toggle('open');
+        
+        // Add slide animation
+        if (navLinks.classList.contains('open')) {
+            navLinks.style.animation = 'slideDown 0.3s ease-in-out forwards';
+        } else {
+            navLinks.style.animation = 'slideUp 0.3s ease-in-out forwards';
+        }
+    });
+});
+</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -1607,6 +2048,78 @@
             });
         });
     </script>
-</body>
+<script>
+    // Welcome Screen Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const welcomeScreen = document.querySelector('.welcome-screen');
+        const getStartedBtn = document.querySelector('.cta-button');
+        
+        // Initially hide welcome screen
+        welcomeScreen.style.display = 'none';
 
+        // Show welcome screen when Get Started is clicked
+        getStartedBtn.addEventListener('click', () => {
+            welcomeScreen.style.display = 'flex';
+            welcomeScreen.style.animation = 'fadeIn 0.5s ease-in-out';
+            welcomeScreen.querySelector('.welcome-content').style.animation = 'slideUp 0.5s ease-out';
+        });
+        const loginBtn = document.querySelector('.auth-btn.login');
+        const signupBtn = document.querySelector('.auth-btn.signup');
+
+        const closeBtn = document.querySelector('.close-btn');
+        
+        const closeWelcomeScreen = () => {
+            welcomeScreen.style.animation = 'fadeOut 0.5s ease-in-out forwards';
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+            }, 500);
+        };
+
+        
+        closeBtn.addEventListener('click', closeWelcomeScreen);
+
+        // Hamburger Menu Animation
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            navLinks.classList.toggle('open');
+            
+            // Add slide animation
+            if (navLinks.classList.contains('open')) {
+                navLinks.style.animation = 'slideDown 0.3s ease-in-out forwards';
+            } else {
+                navLinks.style.animation = 'slideUp 0.3s ease-in-out forwards';
+            }
+        });
+    });
+</script>
+
+<style>
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    @keyframes slideDown {
+        from { 
+            max-height: 0;
+            opacity: 0;
+        }
+        to { 
+            max-height: 300px;
+            opacity: 1;
+        }
+    }
+
+    .nav-links {
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .nav-links.open {
+        animation: slideDown 0.3s ease-in-out forwards;
+    }
+</style>
+</body>
 </html>

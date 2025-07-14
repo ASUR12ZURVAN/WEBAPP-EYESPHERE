@@ -677,7 +677,6 @@ body::before {
         <!-- Add this before the closing </div> of container -->
 <div id="submission-result"></div>
 <div class="buttons-container" id="buttonsContainer" style="display: none; margin-top: 20px;">
-    <button onclick="submitScore()" style="margin: 10px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">Submit Result</button>
     <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
         <button type="submit" style="margin: 10px; padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer;">Go to Profile</button>
     </form>
@@ -766,13 +765,13 @@ body::before {
         
         // Scroll to results
         document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        autoSubmitScore();
     }
-
-    function submitScore() {
-        const userId = document.getElementById('user-id').value;
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
-               let category;
+    function autoSubmitScore() {
+    const userId = document.getElementById('user-id').value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    let category;
     if (finalOSDIScore <= 12) {
         category = 'Normal';
     } else if (finalOSDIScore <= 22) {
@@ -795,38 +794,40 @@ body::before {
             user_id: userId,
             test_type: 'dryeye',
             final_score: finalOSDIScore.toFixed(1),
-            result_value: combinedResult, // Store "score - category"
+            result_value: combinedResult,
             accuracy: 100
         })
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Server response:', data);
-            const container = document.getElementById('submission-result');
-            
-            if (data.status === 'success') {
-                container.innerHTML = `
-                    <div class="result-message success">
-                        Result submitted successfully!
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `
-                    <div class="result-message error">
-                        Error: ${data.message || 'Could not submit result'}
-                    </div>
-                `;
-            }
-        })
-        .catch(error => {
-            console.error('Error sending score:', error);
-            document.getElementById('submission-result').innerHTML = `
-                <div class="result-message error">
-                    Error submitting result. Please try again.
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server response:', data);
+        const container = document.getElementById('submission-result');
+        
+        if (data.status === 'success') {
+            container.innerHTML = `
+                <div class="result-message success">
+                    Result stored!
                 </div>
             `;
-        });
-    }
+        } else {
+            container.innerHTML = `
+                <div class="result-message error">
+                    Error: ${data.message || 'Could not save result'}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Error sending score:', error);
+        document.getElementById('submission-result').innerHTML = `
+            <div class="result-message error">
+                Error saving result. Please try again.
+            </div>
+        `;
+    });
+}
+
+   
 </script>
 </body>
 </html>
