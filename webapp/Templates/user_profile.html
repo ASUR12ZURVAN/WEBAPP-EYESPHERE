@@ -423,41 +423,112 @@
 
         <div class="content">
             <div class="main-sections">
-                <div class="diagnosis-section">
-                    <div class="diagnosis-header">Provisional Diagnosis</div>
+                <!-- Replace the diagnosis-section in your main template -->
+<div class="diagnosis-section">
+    <div class="diagnosis-header">Patient History</div>
 
-                    <div class="condition">
-                        <div class="condition-title">Dry Eyes with Red Marks</div>
-                        <div class="condition-detail">Patient Input: Frequent screen usage, Burning sensation in eyes</div>
-                        <div class="condition-detail ai-correlation">AI Correlation: Reduced blink rate and eye redness</div>
+    {% if patient_history %}
+        <!-- Chief Complaints -->
+        {% if patient_history.chief_complaints.exists %}
+            <div class="condition">
+                <div class="condition-title">Chief Complaints</div>
+                {% for complaint in patient_history.chief_complaints.all %}
+                    <div class="condition-detail">
+                        • {{ complaint.get_complaint_display }}
+                        {% if complaint.other_details %}
+                            - {{ complaint.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Cataract</div>
-                        <div class="condition-detail">Patient Input: Blurry vision and difficulty seeing in dim light</div>
+        <!-- Ophthalmic History -->
+        {% if patient_history.ophthalmic_histories.exists %}
+            <div class="condition">
+                <div class="condition-title">Ophthalmic History</div>
+                {% for history in patient_history.ophthalmic_histories.all %}
+                    <div class="condition-detail">
+                        • {{ history.get_history_item_display }}
+                        {% if history.other_details %}
+                            - {{ history.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Glaucoma</div>
-                        <div class="condition-detail">Patient Input: Occasional headaches, Family history of glaucoma</div>
+        <!-- Systemic History -->
+        {% if patient_history.systemic_histories.exists %}
+            <div class="condition">
+                <div class="condition-title">Systemic History</div>
+                {% for history in patient_history.systemic_histories.all %}
+                    <div class="condition-detail">
+                        • {{ history.get_history_item_display }}
+                        {% if history.other_details %}
+                            - {{ history.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Macular Degeneration</div>
-                        <div class="condition-detail">Patient Input: Difficulty reading small text in dim light</div>
-                        <div class="condition-detail ai-correlation">AI Detecting damage to central vision areas</div>
+        <!-- Family History -->
+        {% if patient_history.family_histories.exists %}
+            <div class="condition">
+                <div class="condition-title">Family History</div>
+                {% for history in patient_history.family_histories.all %}
+                    <div class="condition-detail">
+                        • {{ history.get_history_item_display }}
+                        {% if history.other_details %}
+                            - {{ history.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Diabetic Retinopathy</div>
-                        <div class="condition-detail">Patient Input: History of diabetes, Poor blood sugar</div>
-                        <div class="condition-detail ai-correlation">AI Detecting retinal vascular changes</div>
+        <!-- Drug Allergies -->
+        {% if patient_history.drug_allergies.exists %}
+            <div class="condition">
+                <div class="condition-title">Drug Allergies</div>
+                {% for allergy in patient_history.drug_allergies.all %}
+                    <div class="condition-detail">
+                        • {{ allergy.get_allergy_type_display }}
+                        {% if allergy.other_details %}
+                            - {{ allergy.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div style="margin-top: 15px; font-style: italic; color: #666;">
-                        *This is not medical advice
+        <!-- Contact Allergies -->
+        {% if patient_history.contact_allergies.exists %}
+            <div class="condition">
+                <div class="condition-title">Contact Allergies</div>
+                {% for allergy in patient_history.contact_allergies.all %}
+                    <div class="condition-detail">
+                        • {{ allergy.get_allergy_type_display }}
+                        {% if allergy.other_details %}
+                            - {{ allergy.other_details }}
+                        {% endif %}
                     </div>
-                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="history-prompt">
+            <strong>📋 No patient history found!</strong><br>
+            Please <a href="/patient-history/">fill out your medical history form</a> to see your history here.
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 15px; font-style: italic; color: #666;">
+        *Patient history information
+    </div>
+</div>
 
                 <div class="correlator-section">
                     <div class="correlator-header">SBO Correlator</div>
