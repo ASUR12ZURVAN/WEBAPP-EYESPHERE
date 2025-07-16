@@ -3,6 +3,10 @@
 <html>
 <head>
     <title>Dynamic Snellen Chart</title>
+    <h2 style="text-align: center; color: #2c3e50; margin-top: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Download our AR app for better experience</h2>
+    <div style="text-align: center; margin: 20px 0;">
+        <img src="{%static 'qr.jpg' %}" alt="AR App QR Code" style="width: 200px; height: 200px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    </div>
     <style>
         * {
             box-sizing: border-box;
@@ -551,8 +555,8 @@
         }
 
         function showCombinedResults() {
-    document.getElementById('leftEyeResult').textContent = eyeResults.left + ' D';
-    document.getElementById('rightEyeResult').textContent = eyeResults.right + ' D';
+    document.getElementById('leftEyeResult').textContent = eyeResults.left ;
+    document.getElementById('rightEyeResult').textContent = eyeResults.right ;
     combinedResults.style.display = 'block';
 
     submitResultsToBackend();
@@ -674,21 +678,17 @@ function submitResultsToBackend() {
             const headache = formData.get('headache');
             
             // Calculate diopter
-            if (lineNumber === 11 || lineNumber === 12) {
-    prediction = 0;
+            let visionResult;
+if (lineNumber >= 10) {
+    visionResult = "20/20"; // Normal vision
 } else {
-    const logmar = (10 - lineNumber) * 0.1;
-    const rawDiopters = -3.3 * logmar;
-    
-    if (headache === 'yes') {
-        prediction = Math.round(Math.abs(rawDiopters) * 2) / 2.0;
-    } else {
-        prediction = -Math.round(Math.abs(rawDiopters) * 2) / 2.0;
-    }
+    // Convert line number to Snellen fraction
+    const snellenDenominator = Math.round(20 * Math.pow(10, (10 - lineNumber) * 0.1));
+    visionResult = `20/${snellenDenominator}`;
 }
             
             // Store result
-            eyeResults[currentEye] = prediction;
+            eyeResults[currentEye] = visionResult;
             
             hideLoading();
             
@@ -705,7 +705,7 @@ function submitResultsToBackend() {
                 resultDiv.style.borderLeftColor = '#2ecc71';
                 resultDiv.innerHTML = `
                     <strong>Left Eye Complete!</strong><br>
-                    Result: <span style="font-size: 1.2em; font-weight: bold;">${prediction} D</span><br>
+                    Result: <span style="font-size: 1.2em; font-weight: bold;">${visionResult} </span><br>
                     <button id="startRightEyeBtn" style="margin-top: 15px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         Start Right Eye Test
                     </button>
@@ -775,8 +775,8 @@ function submitResultsToBackend() {
             const results = document.createElement('div');
             results.innerHTML = `
                 <h3>Results Summary:</h3>
-                <p><strong>Left Eye:</strong> ${eyeResults.left} D</p>
-                <p><strong>Right Eye:</strong> ${eyeResults.right} D</p>
+                <p><strong>Left Eye:</strong> ${eyeResults.left} </p>
+                <p><strong>Right Eye:</strong> ${eyeResults.right} </p>
             `;
             pdfContent.appendChild(results);
 
