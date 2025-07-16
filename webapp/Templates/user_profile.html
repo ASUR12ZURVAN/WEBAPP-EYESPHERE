@@ -33,6 +33,7 @@
             padding: 30px;
             text-align: center;
             position: relative;
+            z-index: 1000;
         }
 
         .logo-title {
@@ -41,25 +42,6 @@
             font-weight: bold;
             margin-bottom: 10px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .patient-date-info {
-            background: white;
-            color: #333;
-            padding: 15px 30px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .patient-info {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .date-info {
-            font-size: 1em;
-            color: #666;
         }
 
         .test-buttons {
@@ -80,12 +62,93 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .test-button:hover {
             background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            z-index: 1001;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 250px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+            z-index: 1002;
+            border-radius: 10px;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-content a:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .dropdown-content a:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .test-button {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .dropdown-arrow {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+
+        .patient-date-info {
+            background: white;
+            color: #333;
+            padding: 15px 30px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .patient-info {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .date-info {
+            font-size: 1em;
+            color: #666;
         }
 
         .content {
@@ -291,6 +354,20 @@
             .test-button {
                 width: 100%;
                 max-width: 250px;
+                justify-content: center;
+            }
+
+            .dropdown-content {
+                position: static;
+                display: none;
+                box-shadow: none;
+                background-color: rgba(255,255,255,0.9);
+                margin-top: 10px;
+                border-radius: 10px;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
             }
         }
     </style>
@@ -301,16 +378,41 @@
             <div class="logo-title">NETRASCREEN AI</div>
 
             <div class="test-buttons">
-            <form action="{% url 'mainx' request.session.user_id %}" method="get" class="test-button">
-                <button type="submit">HOME</button>
-            </form>
+                <form action="{% url 'mainx' request.session.user_id %}" method="get" style="margin: 0;">
+                    <button type="submit" class="test-button">
+                        <span>🏠</span> Home
+                    </button>
+                </form>
 
-            
-                <a href="{% url 'base_myopia'  %}" class="test-button">📏 Vision Distance Test</a>
-                <a href="{% url 'base_glaucoma' %}" class="test-button">🎯 Eye Pressure Check</a>
-                <a href="{% url 'Colourblindness_Test' %}" class="test-button">🌈 Color Vision Test</a>
-                <a href="{% url 'Blink_Page' %}" class = "test-button">👁️ Blink Rate Test</a>
-                <a href="{% url 'eye_upload_form' %}" class="test-button">💧 Dry Eye Test</a>
+                <a href="{% url 'chat_page' %}" class="test-button">
+                    <span>🤖</span> ChatBot
+                </a>
+
+                <div class="dropdown">
+                    <a href="#" class="test-button">
+                        <span>🔬</span> Tests <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'osdi' %}">
+                            <span>👓</span> OSDI Test
+                        </a>
+                        <a href="{% url 'base_myopia' %}">
+                            <span>📏</span> Vision Distance Test
+                        </a>
+                        <a href="{% url 'base_glaucoma' %}">
+                            <span>🎯</span> Eye Pressure Check
+                        </a>
+                        <a href="{% url 'Colourblindness_Test' %}">
+                            <span>🌈</span> Color Vision Test
+                        </a>
+                        <a href="{% url 'Blink_Page' %}">
+                            <span>👁️</span> Blink Rate Test
+                        </a>
+                        <a href="{% url 'eye_upload_form' %}">
+                            <span>💧</span> Dry Eye Test
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -321,41 +423,112 @@
 
         <div class="content">
             <div class="main-sections">
-                <div class="diagnosis-section">
-                    <div class="diagnosis-header">Provisional Diagnosis</div>
+                <!-- Replace the diagnosis-section in your main template -->
+<div class="diagnosis-section">
+    <div class="diagnosis-header">Patient History</div>
 
-                    <div class="condition">
-                        <div class="condition-title">Dry Eyes with Red Marks</div>
-                        <div class="condition-detail">Patient Input: Frequent screen usage, Burning sensation in eyes</div>
-                        <div class="condition-detail ai-correlation">AI Correlation: Reduced blink rate and eye redness</div>
+    {% if patient_history %}
+        <!-- Chief Complaints -->
+        {% if patient_history.chief_complaints.exists %}
+            <div class="condition">
+                <div class="condition-title">Chief Complaints</div>
+                {% for complaint in patient_history.chief_complaints.all %}
+                    <div class="condition-detail">
+                        • {{ complaint.get_complaint_display }}
+                        {% if complaint.other_details %}
+                            - {{ complaint.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Cataract</div>
-                        <div class="condition-detail">Patient Input: Blurry vision and difficulty seeing in dim light</div>
+        <!-- Ophthalmic History -->
+        {% if patient_history.ophthalmic_histories.exists %}
+            <div class="condition">
+                <div class="condition-title">Ophthalmic History</div>
+                {% for history in patient_history.ophthalmic_histories.all %}
+                    <div class="condition-detail">
+                        • {{ history.get_history_item_display }}
+                        {% if history.other_details %}
+                            - {{ history.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Glaucoma</div>
-                        <div class="condition-detail">Patient Input: Occasional headaches, Family history of glaucoma</div>
+        <!-- Systemic History -->
+        {% if patient_history.systemic_histories.exists %}
+            <div class="condition">
+                <div class="condition-title">Systemic History</div>
+                {% for history in patient_history.systemic_histories.all %}
+                    <div class="condition-detail">
+                        • {{ history.get_history_item_display }}
+                        {% if history.other_details %}
+                            - {{ history.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Macular Degeneration</div>
-                        <div class="condition-detail">Patient Input: Difficulty reading small text in dim light</div>
-                        <div class="condition-detail ai-correlation">AI Detecting damage to central vision areas</div>
+        <!-- Family History -->
+        {% if patient_history.family_histories.exists %}
+            <div class="condition">
+                <div class="condition-title">Family History</div>
+                {% for history in patient_history.family_histories.all %}
+                    <div class="condition-detail">
+                        • {{ history.get_history_item_display }}
+                        {% if history.other_details %}
+                            - {{ history.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="condition">
-                        <div class="condition-title">Diabetic Retinopathy</div>
-                        <div class="condition-detail">Patient Input: History of diabetes, Poor blood sugar</div>
-                        <div class="condition-detail ai-correlation">AI Detecting retinal vascular changes</div>
+        <!-- Drug Allergies -->
+        {% if patient_history.drug_allergies.exists %}
+            <div class="condition">
+                <div class="condition-title">Drug Allergies</div>
+                {% for allergy in patient_history.drug_allergies.all %}
+                    <div class="condition-detail">
+                        • {{ allergy.get_allergy_type_display }}
+                        {% if allergy.other_details %}
+                            - {{ allergy.other_details }}
+                        {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div style="margin-top: 15px; font-style: italic; color: #666;">
-                        *This is not medical advice
+        <!-- Contact Allergies -->
+        {% if patient_history.contact_allergies.exists %}
+            <div class="condition">
+                <div class="condition-title">Contact Allergies</div>
+                {% for allergy in patient_history.contact_allergies.all %}
+                    <div class="condition-detail">
+                        • {{ allergy.get_allergy_type_display }}
+                        {% if allergy.other_details %}
+                            - {{ allergy.other_details }}
+                        {% endif %}
                     </div>
-                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="history-prompt">
+            <strong>📋 No patient history found!</strong><br>
+            Please <a href="/patient-history/">fill out your medical history form</a> to see your history here.
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 15px; font-style: italic; color: #666;">
+        *Patient history information
+    </div>
+</div>
 
                 <div class="correlator-section">
                     <div class="correlator-header">SBO Correlator</div>
@@ -368,32 +541,33 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-{% if myopia_results %}
-    {% for result in myopia_results %}
-        <div class="test-result">
-            <span class="test-name">Myopia Test</span>
-            <span class="test-percentage">L: {{ result.left_eye_diopter }}D, R: {{ result.right_eye_diopter }}D</span>
-        </div>
-    {% endfor %}
-{% endif %}
-                    
-{% if dryeye_results %}
-    {% for result in dryeye_results %}
-        <div class="test-result">
-            <span class="test-name">OSDI</span>
-            <span class="test-percentage">{{ result.osdi_score }} - {{ result.severity }}</span>
-        </div>
-    {% endfor %}
-{% endif %}
-<!-- Add this to your user_profile.html template -->
-{% if glaucoma_results %}
-    {% for result in glaucoma_results %}
-        <div class="test-result">
-            <span class="test-name">Peripheral Vision</span>
-            <span class="test-percentage">{{ result.total_score }}% - {{ result.severity }}</span>
-        </div>
-    {% endfor %}
-{% endif %}
+
+                    {% if myopia_results %}
+                        {% for result in myopia_results %}
+                            <div class="test-result">
+                                <span class="test-name">Myopia Test</span>
+                                <span class="test-percentage">L: {{ result.left_eye_diopter }}D, R: {{ result.right_eye_diopter }}D</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                        
+                    {% if dryeye_results %}
+                        {% for result in dryeye_results %}
+                            <div class="test-result">
+                                <span class="test-name">OSDI</span>
+                                <span class="test-percentage">{{ result.osdi_score }} - {{ result.severity }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if glaucoma_results %}
+                        {% for result in glaucoma_results %}
+                            <div class="test-result">
+                                <span class="test-name">Peripheral Vision</span>
+                                <span class="test-percentage">{{ result.total_score }}% - {{ result.severity }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
                     {% if color_vision_tests %}
                         {% for test in color_vision_tests %}
@@ -402,8 +576,8 @@
                                 <span class="test-percentage">{{ test.severity_level|title }}</span>
                             </div>
                             <div class="card-field">
-                                    <span class="card-label">Clinical Assessment</span>
-                                    <span class="card-value">{{ test.diagnosis_text }}</span>
+                                <span class="card-label">Clinical Assessment</span>
+                                <span class="card-value">{{ test.diagnosis_text }}</span>
                             </div>
                         {% endfor %}
                     {% endif %}

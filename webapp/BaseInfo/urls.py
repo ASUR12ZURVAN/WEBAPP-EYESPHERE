@@ -17,4 +17,6 @@ urlpatterns = [
     path('sign-in/', views.sign_in_user, name='sign_in_user'),
     path('main/<int:user_id>/',views.mainx,name='mainx'),
     path('dryeye_test',views.osdi,name='osdi'),
+    path('history/',views.history,name='history'),
+     path('submit_patient_history/', views.submit_patient_history, name='submit_patient_history'),
 ]

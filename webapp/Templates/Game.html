@@ -1574,8 +1574,57 @@ function showFinalResults() {
             </div>
         </div>
     `;
-
-    document.getElementById('saveBtn').style.display = 'inline-block';
+    submitResultsToBackend()
+        .then(() => {
+            // Update the message to show success
+            const scoreElement = document.getElementById('score');
+            scoreElement.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">🎯 Test Complete!</h3>
+                    <div style="margin: 15px 0;">
+                        <strong>Overall Performance:</strong><br>
+                        ${totalCorrect}/${totalPossible} correct (${averageScore}%)
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>Assessment:</strong> ${severity}<br>
+                        <em style="font-size: 14px; color: var(--neutral-color);">${recommendation}</em>
+                    </div>
+                    <div style="font-size: 12px; color: var(--neutral-color); margin-top: 15px;">
+                        <strong>Disclaimer:</strong> This is a screening tool, not a diagnostic test. 
+                        Consult a qualified eye care professional for medical advice.
+                    </div>
+                    <div style="margin-top: 15px; color: var(--secondary-color);">
+                        <i class="fas fa-check-circle"></i> Results saved successfully!
+                    </div>
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error('Failed to save results:', error);
+            // Show error message
+            const scoreElement = document.getElementById('score');
+            scoreElement.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">🎯 Test Complete!</h3>
+                    <div style="margin: 15px 0;">
+                        <strong>Overall Performance:</strong><br>
+                        ${totalCorrect}/${totalPossible} correct (${averageScore}%)
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>Assessment:</strong> ${severity}<br>
+                        <em style="font-size: 14px; color: var(--neutral-color);">${recommendation}</em>
+                    </div>
+                    <div style="font-size: 12px; color: var(--neutral-color); margin-top: 15px;">
+                        <strong>Disclaimer:</strong> This is a screening tool, not a diagnostic test. 
+                        Consult a qualified eye care professional for medical advice.
+                    </div>
+                    <div style="margin-top: 15px; color: var(--accent-color);">
+                        <i class="fas fa-exclamation-triangle"></i> Failed to save results automatically
+                    </div>
+                </div>
+            `;
+        });
+    
     document.getElementById('nextTestBtn').style.display = 'inline-block';
     document.getElementById('profileBtn').style.display = 'inline-block';
     document.getElementById('HOMEBtn').style.display = 'inline-block';
@@ -1597,7 +1646,6 @@ function restartGame() {
     document.getElementById('score').classList.remove('score-highlight');
     document.getElementById('score').innerHTML = '';
     document.getElementById('checkBtn').style.display = 'block';
-    document.getElementById('saveBtn').style.display = 'none';
     document.getElementById('nextTestBtn').style.display = 'none';
     document.getElementById('profileBtn').style.display = 'none';
     document.getElementById('HOMEBtn').style.display = 'none';

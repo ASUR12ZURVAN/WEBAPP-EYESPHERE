@@ -554,11 +554,15 @@
     document.getElementById('leftEyeResult').textContent = eyeResults.left + ' D';
     document.getElementById('rightEyeResult').textContent = eyeResults.right + ' D';
     combinedResults.style.display = 'block';
+
+    submitResultsToBackend();
     
     // Add submit button
-    const submitBtn = document.createElement('button');
-    submitBtn.textContent = 'Save Results to Profile';
-    submitBtn.style.cssText = `
+    const nextBtn = document.createElement('a');
+    nextBtn.href = "{% url 'base_glaucoma' %}";
+    nextBtn.className = 'test-button';
+    nextBtn.innerHTML = '<span></span> Next';
+    nextBtn.style.cssText = `
         background: linear-gradient(135deg, #27ae60, #2ecc71);
         color: white;
         padding: 15px 30px;
@@ -568,36 +572,41 @@
         cursor: pointer;
         margin-top: 20px;
         width: 100%;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
     `;
     
-    submitBtn.onclick = function() {
-        submitResultsToBackend();
-    };
-    
-    combinedResults.appendChild(submitBtn);
+    combinedResults.appendChild(nextBtn);
     combinedResults.scrollIntoView({ behavior: 'smooth', block: 'center' });
     // Add profile button
 const profileForm = document.createElement('form');
-profileForm.method = 'get';
-profileForm.action = "{% url 'user_profile' request.session.user_id %}";
-profileForm.style.cssText = 'display: inline; width: 100%; margin-top: 10px;';
+    profileForm.method = 'get';
+    profileForm.action = "{% url 'user_profile' request.session.user_id %}";
+    profileForm.style.cssText = `
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+    `;
 
-const profileBtn = document.createElement('button');
-profileBtn.type = 'submit';
-profileBtn.innerHTML = '<span>👤</span> Go to Profile';
-profileBtn.style.cssText = `
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-`;
+    const profileBtn = document.createElement('button');
+    profileBtn.type = 'submit';
+    profileBtn.innerHTML = '<span>👤</span> Go to Profile';
+    profileBtn.style.cssText = `
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+    `;
 
-profileForm.appendChild(profileBtn);
-combinedResults.appendChild(profileForm);
+    profileForm.appendChild(profileBtn);
+    combinedResults.appendChild(profileForm);
 }
 
 function submitResultsToBackend() {
@@ -624,7 +633,6 @@ function submitResultsToBackend() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error saving results. Please try again.');
     });
 }
 

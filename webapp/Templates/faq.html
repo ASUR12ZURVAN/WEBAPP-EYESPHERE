@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body and Container Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* A softer, modern background color */
+            display: flex;
+            flex-direction: column; /* Stack navbar and content */
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 80px; /* Space for the fixed navbar */
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1400px; /* Slightly wider for better content display */
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* Softly rounded corners */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* More pronounced, softer shadow */
+            overflow: hidden;
+            padding: 2.5rem 3rem; /* Increased padding */
+            box-sizing: border-box;
+            margin: 2rem; /* Margin at the bottom for overall layout */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #ffffff; /* White background for clean look */
+            color: #05394d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 40px; /* More padding on sides for larger screens */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            position: fixed; /* Fixed at the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Ensure it stays on top */
+            min-height: 100px;
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        /* Logo Styling */
+        .navbar .logo img {
+            height: 80px; /* Adjusted logo size for better balance */
+            vertical-align: middle;
+        }
+
+        /* Navigation Links Styling */
+        .navbar .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar .nav-links a {
+            color: #334155; /* Darker, more legible color for links */
+            text-decoration: none;
+            font-weight: 500; /* Medium weight */
+            padding: 10px 18px; /* Padding around each link */
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+            border-radius: 5px;
+            position: relative; /* For the underline effect */
+        }
+
+        .navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 5px; /* Position it slightly above the bottom */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #0a9ec6; /* Accent color for underline */
+            transition: width 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover::after,
+        .navbar .nav-links a.active::after {
+            width: calc(100% - 30px); /* Adjust width to leave some space on sides */
+        }
+
+        .navbar .nav-links a:hover,
+        .navbar .nav-links a.active {
+            color: #0a9ec6; /* Accent color on hover/active */
+            background-color: #f6f7f5; /* Very light background on hover */
+        }
+
+        /* Hamburger Icon Styling (for mobile) */
+        .hamburger {
+            display: none; /* Hidden by default on larger screens */
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 1001; /* Ensure it's above .nav-links when open */
+        }
+
+        .hamburger .bar {
+            width: 100%;
+            height: 3px;
+            background-color: #334155; /* Color of hamburger bars */
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hamburger animation */
+        .hamburger.open .bar:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger.open .bar:nth-child(2) {
+            opacity: 0;
+            /* Hide the middle bar */
+        }
+
+        .hamburger.open .bar:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+        /* FAQ Section Specific Styles */
+        .section-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0; /* Subtle separator */
+        }
+        .section-title {
+            font-size: 2.5rem; /* Larger, more impactful title */
+            font-weight: 600; /* Semibold */
+            color: #25427b; /* Darker text for headings */
+            letter-spacing: -0.025em; /* Slight letter spacing adjustment */
+        }
+        .expand-all-btn {
+            font-size: 0.95rem;
+            color: #64748b; /* Grayish blue for subtle action */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem; /* More rounded button */
+            transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            font-weight: 500;
+        }
+        .expand-all-btn:hover {
+            color: #1e293b; /* Darken on hover */
+            background-color: #e2e8f0; /* Light background on hover */
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #f0f2f5; /* Lighter border for distinction */
+            margin-bottom: 0.5rem; /* Space between items */
+            padding-bottom: 0.5rem;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            cursor: pointer;
+            font-size: 1.15rem; /* Slightly larger question font */
+            font-weight: 500;
+            color: #334155; /* Main question text color */
+            transition: color 0.2s ease-in-out;
+        }
+        .faq-question:hover {
+            color: #0a9ec6; /* Accent color on hover for questions */
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding-bottom 0.4s ease-in-out;
+            font-size: 1rem;
+            color: #64748b; /* Softer text color for answers */
+            padding-bottom: 0;
+            line-height: 1.6; /* Improved readability */
+        }
+        .faq-answer.active {
+            max-height: 200px; /* Adjust as needed, sufficient for current content */
+            padding-bottom: 1.5rem; /* More padding below active answer */
+        }
+        .plus-icon {
+            font-size: 1.8rem; /* Larger icon */
+            color: #64748b; /* Matches expand button color */
+            transition: transform 0.3s ease-out, color 0.2s ease-in-out;
+            margin-left: 1rem; /* Space between text and icon */
+        }
+        .faq-question.active .plus-icon {
+            transform: rotate(45deg);
+            color: #0a9ec6; /* Accent color when active */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) { /* Adjust for larger tablets/smaller desktops */
+            .container {
+                padding: 2rem;
+            }
+            .navbar {
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px; /* Adjust for smaller navbar height */
+            }
+            .container {
+                padding: 1.5rem;
+                margin-top: 1rem; /* Add some space below the navbar */
+                margin-bottom: 1.5rem;
+            }
+            .navbar {
+                flex-wrap: nowrap; /* Prevent wrapping, let hamburger handle menu */
+                padding: 8px 15px;
+                min-height: 50px;
+            }
+            .navbar .logo img {
+                height: 40px;
+            }
+            .navbar .nav-links {
+                display: flex; /* Hide navigation links by default on small screens */
+                flex-direction: column;
+                width: 100%;
+                background-color: #ffffff;
+                align-items: center;
+                position: absolute;
+                top: 50px; /* Position below the navbar */
+                left: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+                overflow: hidden;
+                max-height: 0; /* Initially collapsed */
+                opacity: 0;
+                pointer-events: none; /* Disable interaction when hidden */
+            }
+
+            .navbar .nav-links.open {
+                display: flex;
+                max-height: 300px; /* A value larger than actual height for smooth transition */
+                opacity: 1;
+                pointer-events: all; /* Enable interaction when open */
+            }
+
+            .navbar .nav-links a {
+                padding: 15px 20px;
+                text-align: left; /* Align links to the left in dropdown */
+                border-bottom: 1px solid #f0f2f5; /* Lighter separator */
+            }
+
+            .navbar .nav-links a:last-child {
+                border-bottom: none;
+            }
+
+            .hamburger {
+                display: flex; /* Show hamburger icon on small screens */
+            }
+
+            .section-title-container {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+            .expand-all-btn {
+                align-self: flex-start;
+                font-size: 0.85rem;
+            }
+            .faq-question {
+                font-size: 1.05rem;
+                padding: 1rem 0;
+            }
+            .faq-answer.active {
+                padding-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            .navbar .logo img {
+                height: 35px;
+            }
+            .section-title {
+                font-size: 1.75rem;
+            }
+            .faq-question {
+                font-size: 0.95rem;
+            }
+            .plus-icon {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">About Us</a>
+            <a href="#">Testimonials</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <!-- FAQ Section Header -->
+        <div class="section-title-container">
+            <h1 class="section-title">Frequently Asked Questions</h1>
+
+        </div>
+
+        <!-- FAQ Items -->
+        <div class="faq-section">
+            <!-- FAQ Item 1 -->
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="1">
+                    <span>What is the Osdi Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-1">
+                    <p>
+                        The OSDI (Ocular Surface Disease Index) Test is a short questionnaire used to assess symptoms of dry eye and their impact on daily vision-related activities.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="2">
+                    <span>How do I perform the Osdi Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-2">
+                    <p>
+                        Simply answer a series of multiple-choice questions about your eye discomfort, vision issues, and environmental triggers. The website calculates a score based on your responses to evaluate your dry eye severity.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="3">
+                    <span>What is the Vision Distance Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-3">
+                    <p>
+                        This test measures your ability to see objects clearly at various distances, helping to identify nearsightedness (myopia) or farsightedness (hyperopia).
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="4">
+                    <span>How do I perform the Vision Distance Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-4">
+                    <p>
+                        Stand at a recommended distance from your screen. Read letters or numbers shown in different sizes. The test evaluates the smallest size you can read clearly to determine your visual acuity.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ Item 5 -->
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="5">
+                    <span>What is the Eye Pressure Check?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-5">
+                    <p>
+                        This is a non-invasive screening tool to estimate intraocular pressure (IOP), which is important for detecting conditions like glaucoma.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="6">
+                    <span> How do I perform the Eye Pressure Check?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-6">
+                    <p>
+                        Follow the on-screen prompts—usually involving simulated techniques or guided questions. While it doesn't replace a clinical tonometry test, it gives an estimated pressure level.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="7">
+                    <span>What is the Color Vision Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-7">
+                    <p>
+                        This test checks your ability to distinguish between different colors and is typically used to screen for color blindness (especially red-green deficiencies).
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="8">
+                    <span>How do I perform the Color Vision Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-8">
+                    <p>
+                        View a series of images with numbers or shapes hidden in dots of various colors. Identify what you see. Based on your answers, the test detects any color vision deficiencies.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="9">
+                    <span>What is the Blink Rate Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-9">
+                    <p>
+                       This test calculates how often you blink, which is essential for maintaining eye moisture and preventing dryness, especially during screen time.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-faq-id="10">
+                    <span>How do I perform the Blink Rate Test?</span>
+                    <span class="plus-icon">+</span>
+                </div>
+                <div class="faq-answer" id="answer-10">
+                    <p>
+                        Sit calmly and follow the on-screen instructions. The system may use your webcam or manual timer to record blinks over a set duration, typically one minute.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Navbar hamburger functionality
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+
+            // Optional: Close menu when a link is clicked (for single-page apps)
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('open');
+                    navLinks.classList.remove('open');
+                });
+            });
+
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            const expandAllBtn = document.getElementById('expandAllBtn');
+
+            // Function to toggle a single FAQ item
+            const toggleFaq = (questionElement) => {
+                const faqId = questionElement.dataset.faqId;
+                const answerElement = document.getElementById(`answer-${faqId}`);
+
+                if (answerElement.classList.contains('active')) {
+                    answerElement.classList.remove('active');
+                    questionElement.classList.remove('active');
+                } else {
+                    // Close all other active FAQs to ensure only one is open at a time
+                    document.querySelectorAll('.faq-answer.active').forEach(ans => {
+                        ans.classList.remove('active');
+                        ans.previousElementSibling.classList.remove('active'); // Remove active from question
+                    });
+                    answerElement.classList.add('active');
+                    questionElement.classList.add('active');
+                }
+            };
+
+            // Event listeners for each FAQ question
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    toggleFaq(question);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

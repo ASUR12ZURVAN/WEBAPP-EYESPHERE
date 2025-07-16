@@ -112,3 +112,139 @@ class ColorVisionPlateResponse(models.Model):
 
     def __str__(self):
         return f"Plate {self.plate_number} - {self.result} ({self.test.user.name})"
+
+
+class PatientHistory(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_history')
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.user.name if hasattr(self.user, 'name') else self.user.username} - Patient History"
+
+class ChiefComplaint(models.Model):
+    COMPLAINT_CHOICES = [
+        ('blurry_vision', 'Blurry vision'),
+        ('diminution_vision', 'Diminution of vision'),
+        ('pain', 'Pain'),
+        ('irritation', 'Irritation'),
+        ('redness', 'Redness'),
+        ('injury_trauma', 'Injury / Trauma'),
+        ('watering', 'Watering'),
+        ('discharge', 'Discharge'),
+        ('dryness', 'Dryness'),
+        ('itching', 'Itching'),
+        ('foreign_body', 'Foreign body sensation'),
+        ('deviation_squint', 'Deviation / Squint'),
+        ('headache_strain', 'Headache / Strain'),
+        ('swelling', 'Swelling'),
+        ('burning_sensation', 'Burning sensation'),
+        ('discoloration', 'Discoloration of eye'),
+        ('other', 'Other'),
+    ]
+    
+    patient_history = models.ForeignKey(PatientHistory, on_delete=models.CASCADE, related_name='chief_complaints')
+    complaint = models.CharField(max_length=50, choices=COMPLAINT_CHOICES)
+    other_details = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.get_complaint_display()}"
+
+class OphthalmicHistory(models.Model):
+    OPHTHALMIC_CHOICES = [
+        ('glaucoma', 'Glaucoma'),
+        ('retinal_detachment', 'Retinal detachment'),
+        ('glasses_use', 'Glasses use'),
+        ('eye_disease', 'Eye disease'),
+        ('eye_surgery', 'Eye surgery'),
+        ('uveitis', 'Uveitis'),
+        ('retinal_laser', 'Retinal laser treatment'),
+        ('contact_lens', 'Contact lens use'),
+        ('other', 'Other'),
+    ]
+    
+    patient_history = models.ForeignKey(PatientHistory, on_delete=models.CASCADE, related_name='ophthalmic_histories')
+    history_item = models.CharField(max_length=50, choices=OPHTHALMIC_CHOICES)
+    other_details = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.get_history_item_display()}"
+
+class SystemicHistory(models.Model):
+    SYSTEMIC_CHOICES = [
+        ('diabetes', 'Diabetes'),
+        ('hypertension', 'Hypertension'),
+        ('alcoholism', 'Alcoholism'),
+        ('smoking_tobacco', 'Smoking tobacco'),
+        ('cardiac_disorder', 'Cardiac disorder'),
+        ('steroid_intake', 'Steroid intake'),
+        ('drug_abuse', 'Drug abuse'),
+        ('hiv_aids', 'HIV / AIDS'),
+        ('tuberculosis', 'Tuberculosis'),
+        ('asthma', 'Asthma'),
+        ('cns_disorder', 'CNS disorder / Stroke'),
+        ('hyperthyroidism', 'Hyperthyroidism'),
+        ('hypothyroidism', 'Hypothyroidism'),
+        ('hepatitis_cirrhosis', 'Hepatitis / Cirrhosis'),
+        ('renal_disorder', 'Renal disorder'),
+        ('acidity', 'Acidity'),
+        ('on_insulin', 'On insulin'),
+        ('blood_thinners', 'On aspirin / blood thinners'),
+        ('consanguinity', 'Consanguinity'),
+        ('thyroid_disorder', 'Thyroid disorder'),
+        ('chewing_tobacco', 'Chewing tobacco'),
+        ('chronic_kidney', 'Chronic kidney disease'),
+        ('rheumatoid_arthritis', 'Rheumatoid arthritis'),
+        ('other', 'Other'),
+    ]
+    
+    patient_history = models.ForeignKey(PatientHistory, on_delete=models.CASCADE, related_name='systemic_histories')
+    history_item = models.CharField(max_length=50, choices=SYSTEMIC_CHOICES)
+    other_details = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.get_history_item_display()}"
+
+class FamilyHistory(models.Model):
+    FAMILY_CHOICES = [
+        ('glaucoma', 'Glaucoma'),
+        ('keratoconus', 'Keratoconus'),
+        ('myopia', 'Myopia'),
+        ('other', 'Other'),
+    ]
+    
+    patient_history = models.ForeignKey(PatientHistory, on_delete=models.CASCADE, related_name='family_histories')
+    history_item = models.CharField(max_length=50, choices=FAMILY_CHOICES)
+    other_details = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.get_history_item_display()}"
+
+class DrugAllergy(models.Model):
+    DRUG_ALLERGY_CHOICES = [
+        ('antimicrobial_agents', 'Antimicrobial agents'),
+        ('antifungal_agents', 'Antifungal agents'),
+        ('eye_drops', 'Eye drops'),
+        ('other', 'Other'),
+    ]
+    
+    patient_history = models.ForeignKey(PatientHistory, on_delete=models.CASCADE, related_name='drug_allergies')
+    allergy_type = models.CharField(max_length=50, choices=DRUG_ALLERGY_CHOICES)
+    other_details = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.get_allergy_type_display()}"
+
+class ContactAllergy(models.Model):
+    CONTACT_ALLERGY_CHOICES = [
+        ('alcohol', 'Alcohol'),
+        ('betadine', 'Betadine'),
+        ('other', 'Other'),
+    ]
+    
+    patient_history = models.ForeignKey(PatientHistory, on_delete=models.CASCADE, related_name='contact_allergies')
+    allergy_type = models.CharField(max_length=50, choices=CONTACT_ALLERGY_CHOICES)
+    other_details = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.get_allergy_type_display()}"
