@@ -281,7 +281,7 @@ def submit_score(request):
             )
         
         elif test_type == 'myopia':
-                 left_eye = data.get('left_eye_diopter')
+                 left_eye  = data.get('left_eye_diopter')
                  right_eye = data.get('right_eye_diopter')
                  if left_eye is None or right_eye is None:
                     return JsonResponse({'status': 'error', 'message': 'Missing eye diopter values'}, status=400)
