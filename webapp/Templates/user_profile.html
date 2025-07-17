@@ -19,7 +19,8 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 2000px;
+            animation: fadeIn 0.5s ease-in-out;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -33,6 +34,10 @@
             padding: 30px;
             text-align: center;
             position: relative;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .logo-title {
@@ -305,12 +310,47 @@
                 <button type="submit">HOME</button>
             </form>
 
+<<<<<<< Updated upstream
             
                 <a href="{% url 'base_myopia'  %}" class="test-button">📏 Vision Distance Test</a>
                 <a href="{% url 'base_glaucoma' %}" class="test-button">🎯 Eye Pressure Check</a>
                 <a href="{% url 'Colourblindness_Test' %}" class="test-button">🌈 Color Vision Test</a>
                 <a href="{% url 'Blink_Page' %}" class = "test-button">👁️ Blink Rate Test</a>
                 <a href="{% url 'eye_upload_form' %}" class="test-button">💧 Dry Eye Test</a>
+=======
+                <a href="{% url 'chat_page' %}" class="test-button">
+                    <span>🤖</span> ChatBot
+                </a>
+                <a href="{% url 'base_myopia'%}"class="test-button">
+                    <span>👓</span>Complete Eye-Screening
+                </a> 
+
+                <div class="dropdown">
+                    <a href="#" class="test-button">
+                        <span>🔬</span> Tests <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'osdi' %}">
+                            <span>👓</span> OSDI Test
+                        </a>
+                        <a href="{% url 'base_myopia' %}">
+                            <span>📏</span> Vision Distance Test
+                        </a>
+                        <a href="{% url 'base_glaucoma' %}">
+                            <span>🎯</span> Eye Pressure Check
+                        </a>
+                        <a href="{% url 'Colourblindness_Test' %}">
+                            <span>🌈</span> Color Vision Test
+                        </a>
+                        <a href="{% url 'Blink_Page' %}">
+                            <span>👁️</span> Blink Rate Test
+                        </a>
+                        <a href="{% url 'eye_upload_form' %}">
+                            <span>💧</span> Dry Eye Test
+                        </a>
+                    </div>
+                </div>
+>>>>>>> Stashed changes
             </div>
         </div>
 
