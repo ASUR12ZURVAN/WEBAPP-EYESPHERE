@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient History and Chief Complaints</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            background: white;
+            color: black;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid black;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-decoration: underline;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .other-input {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid black;
+            font-size: 14px;
+        }
+
+        .notes-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid black;
+        }
+
+        .notes-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .note-item {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid black;
+        }
+
+        .submit-button {
+            background: white;
+            color: black;
+            border: 2px solid black;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .submit-button:hover {
+            background: black;
+            color: white;
+        }
+
+        .next-button {
+            background: #28a745;
+            color: white;
+            border: 2px solid #28a745;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: none;
+        }
+
+        .next-button:hover {
+            background: #218838;
+            border-color: #218838;
+        }
+
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid black;
+            padding-top: 15px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid red;
+            background-color: #ffe6e6;
+            display: none;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid green;
+            background-color: #e6ffe6;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NETRASCREEN AI</h1>
+        <h2>Patient History and Chief Complaints</h2>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <form id="patientHistoryForm">
+        <div class="section">
+            <div class="section-title">Chief Complaint</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="blurry_vision" name="chief_complaint" value="blurry_vision">
+                    <label for="blurry_vision">Blurry vision</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="diminution_vision" name="chief_complaint" value="diminution_vision">
+                    <label for="diminution_vision">Diminution of vision</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="pain" name="chief_complaint" value="pain">
+                    <label for="pain">Pain</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="irritation" name="chief_complaint" value="irritation">
+                    <label for="irritation">Irritation</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="redness" name="chief_complaint" value="redness">
+                    <label for="redness">Redness</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="injury_trauma" name="chief_complaint" value="injury_trauma">
+                    <label for="injury_trauma">Injury / Trauma</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="watering" name="chief_complaint" value="watering">
+                    <label for="watering">Watering</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="discharge" name="chief_complaint" value="discharge">
+                    <label for="discharge">Discharge</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="dryness" name="chief_complaint" value="dryness">
+                    <label for="dryness">Dryness</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="itching" name="chief_complaint" value="itching">
+                    <label for="itching">Itching</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="foreign_body" name="chief_complaint" value="foreign_body">
+                    <label for="foreign_body">Foreign body sensation</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="deviation_squint" name="chief_complaint" value="deviation_squint">
+                    <label for="deviation_squint">Deviation / Squint</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="headache_strain" name="chief_complaint" value="headache_strain">
+                    <label for="headache_strain">Headache / Strain</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="swelling" name="chief_complaint" value="swelling">
+                    <label for="swelling">Swelling</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="burning_sensation" name="chief_complaint" value="burning_sensation">
+                    <label for="burning_sensation">Burning sensation</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="discoloration" name="chief_complaint" value="discoloration">
+                    <label for="discoloration">Discoloration of eye</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="chief_other" name="chief_complaint" value="other">
+                    <label for="chief_other">Other</label>
+                </div>
+            </div>
+            <input type="text" id="chief_other_text" class="other-input" placeholder="Please specify other chief complaints..." style="display: none;">
+        </div>
+
+        <div class="section">
+            <div class="section-title">Ophthalmic History</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="glaucoma_hist" name="ophthalmic_history" value="glaucoma">
+                    <label for="glaucoma_hist">Glaucoma</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="retinal_detachment" name="ophthalmic_history" value="retinal_detachment">
+                    <label for="retinal_detachment">Retinal detachment</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="glasses_use" name="ophthalmic_history" value="glasses_use">
+                    <label for="glasses_use">Glasses use</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="eye_disease" name="ophthalmic_history" value="eye_disease">
+                    <label for="eye_disease">Eye disease</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="eye_surgery" name="ophthalmic_history" value="eye_surgery">
+                    <label for="eye_surgery">Eye surgery</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="uveitis" name="ophthalmic_history" value="uveitis">
+                    <label for="uveitis">Uveitis</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="retinal_laser" name="ophthalmic_history" value="retinal_laser">
+                    <label for="retinal_laser">Retinal laser treatment</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="contact_lens" name="ophthalmic_history" value="contact_lens">
+                    <label for="contact_lens">Contact lens use</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="ophthalmic_other" name="ophthalmic_history" value="other">
+                    <label for="ophthalmic_other">Other</label>
+                </div>
+            </div>
+            <input type="text" id="ophthalmic_other_text" class="other-input" placeholder="Please specify other ophthalmic history..." style="display: none;">
+        </div>
+
+        <div class="section">
+            <div class="section-title">Systemic History</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="diabetes" name="systemic_history" value="diabetes">
+                    <label for="diabetes">Diabetes</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hypertension" name="systemic_history" value="hypertension">
+                    <label for="hypertension">Hypertension</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="alcoholism" name="systemic_history" value="alcoholism">
+                    <label for="alcoholism">Alcoholism</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="smoking_tobacco" name="systemic_history" value="smoking_tobacco">
+                    <label for="smoking_tobacco">Smoking tobacco</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="cardiac_disorder" name="systemic_history" value="cardiac_disorder">
+                    <label for="cardiac_disorder">Cardiac disorder</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="steroid_intake" name="systemic_history" value="steroid_intake">
+                    <label for="steroid_intake">Steroid intake</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="drug_abuse" name="systemic_history" value="drug_abuse">
+                    <label for="drug_abuse">Drug abuse</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hiv_aids" name="systemic_history" value="hiv_aids">
+                    <label for="hiv_aids">HIV / AIDS</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="tuberculosis" name="systemic_history" value="tuberculosis">
+                    <label for="tuberculosis">Tuberculosis</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="asthma" name="systemic_history" value="asthma">
+                    <label for="asthma">Asthma</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="cns_disorder" name="systemic_history" value="cns_disorder">
+                    <label for="cns_disorder">CNS disorder / Stroke</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hyperthyroidism" name="systemic_history" value="hyperthyroidism">
+                    <label for="hyperthyroidism">Hyperthyroidism</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hypothyroidism" name="systemic_history" value="hypothyroidism">
+                    <label for="hypothyroidism">Hypothyroidism</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hepatitis_cirrhosis" name="systemic_history" value="hepatitis_cirrhosis">
+                    <label for="hepatitis_cirrhosis">Hepatitis / Cirrhosis</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="renal_disorder" name="systemic_history" value="renal_disorder">
+                    <label for="renal_disorder">Renal disorder</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="acidity" name="systemic_history" value="acidity">
+                    <label for="acidity">Acidity</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="on_insulin" name="systemic_history" value="on_insulin">
+                    <label for="on_insulin">On insulin</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="blood_thinners" name="systemic_history" value="blood_thinners">
+                    <label for="blood_thinners">On aspirin / blood thinners</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="consanguinity" name="systemic_history" value="consanguinity">
+                    <label for="consanguinity">Consanguinity</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="thyroid_disorder" name="systemic_history" value="thyroid_disorder">
+                    <label for="thyroid_disorder">Thyroid disorder</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="chewing_tobacco" name="systemic_history" value="chewing_tobacco">
+                    <label for="chewing_tobacco">Chewing tobacco</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="chronic_kidney" name="systemic_history" value="chronic_kidney">
+                    <label for="chronic_kidney">Chronic kidney disease</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="rheumatoid_arthritis" name="systemic_history" value="rheumatoid_arthritis">
+                    <label for="rheumatoid_arthritis">Rheumatoid arthritis</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="systemic_other" name="systemic_history" value="other">
+                    <label for="systemic_other">Other</label>
+                </div>
+            </div>
+            <input type="text" id="systemic_other_text" class="other-input" placeholder="Please specify other systemic history..." style="display: none;">
+        </div>
+
+        <div class="section">
+            <div class="section-title">Family History</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="family_glaucoma" name="family_history" value="glaucoma">
+                    <label for="family_glaucoma">Glaucoma</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="family_keratoconus" name="family_history" value="keratoconus">
+                    <label for="family_keratoconus">Keratoconus</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="family_myopia" name="family_history" value="myopia">
+                    <label for="family_myopia">Myopia</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="family_other" name="family_history" value="other">
+                    <label for="family_other">Other</label>
+                </div>
+            </div>
+            <input type="text" id="family_other_text" class="other-input" placeholder="Please specify other family history..." style="display: none;">
+        </div>
+
+        <div class="section">
+            <div class="section-title">Drug Allergy</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="antimicrobial_agents" name="drug_allergy" value="antimicrobial_agents">
+                    <label for="antimicrobial_agents">Antimicrobial agents</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="antifungal_agents" name="drug_allergy" value="antifungal_agents">
+                    <label for="antifungal_agents">Antifungal agents</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="eye_drops" name="drug_allergy" value="eye_drops">
+                    <label for="eye_drops">Eye drops</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="drug_allergy_other" name="drug_allergy" value="other">
+                    <label for="drug_allergy_other">Other</label>
+                </div>
+            </div>
+            <input type="text" id="drug_allergy_other_text" class="other-input" placeholder="Please specify other drug allergies..." style="display: none;">
+        </div>
+
+        <div class="section">
+            <div class="section-title">Contact Allergy</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="alcohol_allergy" name="contact_allergy" value="alcohol">
+                    <label for="alcohol_allergy">Alcohol</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="betadine" name="contact_allergy" value="betadine">
+                    <label for="betadine">Betadine</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="contact_allergy_other" name="contact_allergy" value="other">
+                    <label for="contact_allergy_other">Other</label>
+                </div>
+            </div>
+            <input type="text" id="contact_allergy_other_text" class="other-input" placeholder="Please specify other contact allergies..." style="display: none;">
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="submit-button">Submit History</button>
+            <button type="reset" class="submit-button">Clear Form</button>
+            <a href="#" id="nextButton" class="next-button">
+                <span>📏</span> Next Screening
+            </a>
+        </div>
+    </form>
+
+    <div class="notes-section">
+        <div class="notes-title">Important Notes</div>
+        <div class="note-item">• If the patient has <strong>diabetes</strong>, there is an increased risk of <strong>diabetic retinopathy</strong>.</div>
+        <div class="note-item">• If the patient has <strong>hypertension</strong>, there is a risk of <strong>retinal vascular issues</strong>.</div>
+        <div class="note-item">• <strong>Thyroid disorders</strong> may be associated with <strong>dryness and bulging eyes</strong>.</div>
+        <div class="note-item">• <strong>Smoking</strong> increases the risk of <strong>dryness, retinal problems, and cataract development</strong>.</div>
+        <div class="note-item">• <strong>Alcoholism</strong> also increases the risk of <strong>dryness</strong>.</div>
+    </div>
+
+    <div class="form-footer">
+        <p>NETRASCREEN AI - Patient History Assessment Form</p>
+        <p>*This information is for medical screening purposes only</p>
+    </div>
+
+    <script>
+        // Show/hide other input fields based on checkbox selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const otherCheckboxes = [
+                { checkbox: 'chief_other', input: 'chief_other_text' },
+                { checkbox: 'ophthalmic_other', input: 'ophthalmic_other_text' },
+                { checkbox: 'systemic_other', input: 'systemic_other_text' },
+                { checkbox: 'family_other', input: 'family_other_text' },
+                { checkbox: 'drug_allergy_other', input: 'drug_allergy_other_text' },
+                { checkbox: 'contact_allergy_other', input: 'contact_allergy_other_text' }
+            ];
+
+            otherCheckboxes.forEach(item => {
+                const checkbox = document.getElementById(item.checkbox);
+                const input = document.getElementById(item.input);
+                
+                if (checkbox && input) {
+                    checkbox.addEventListener('change', function() {
+                        input.style.display = this.checked ? 'block' : 'none';
+                        if (!this.checked) {
+                            input.value = '';
+                        }
+                    });
+                }
+            });
+        });
+
+        // Form submission handler
+        document.getElementById('patientHistoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitButton = document.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Submitting...';
+            submitButton.disabled = true;
+            
+            const formData = new FormData(this);
+            const historyData = {
+                chief_complaint: [],
+                ophthalmic_history: [],
+                systemic_history: [],
+                family_history: [],
+                drug_allergy: [],
+                contact_allergy: [],
+                other_details: {}
+            };
+
+            // Process all checkboxes
+            const checkboxes = this.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                const category = checkbox.name;
+                const value = checkbox.value;
+                
+                if (historyData[category]) {
+                    historyData[category].push(value);
+                }
+            });
+
+            // Add other details
+            const otherInputs = [
+                { key: 'chief_complaint_other', id: 'chief_other_text' },
+                { key: 'ophthalmic_history_other', id: 'ophthalmic_other_text' },
+                { key: 'systemic_history_other', id: 'systemic_other_text' },
+                { key: 'family_history_other', id: 'family_other_text' },
+                { key: 'drug_allergy_other', id: 'drug_allergy_other_text' },
+                { key: 'contact_allergy_other', id: 'contact_allergy_other_text' }
+            ];
+
+            otherInputs.forEach(item => {
+                const input = document.getElementById(item.id);
+                if (input && input.value.trim()) {
+                    historyData.other_details[item.key] = input.value.trim();
+                }
+            });
+
+            // Submit to backend
+            submitHistoryToBackend(historyData)
+                .finally(() => {
+                    // Restore button state
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                });
+        });
+
+        function submitHistoryToBackend(historyData) {
+            return fetch('/submit_patient_history/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(historyData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                if (data.status === 'success') {
+                    showMessage('Patient history submitted successfully!', 'success');
+                    
+                    // Show the Next button after successful submission
+                    const nextButton = document.getElementById('nextButton');
+                    nextButton.style.display = 'inline-block';
+                    nextButton.href = '/Myopia_Test1/'; // Update this URL as needed
+                    
+                    // Hide the submit buttons
+                    const submitButtons = document.querySelectorAll('button[type="submit"], button[type="reset"]');
+                    submitButtons.forEach(btn => {
+                        btn.style.display = 'none';
+                    });
+                    
+                } else {
+                    showMessage('Error submitting history: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                hideMessages();
+                console.error('Error:', error);
+                showMessage('Error submitting history. Please try again.', 'error');
+            });
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById(type === 'success' ? 'successMessage' : 'errorMessage');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function hideMessages() {
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

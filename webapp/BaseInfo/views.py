@@ -29,6 +29,9 @@ def index1(request ):
 def history(request):
     return render(request,"history.html")
 
+def history1(request):
+    return render(request,"history1.html")
+
 def osdi(request):
     return render(request,"osdi.html")
 
@@ -74,7 +77,7 @@ def create_user(request):
 
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return render(request, 'user_profile.html', {'user': serializer.instance})
+            return render(request, 'consent.html', {'user': serializer.instance})
 
         # Invalid data
         if request.content_type == 'application/json':
@@ -412,7 +415,7 @@ def sign_in_user(request):
                 serializer = UserSerializer(user)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             # Redirect to user profile page with user id as parameter
-            return redirect('mainx',user_id=user.id)
+            return redirect('user_profile',user_id=user.id)
         else:
             error = {'error': 'Incorrect password'}
             if request.content_type == 'application/json':

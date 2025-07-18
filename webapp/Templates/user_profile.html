@@ -396,7 +396,7 @@
                         <span>🔬</span> Screening <span class="dropdown-arrow">▼</span>
                     </a>
                     <div class="dropdown-content">
-                        <a href="{% url 'base_myopia1' %}">
+                        <a href="{% url 'history1' %}">
                             <span>🩺</span> Complete Eye screening
                         </a>
                         <a href="{% url 'osdi1' %}">
@@ -521,7 +521,7 @@
     {% else %}
         <div class="history-prompt">
             <strong>📋 No patient history found!</strong><br>
-            Please <a href="/submit_patient_history/">fill out your medical history form</a> to see your history here.
+            Please <a href="/history/">fill out your medical history form</a> to see your history here.
         </div>
     {% endif %}
 

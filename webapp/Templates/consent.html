@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Netrascreen AI – Consent Agreement</title>
+  <title>Netrascreen AI – Terms and Conditions</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,13 +13,18 @@
       padding: 30px;
       background-color: #f9f9f9;
     }
+    h1 {
+      color: #004466;
+      text-align: center;
+    }
     h2 {
       color: #004466;
+      margin-top: 20px;
     }
     section {
       margin-bottom: 20px;
     }
-    .consent-box {
+    .terms-box {
       background: #ffffff;
       padding: 20px;
       border-radius: 10px;
@@ -51,9 +56,9 @@
 </head>
 <body>
 
-  <div class="consent-box">
-    <h1>Netrascreen AI – User Consent, Legal Disclaimer & Data Protection Agreement</h1>
-    <p>Please read this agreement carefully. By clicking “I Accept”, you confirm your understanding and acceptance of all terms below.</p>
+  <div class="terms-box">
+    <h1>Netrascreen AI – Terms and Conditions</h1>
+    <p>Please read these terms and conditions carefully. By clicking “I Accept”, you confirm your understanding and acceptance of all terms below.</p>
 
     <section>
       <h2>1. Nature of Service – Not a Medical Device</h2>
@@ -166,9 +171,10 @@
 
     nextBtn.addEventListener('click', () => {
       if (checkbox.checked) {
-        window.location.href = "{% url 'user_profile' %}";
+        window.location.href = "{% url 'user_profile' request.session.user_id %}";
       }
     });
+    
   </script>
 
 </body>

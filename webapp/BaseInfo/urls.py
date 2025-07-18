@@ -18,6 +18,7 @@ urlpatterns = [
     path('main/<int:user_id>/',views.mainx,name='mainx'),
     path('dryeye_test',views.osdi,name='osdi'),
     path('history/',views.history,name='history'),
+    path('history1/',views.history1,name='history1'),
     path('submit_patient_history/', views.submit_patient_history, name='submit_patient_history'),
     path('dryeye_test1',views.osdi1,name='osdi1'),
     path('Colourblindness_Test1/',views.Colour_Blindness_Test1,name = 'Colourblindness_Test1'),
