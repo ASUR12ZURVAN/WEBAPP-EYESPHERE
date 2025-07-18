@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Netrascreen AI – Consent Agreement</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding: 30px;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      color: #004466;
+    }
+    section {
+      margin-bottom: 20px;
+    }
+    .consent-box {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      max-width: 800px;
+      margin: auto;
+    }
+    .checkbox {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #0077cc;
+      color: white;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="consent-box">
+    <h1>Netrascreen AI – User Consent, Legal Disclaimer & Data Protection Agreement</h1>
+    <p>Please read this agreement carefully. By clicking “I Accept”, you confirm your understanding and acceptance of all terms below.</p>
+
+    <section>
+      <h2>1. Nature of Service – Not a Medical Device</h2>
+      <ul>
+        <li>Netrascreen AI is a pre-screening, non-diagnostic tool by Eyesphere Medicare Pvt Ltd.</li>
+        <li>It uses AI to provide preliminary insights based on user-provided images or data, intended to raise awareness about potential eye conditions.</li>
+        <li>It is not a medical device, does not offer prescriptions, and does not replace clinical evaluation by a licensed healthcare provider.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. No Medical Diagnosis or Doctor-Patient Relationship</h2>
+      <ul>
+        <li>The outputs of Netrascreen AI are not certified medical opinions, prescriptions, or diagnostic conclusions.</li>
+        <li>Use of the tool does not constitute a doctor-patient relationship.</li>
+        <li>All decisions regarding your eye health must be taken in consultation with a qualified ophthalmologist.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. User Responsibility & Limitation of Liability</h2>
+      <p>You understand and accept that:</p>
+      <ul>
+        <li>This tool may produce false positives or false negatives.</li>
+        <li>Eyesphere is not liable for any delay in seeking medical attention due to reliance on the tool.</li>
+        <li>Eyesphere is not responsible for any emotional or psychological distress arising from results.</li>
+        <li>Any health deterioration, complications, or outcomes from delayed or misinterpreted use of this tool are the sole responsibility of the user.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Emotional or Psychological Effects</h2>
+      <ul>
+        <li>Some results may cause worry or distress. These outputs are not designed to alarm but to encourage proactive action.</li>
+        <li>If you feel disturbed or anxious, please consult a medical professional immediately.</li>
+        <li>Eyesphere disclaims responsibility for any emotional outcomes or stress triggered by the tool’s insights.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. Data Privacy, Protection & Compliance</h2>
+      <ul>
+        <li>Eyesphere is committed to protecting your data and complies with the Digital Personal Data Protection Act, 2023, and international best practices.</li>
+        <li>Your data is stored with end-to-end encryption and restricted access.</li>
+        <li>Your identifiable data will never be sold, misused, or shared without consent.</li>
+        <li>In case of a cyber breach, Eyesphere will follow legal data breach reporting protocols.</li>
+        <li>You retain full rights over your personal data and can request deletion or review of your records.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. Age and Guardian Consent</h2>
+      <ul>
+        <li>You must be 18 years or older to use this service.</li>
+        <li>If you are a minor, you must have your parent’s or legal guardian’s explicit consent.</li>
+        <li>Eyesphere is not responsible for unauthorized use by minors.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>7. Algorithmic Limitations and Bias</h2>
+      <p>AI performance may vary based on:</p>
+      <ul>
+        <li>Image quality</li>
+        <li>Ethnic or age-based variations</li>
+        <li>Uncommon clinical patterns</li>
+      </ul>
+      <p>While the system is trained on diverse datasets, unintentional bias or lower accuracy may occur in some groups. We are committed to continuous learning and algorithmic fairness. Any discrepancy should be followed up with a professional clinical exam.</p>
+    </section>
+
+    <section>
+      <h2>8. No Guarantee of Accuracy</h2>
+      <ul>
+        <li>The AI output is based on probabilistic inference and cannot be guaranteed as 100% accurate.</li>
+        <li>Clinical validation is mandatory before drawing any health conclusions.</li>
+        <li>Do not use this service as a standalone method for diagnosing or treating any condition.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>9. General Legal Indemnity</h2>
+      <ul>
+        <li>By accepting, you fully understand the scope and limitations of the service.</li>
+        <li>You agree not to hold Eyesphere Medicare Pvt Ltd or its affiliates liable for any:</li>
+        <ul>
+          <li>Medical outcomes</li>
+          <li>Emotional or psychological impacts</li>
+          <li>Data breaches caused by third-party attacks</li>
+          <li>Delayed medical care</li>
+          <li>Misuse or misunderstanding of results</li>
+        </ul>
+      </ul>
+    </section>
+
+    <div class="checkbox">
+      <input type="checkbox" id="agreeCheckbox" />
+      <label for="agreeCheckbox">I agree with the terms and conditions</label>
+    </div>
+
+    <button id="nextBtn" disabled>Next</button>
+  </div>
+
+  <script>
+    const checkbox = document.getElementById('agreeCheckbox');
+    const nextBtn = document.getElementById('nextBtn');
+
+    checkbox.addEventListener('change', () => {
+      nextBtn.disabled = !checkbox.checked;
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (checkbox.checked) {
+        window.location.href = "{% url 'user_profile' %}";
+      }
+    });
+  </script>
+
+</body>
+</html>

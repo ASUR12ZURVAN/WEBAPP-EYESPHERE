@@ -46,6 +46,9 @@ def next(request):
 def next1(request):
     return render(request,'game1.html' )
 
+def consent(request):
+    return render(request,'consent.html')
+
 
 @api_view(['GET', 'POST'])
 def create_user(request):
