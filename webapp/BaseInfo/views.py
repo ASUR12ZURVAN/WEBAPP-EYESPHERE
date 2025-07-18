@@ -23,11 +23,17 @@ def home(request):
 def index(request ):
     return render(request, 'hd.html', )
 
+def index1(request ):
+    return render(request, 'hd1.html', )
+
 def history(request):
     return render(request,"history.html")
 
 def osdi(request):
     return render(request,"osdi.html")
+
+def osdi1(request):
+    return render(request,"osdi1.html")
 
 def mainx(request,user_id):
     request.session['user_id'] = user_id  # store in session
@@ -36,6 +42,9 @@ def mainx(request,user_id):
 
 def next(request):
     return render(request,'Game.html' )
+
+def next1(request):
+    return render(request,'game1.html' )
 
 
 @api_view(['GET', 'POST'])
@@ -62,7 +71,7 @@ def create_user(request):
 
             if request.content_type == 'application/json':
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return render(request, 'f.html', {'user': serializer.instance})
+            return render(request, 'user_profile.html', {'user': serializer.instance})
 
         # Invalid data
         if request.content_type == 'application/json':
@@ -347,6 +356,9 @@ def test_results_history(request):
 
 def Colour_Blindness_Test(request):
     return render(request,"Colourblindness_test.html")
+
+def Colour_Blindness_Test1(request):
+    return render(request,"colour1.html")
 
 class ColorVisionTestView(APIView):
     def post(self, request):
