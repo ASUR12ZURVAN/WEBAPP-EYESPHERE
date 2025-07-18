@@ -19,4 +19,9 @@ urlpatterns = [
     path('dryeye_test',views.osdi,name='osdi'),
     path('history/',views.history,name='history'),
      path('submit_patient_history/', views.submit_patient_history, name='submit_patient_history'),
+     path('dryeye_test1',views.osdi1,name='osdi1'),
+     path('Colourblindness_Test1/',views.Colour_Blindness_Test1,name = 'Colourblindness_Test1'),
+     path('glaucoma_test1/',views.next1,name = 'base_glaucoma1'),
+     path('Myopia_Test1/', views.index1, name='base_myopia1'),
+     
 ]

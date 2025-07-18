@@ -90,7 +90,7 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            margin-top: 5px;
+            margin-top: 1px;
             overflow: hidden;
         }
 
@@ -387,29 +387,29 @@
                 <a href="{% url 'chat_page' %}" class="test-button">
                     <span>🤖</span> ChatBot
                 </a>
+                <a href="{% url 'history' %}" class="test-button">
+                <span>📄</span> patient history form
+            </a>
 
                 <div class="dropdown">
                     <a href="#" class="test-button">
-                        <span>🔬</span> Tests <span class="dropdown-arrow">▼</span>
+                        <span>🔬</span> Screening <span class="dropdown-arrow">▼</span>
                     </a>
                     <div class="dropdown-content">
-                        <a href="{% url 'osdi' %}">
-                            <span>👓</span> OSDI Test
+                        <a href="{% url 'base_myopia1' %}">
+                            <span>🩺</span> Complete Eye screening
+                        </a>
+                        <a href="{% url 'osdi1' %}">
+                            <span>👓</span> Dryeye Screening
                         </a>
                         <a href="{% url 'base_myopia' %}">
-                            <span>📏</span> Vision Distance Test
+                            <span>📏</span> Vision Distance Screening
                         </a>
                         <a href="{% url 'base_glaucoma' %}">
-                            <span>🎯</span> Eye Pressure Check
+                            <span>🎯</span> Eye Pressure Screening
                         </a>
                         <a href="{% url 'Colourblindness_Test' %}">
-                            <span>🌈</span> Color Vision Test
-                        </a>
-                        <a href="{% url 'Blink_Page' %}">
-                            <span>👁️</span> Blink Rate Test
-                        </a>
-                        <a href="{% url 'eye_upload_form' %}">
-                            <span>💧</span> Dry Eye Test
+                            <span>🌈</span> Color Vision SCreening
                         </a>
                     </div>
                 </div>

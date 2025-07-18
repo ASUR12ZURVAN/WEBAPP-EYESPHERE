@@ -1,0 +1,1250 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Color Blindness Test</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --primary: #0a74da;
+    --primary-dark: #095ec2;
+    --primary-light: #e6f0ff;
+    --primary-lightest: #f1f8ff;
+    --primary-pale: #a3c0f9;
+    --success: #2e7d32;
+    --error: #c62828;
+    --neutral-100: #f0f4f8;
+    --neutral-200: #e1e5eb;
+    --neutral-300: #ccd2d9;
+    --neutral-700: #666;
+    --neutral-800: #333;
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 10px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 20px rgba(0,0,0,0.1);
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 20px;
+    --transition: all 0.3s ease;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--neutral-100);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: var(--neutral-800);
+    line-height: 1.6;
+  }
+
+  main {
+    flex: 1;
+    max-width: 900px;
+    width: 92%;
+    margin: 2rem auto 3rem;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), #4287f5);
+  }
+
+  h1, h2, h3 {
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+  }
+
+  h2 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  h3 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-light);
+  }
+
+  .instructions {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  #start-test, button {
+    display: inline-block;
+    background-color: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 1.8rem;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0.5rem;
+    transition: var(--transition);
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(10, 116, 218, 0.2);
+  }
+
+  #start-test {
+    font-size: 1.1rem;
+    padding: 0.8rem 2.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 10px rgba(10, 116, 218, 0.25);
+  }
+
+  #start-test:hover, button:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 116, 218, 0.3);
+  }
+
+  button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(10, 116, 218, 0.2);
+  }
+
+  button:disabled, button[disabled] {
+    background-color: var(--primary-pale);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+  }
+
+  #test-container {
+    margin-top: 1.5rem;
+    position: relative;
+    /* Increased padding bottom to accommodate navigation and progress */
+    padding-bottom: 180px;
+  }
+
+  .test-plate {
+    display: none;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+    background: #f9fbfd;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    /* Removed fixed min-height to allow natural sizing */
+  }
+
+  .test-plate.active {
+    display: block;
+    border-color: var(--primary);
+    background: var(--primary-light);
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .plate-image-placeholder {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+
+  .plate-image {
+    border-radius: var(--radius-md);
+    max-width: 300px;
+    max-height: 300px;
+    transition: transform 0.3s ease;
+  }
+
+  .plate-image:hover {
+    transform: scale(1.02);
+  }
+
+  .input-container {
+    background: white;
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .input-container label,
+  .input-container p {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    display: block;
+  }
+
+  .input-container input[type="number"],
+  .input-container select {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--primary);
+    outline: none;
+    transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .input-container input[type="number"]:focus,
+  .input-container select:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.15);
+  }
+
+  /* Fixed navigation positioning - now properly contained within test-container */
+  .navigation {
+    position: absolute;
+    bottom: 100px; /* Position above progress section */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 2rem; /* Add padding to prevent edge overflow */
+  }
+
+  /* Fixed progress positioning - now properly contained within test-container */
+  .progress-section {
+    position: absolute;
+    bottom: 20px; /* Position at bottom of test-container */
+    left: 0;
+    right: 0;
+    padding: 0 2rem; /* Add padding to prevent edge overflow */
+  }
+
+  #submit-btn {
+    background-color: #2e7d32;
+  }
+
+  #submit-btn:hover {
+    background-color: #1b5e20;
+  }
+
+  #results {
+    animation: fadeIn 0.6s ease;
+  }
+
+  #results table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2rem;
+  }
+
+  #results th, #results td {
+    border: 1px solid var(--neutral-300);
+    padding: 0.8rem 1rem;
+    text-align: center;
+  }
+
+  #results th {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+
+  #results tr:nth-child(even) {
+    background-color: var(--primary-lightest);
+  }
+
+  #results tr:hover {
+    background-color: var(--primary-light);
+  }
+
+  tr.correct td:last-child {
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  tr.incorrect td:last-child {
+    color: var(--error);
+    font-weight: 600;
+  }
+
+  #diagnosis {
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: center;
+    padding: 1rem;
+    background: var(--primary-lightest);
+    border-radius: var(--radius-md);
+    border-left: 5px solid var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  #deficiency-info {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .deficiency-type {
+    border-left: 5px solid #4CAF50;
+    background-color: var(--primary-lightest);
+    padding: 1.2rem;
+    width: 280px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    user-select: none;
+    transition: var(--transition);
+  }
+
+  .deficiency-type:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(10, 116, 218, 0.15);
+  }
+
+  #protanopia {
+    border-left-color: #f44336;
+  }
+
+  #deuteranopia {
+    border-left-color: #4CAF50;
+  }
+
+  #general {
+    border-left-color: #FF9800;
+  }
+
+  .deficiency-type h4 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+
+  .deficiency-type p {
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    color: var(--neutral-800);
+  }
+
+  .severity-levels {
+    margin: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .severity-level {
+    cursor: default;
+    border-radius: var(--radius-xl);
+    padding: 0.5rem 1.6rem;
+    border: 2px solid var(--primary);
+    font-weight: 600;
+    color: var(--primary);
+    user-select: none;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .severity-level:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .severity-level.selected {
+    color: #fff;
+    background-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(10, 116, 218, 0.25);
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--neutral-700);
+    margin: 1rem 0 2rem;
+  }
+
+  #progress-text {
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-container {
+    background: var(--neutral-200);
+    border-radius: var(--radius-xl);
+    height: 10px;
+    margin: 0.5rem 0 1rem;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  #progress-fill {
+    background: linear-gradient(90deg, var(--primary), #4287f5);
+    height: 100%;
+    width: 0%;
+    border-radius: var(--radius-xl);
+    transition: width 0.4s ease;
+  }
+
+  #restart-btn {
+    font-size: 1.05rem;
+    margin-top: 1rem;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    main {
+      width: 95%;
+      padding: 1.5rem;
+      margin: 1.5rem auto;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+    }
+    
+    #test-container {
+      /* Reduce padding bottom for mobile */
+      padding-bottom: 160px;
+    }
+    
+    .navigation {
+      flex-wrap: wrap;
+      bottom: 80px;
+      gap: 0.5rem;
+    }
+
+    .progress-section {
+      bottom: 10px;
+    }
+  }
+  .navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.navigation-buttons form {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .navigation-buttons form {
+        width: 100%;
+    }
+    
+    .navigation-buttons button {
+        width: 100%;
+    }
+}
+
+  @media (max-width: 600px) {
+    main {
+      width: 100%;
+      border-radius: 0;
+      margin: 0;
+      padding: 1.5rem 1rem;
+      box-shadow: none;
+    }
+    
+    .deficiency-type {
+      width: 100%;
+    }
+    
+    h1 {
+      font-size: 1.6rem;
+    }
+    
+    #start-test, button {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    
+    #test-container {
+      /* Reset padding for mobile - let navigation flow naturally */
+      padding-bottom: 20px;
+    }
+    
+    .navigation {
+      /* Reset positioning on mobile - let it flow naturally */
+      position: static;
+      transform: none;
+      bottom: auto;
+      margin-top: 2rem;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0;
+    }
+
+    .progress-section {
+      /* Reset positioning on mobile - let it flow naturally */
+      position: static;
+      bottom: auto;
+      margin-top: 1.5rem;
+      padding: 0;
+    }
+    
+    .test-plate {
+      padding: 1rem;
+    }
+    
+    .plate-image {
+      max-width: 100%;
+    }
+    
+    .severity-levels {
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    
+    .severity-level {
+      width: 80%;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Color Blindness Test</h1>
+  <div class="instructions" id="instructions">
+    <p>Welcome! This test consists of 15 plates to assess your color vision. Please try to identify the number or line pattern you see in each plate. Click "Start Test" to begin.</p>
+  </div>
+  <div id="start-section" style="text-align: center;">
+    <button id="start-test">Start Test</button>
+  </div>
+
+  <div id="test-container" class="hidden">
+    <div class="test-plate active" id="plate-1">
+      <h3>Plate 1</h3>
+      <div class="plate-image-placeholder">
+       <img data-src="{% static 'plate1.png' %}" alt="Color Blindness Test Plate 1" class="plate-image" />
+      </div>
+      <div class="input-container">
+        <label for="answer-1">What number do you see?</label>
+        <input type="number" id="answer-1" min="0" max="99" placeholder="Enter number" />
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button id="prev-btn" disabled>Previous</button>
+      <button id="next-btn">Next</button>
+      <button id="submit-btn" class="hidden">Submit</button>
+    </div>
+    <div class="progress-section">
+      <div id="progress-text" aria-live="polite">Plate 1 of 17</div>
+      <div class="progress-container">
+        <div id="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" style="display:none;">
+    <h2>Test Results</h2>
+    <table aria-label="Test result details">
+      <thead>
+        <tr>
+          <th>Plate</th><th>Your Answer</th><th>Expected Answer</th><th>Result</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+
+    <div id="diagnosis" role="region" aria-live="polite"></div>
+
+    <div class="severity-levels" aria-label="Severity Levels">
+      <div id="severity-none" class="severity-level">None</div>
+      <div id="severity-weak" class="severity-level">Weak</div>
+      <div id="severity-moderate" class="severity-level">Moderate</div>
+      <div id="severity-strong" class="severity-level">Strong</div>
+    </div>
+
+    <div id="deficiency-info" aria-label="Deficiency Information">
+      <div class="deficiency-type" id="protanopia">
+        <h4>Protanopia / Protanomaly</h4>
+        <p>Reduced sensitivity to red light. Difficulty distinguishing red and green hues.</p>
+      </div>
+      <div class="deficiency-type" id="deuteranopia">
+        <h4>Deuteranopia / Deuteranomaly</h4>
+        <p>Reduced sensitivity to green light. Difficulty distinguishing red and green hues.</p>
+      </div>
+      <div class="deficiency-type" id="general">
+        <h4>General Red-Green Color Blindness</h4>
+        <p>Some characteristics of red-green color vision deficiency but not specific.</p>
+      </div>
+    </div>
+    <div id="saveStatus" style="margin-top: 10px;"></div>
+    <div class="navigation-buttons" style="text-align: center; margin-top: 2rem;">
+    <form action="{% url 'osdi1' %}" method="get" style="display: inline-block; margin: 0 0.5rem;">
+        <button type="submit">Next Screening</button>
+    </form>
+</div>
+    
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <button id="restart-btn">Restart Test</button>
+    </div>
+    
+  </div>
+</main>
+</body>
+</html>
+
+<script>
+    const staticUrl = "{% static '' %}";
+</script>
+
+
+
+
+<script>
+let normalCorrect = 0;
+let redGreenErrors = 0;
+let protanopiaIndicators = 0;
+let deuteranopiaIndicators = 0;
+let resultsHTML = '';
+document.addEventListener('DOMContentLoaded', function() {
+  const testData = [
+    { plateNumber: 1, normalView: 12, redGreenDeficiency: 12, type: 'number' },
+    { plateNumber: 2, normalView: 8, redGreenDeficiency: 3, type: 'number' },
+    { plateNumber: 3, normalView: 6, redGreenDeficiency: 5, type: 'number' },
+    { plateNumber: 4, normalView: 29, redGreenDeficiency: 70, type: 'number' },
+    { plateNumber: 5, normalView: 57, redGreenDeficiency: 35, type: 'number' },
+    { plateNumber: 6, normalView: 5, redGreenDeficiency: 2, type: 'number' },
+    { plateNumber: 7, normalView: 3, redGreenDeficiency: 5, type: 'number' },
+    { plateNumber: 8, normalView: 15, redGreenDeficiency: 17, type: 'number' },
+    { plateNumber: 9, normalView: 74, redGreenDeficiency: 21, type: 'number' },
+    { plateNumber: 10, normalView: 2, redGreenDeficiency: null, type: 'number' },
+    { plateNumber: 11, normalView: 6, redGreenDeficiency: null, type: 'number' },
+    { plateNumber: 12, normalView: 97, redGreenDeficiency: null, type: 'number' },
+    { plateNumber: 13, normalView: 45, redGreenDeficiency: null, type: 'number' },
+    { plateNumber: 14, normalView: 5, redGreenDeficiency: null, type: 'number' },
+    { plateNumber: 15, normalView: 7, redGreenDeficiency: null, type: 'number' },
+];
+
+    const startTestBtn = document.getElementById('start-test');
+    const testContainer = document.getElementById('test-container');
+    const instructionsDiv = document.getElementById('instructions');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsDiv = document.getElementById('results');
+    const diagnosisDiv = document.getElementById('diagnosis');
+    const progressText = document.getElementById('progress-text');
+    const progressFill = document.getElementById('progress-fill');
+    const resultsTableBody = document.getElementById('results-body');
+    const restartBtn = document.getElementById('restart-btn');
+    const deficiencyInfoDiv = document.getElementById('deficiency-info');
+    const deficiencyTypes = deficiencyInfoDiv.querySelectorAll('.deficiency-type');
+
+    let currentPlate = 1;
+    const userAnswers = {};
+    const totalPlates = 15;
+
+    for (let i = 2; i <= 15; i++) {
+        createNumberPlate(i);
+    }
+    
+
+  function createNumberPlate(plateNumber) {
+    const plateDiv = document.createElement('div');
+    plateDiv.classList.add('test-plate');
+    plateDiv.id = `plate-${plateNumber}`;
+
+    // Use the global staticUrl defined in the template
+    plateDiv.innerHTML = `
+        <h3>Plate ${plateNumber}</h3>
+        <div class="plate-image-placeholder">
+            <img data-src="${staticUrl}plate${plateNumber}.png" 
+                 alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
+        </div>
+        <div class="input-container">
+            <label for="answer-${plateNumber}">What number do you see?</label>
+            <input type="number" id="answer-${plateNumber}" min="0" max="99" placeholder="Enter number" />
+        </div>
+    `;
+
+    const testContainer = document.getElementById('test-container');
+    testContainer.appendChild(plateDiv);
+}
+
+
+function createLinePlate(plateNumber) {
+    const plateDiv = document.createElement('div');
+    plateDiv.classList.add('test-plate');
+    plateDiv.id = `plate-${plateNumber}`;
+
+    let options = '';
+    if (plateNumber === 26 || plateNumber === 27) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Purple line only</option>
+            <option value="2">Red line only</option>
+            <option value="3">Both purple and red lines</option>
+        `;
+    } else if (plateNumber >= 28 && plateNumber <= 29) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Line visible</option>
+        `;
+    } else if (plateNumber >= 30 && plateNumber <= 33) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Line visible</option>
+        `;
+    } else if (plateNumber === 34) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Blue-green and yellow-green lines</option>
+            <option value="2">Red-green and violet lines</option>
+        `;
+    } else if (plateNumber === 35) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Blue-green and yellow-green lines</option>
+            <option value="2">Blue-green and violet lines</option>
+        `;
+    } else if (plateNumber >= 36 && plateNumber <= 37) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Red and orange lines</option>
+            <option value="2">Blue-green and violet lines</option>
+        `;
+    } else if (plateNumber === 38) {
+        options = `
+            <option value="0">No lines visible</option>
+            <option value="1">Line visible</option>
+        `;
+    }
+
+    // Inject HTML including the image from static path
+    plateDiv.innerHTML = `
+        <h3>Plate ${plateNumber}</h3>
+        <div class="plate-image-placeholder">
+            <img data-src="${staticUrl}plate${plateNumber}.png" 
+                 alt="Color Blindness Test Plate ${plateNumber}" class="plate-image" />
+        </div>
+        <div class="input-container">
+            <label for="answer-${plateNumber}">What line(s) do you see?</label>
+            <select id="answer-${plateNumber}">
+                ${options}
+            </select>
+        </div>
+    `;
+
+    const testContainer = document.getElementById('test-container');
+    testContainer.appendChild(plateDiv);
+}
+
+
+
+    function loadImageForPlate(plateNumber) {
+        const plateDiv = document.getElementById(`plate-${plateNumber}`);
+        if (!plateDiv) return;
+        const img = plateDiv.querySelector('img.plate-image');
+        if (!img) return;
+        if (!img.src || img.src === window.location.href) {
+            const src = img.getAttribute('data-src');
+            if (src) img.src = src;
+        }
+    }
+     document.addEventListener('DOMContentLoaded', function() {
+
+      loadImageForPlate(1);
+
+      const plate1Img = document.querySelector('#plate-1 img.plate-image');
+      if (plate1Img) {
+         plate1Img.dataset.src = "plate1.png"; 
+         plate1Img.src = "plate1.png"; 
+      }
+
+    showPlate(currentPlate);
+    updateProgress();
+    });
+     
+
+    function showPlate(plateNumber) {
+        if (plateNumber < 1 || plateNumber > totalPlates) return;
+
+        const oldPlateDiv = document.getElementById(`plate-${currentPlate}`);
+        if (oldPlateDiv) oldPlateDiv.classList.remove('active');
+
+        currentPlate = plateNumber;
+
+        const newPlateDiv = document.getElementById(`plate-${currentPlate}`);
+        if (newPlateDiv) newPlateDiv.classList.add('active');
+
+        prevBtn.disabled = (currentPlate === 1);
+
+        if (currentPlate === totalPlates) {
+            nextBtn.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            submitBtn.classList.add('hidden');
+        }
+
+        updateProgress();
+        loadImageForPlate(currentPlate);
+        if (currentPlate > 1) loadImageForPlate(currentPlate - 1);
+        if (currentPlate < totalPlates) loadImageForPlate(currentPlate + 1);
+    }
+
+    function updateProgress() {
+        progressText.textContent = `Plate ${currentPlate} of ${totalPlates}`;
+        progressFill.style.width = `${(currentPlate / totalPlates) * 100}%`;
+    }
+    const CURRENT_USER_ID = {{ request.session.user_id|default:'null' }};
+
+
+  function getSeverityLevel() {
+    return document.querySelector('.severity-level.selected')?.id.replace('severity-', '') || 'none';
+  }
+
+  function getExpectedTextForPlate(plateNumber) {
+    return document.querySelector(`#results-body tr:nth-child(${plateNumber}) td:nth-child(3)`)?.innerText || '';
+  }
+
+  function getResultForPlate(plateNumber) {
+    return document.querySelector(`#results-body tr:nth-child(${plateNumber}) td:nth-child(4)`)?.innerText.toLowerCase() || 'unknown';
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        const trimmed = cookie.trim();
+        if (trimmed.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(trimmed.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+
+    function resetTest() {
+        currentPlate = 1;
+        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+
+        for (let i = 1; i <= totalPlates; i++) {
+            if (i <= 15) {
+                const input = document.getElementById(`answer-${i}`);
+                if (input) input.value = '';
+            } else {
+                const select = document.getElementById(`answer-${i}`);
+                if (select) select.selectedIndex = 0;
+            }
+        }
+
+        document.querySelectorAll('.test-plate').forEach(plate => plate.classList.remove('active'));
+        const plate1Div = document.getElementById('plate-1');
+        if (plate1Div) plate1Div.classList.add('active');
+
+        prevBtn.disabled = true;
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+
+        resultsDiv.style.display = 'none';
+        testContainer.classList.remove('hidden');
+        instructionsDiv.classList.add('hidden'); 
+        startTestBtn.classList.add('hidden'); 
+
+        updateProgress();
+
+        diagnosisDiv.innerHTML = '';
+        document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+        deficiencyTypes.forEach(type => type.style.borderLeft = '4px solid #4CAF50');
+    }
+
+
+
+    function saveCurrentAnswer() {
+        if (currentPlate <= 25) {
+            const inputElem = document.getElementById(`answer-${currentPlate}`);
+            if (inputElem) {
+                const val = inputElem.value;
+                userAnswers[currentPlate] = val !== '' ? parseInt(val) : null;
+            }
+        } else {
+            const selectElem = document.getElementById(`answer-${currentPlate}`);
+            if (selectElem) {
+                const val = selectElem.value;
+                userAnswers[currentPlate] = val !== '' ? parseInt(val) : null;
+            }
+        }
+    }
+
+   function calculateResults() {
+    normalCorrect = 0;
+    redGreenErrors = 0;
+    protanopiaIndicators = 0;
+    deuteranopiaIndicators = 0;
+    resultsHTML = '';
+
+    // Process all 15 plates (your existing calculation logic)
+    for (let i = 1; i <= 15; i++) {
+        const plate = testData[i-1];
+        const userAnswer = userAnswers[i] ?? null;
+        let result = 'incorrect';
+        let expected = '';
+
+        if (i === 1) {
+            if (userAnswer === 12) {
+                normalCorrect++;
+                result = 'correct';
+            }
+            expected = '12 (Control)';
+            
+        } else if (i >= 2 && i <= 9) {
+            if (userAnswer === plate.normalView) {
+                normalCorrect++;
+                result = 'correct';
+            } else if (userAnswer === plate.redGreenDeficiency) {
+                redGreenErrors++;
+                result = 'red-green deficiency';
+                
+                if ([2, 4, 6].includes(i)) {
+                    protanopiaIndicators++;
+                } else if ([3, 5, 7, 8, 9].includes(i)) {
+                    deuteranopiaIndicators++;
+                }
+            }
+            expected = `${plate.normalView} (Normal) / ${plate.redGreenDeficiency} (Deficient)`;
+            
+        } else if (i >= 10 && i <= 15) {
+            if (userAnswer === plate.normalView) {
+                normalCorrect++;
+                result = 'correct';
+            } else {
+                redGreenErrors++;
+                result = 'red-green deficiency';
+            }
+            expected = `${plate.normalView} (Normal) / Nothing (Deficient)`;
+        }
+
+        resultsHTML += `
+            <tr class="${result.replace(' ', '-')}">
+                <td>${i}</td>
+                <td>${userAnswer !== null && userAnswer !== '' ? userAnswer : 'No answer'}</td>
+                <td>${expected}</td>
+                <td>${result}</td>
+            </tr>`;
+    }
+
+    resultsTableBody.innerHTML = resultsHTML;
+    determineDiagnosis();
+    showDeficiencyInfo();
+    
+    // Automatically save results after calculation
+    autoSaveResults();
+}
+async function autoSaveResults() {
+    const diagnosisText = diagnosisDiv.innerText;
+    const severityLevel = document.querySelector('.severity-level.selected')?.id?.replace('severity-', '') || 'none';
+
+    const data = {
+        normal_correct: normalCorrect,
+        red_green_errors: redGreenErrors,
+        protanopia_indicators: protanopiaIndicators,
+        deuteranopia_indicators: deuteranopiaIndicators,
+        severity_level: severityLevel,
+        diagnosis_text: diagnosisText,
+    };
+
+    try {
+        const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
+            ? 'http://127.0.0.1:8000'
+            : 'https://netrascreen.in';
+
+        const response = await fetch(`${baseUrl}/api/color-vision-tests/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            console.log('Results saved successfully!');
+            // Optionally show a brief success message
+            showSaveStatus('✅ Results saved successfully!', 'success');
+        } else {
+            console.error('Failed to save results');
+            showSaveStatus('❌ Failed to save results', 'error');
+        }
+    } catch (error) {
+        console.error('Error saving results:', error);
+        showSaveStatus('❌ Error occurred while saving', 'error');
+    }
+}
+
+ function determineDiagnosis() {
+    let diagnosis = '';
+    let severity = 'none';
+    
+    // Calculate total incorrect answers (not just red-green errors)
+    const totalIncorrect = 17 - normalCorrect;
+    
+    console.log('Diagnosis calculation:', {
+        normalCorrect,
+        totalIncorrect,
+        redGreenErrors,
+        protanopiaIndicators,
+        deuteranopiaIndicators
+    });
+    
+    // Severity based on total incorrect answers
+    if (totalIncorrect <= 2) {
+        severity = 'none';
+        diagnosis = 'Your color vision appears to be normal.';
+    } else if (totalIncorrect <= 5) {
+        severity = 'weak';
+    } else if (totalIncorrect <= 10) {
+        severity = 'moderate';
+    } else {
+        severity = 'strong';
+    }
+    
+    // Diagnosis based on specific deficiency patterns
+    if (severity !== 'none') {
+        let deficiencyType = '';
+        
+        if (protanopiaIndicators >= 2 && protanopiaIndicators > deuteranopiaIndicators) {
+            deficiencyType = 'protanopia/protanomaly';
+        } else if (deuteranopiaIndicators >= 2 && deuteranopiaIndicators > protanopiaIndicators) {
+            deficiencyType = 'deuteranopia/deuteranomaly';
+        } else if (redGreenErrors >= 3) {
+            deficiencyType = 'red-green color blindness';
+        } else {
+            deficiencyType = 'color vision deficiency';
+        }
+        
+        diagnosis = `You have <strong>${severity}</strong> ${deficiencyType}.`;
+        
+        // Add severity descriptions
+        switch(severity) {
+            case 'weak':
+                diagnosis += '<br><br><em>Weak deficiency: You may have difficulty distinguishing certain shades in specific conditions.</em>';
+                break;
+            case 'moderate':
+                diagnosis += '<br><br><em>Moderate deficiency: You have noticeable difficulty with color discrimination in various situations.</em>';
+                break;
+            case 'strong':
+                diagnosis += '<br><br><em>Strong deficiency: You have significant difficulty with color discrimination.</em>';
+                break;
+        }
+    }
+    
+    // Update display
+    diagnosisDiv.innerHTML = diagnosis;
+    
+    // Highlight severity level
+    document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+    const severityEl = document.getElementById(`severity-${severity}`);
+    if (severityEl) severityEl.classList.add('selected');
+    
+    return {
+        severity,
+        normalCorrect,
+        totalIncorrect,
+        redGreenErrors,
+        protanopiaIndicators,
+        deuteranopiaIndicators
+    };
+}
+
+function showDeficiencyInfo() {
+    // Reset all deficiency type highlights
+    deficiencyTypes.forEach(type => {
+        type.style.borderLeft = '5px solid #4CAF50';
+    });
+    
+    // Highlight specific deficiency type based on indicators
+    if (redGreenErrors >= 3) {
+        if (protanopiaIndicators >= 2 && protanopiaIndicators > deuteranopiaIndicators) {
+            document.getElementById('protanopia').style.borderLeft = '5px solid #f44336';
+        } else if (deuteranopiaIndicators >= 2 && deuteranopiaIndicators > protanopiaIndicators) {
+            document.getElementById('deuteranopia').style.borderLeft = '5px solid #4CAF50';
+        } else {
+            document.getElementById('general').style.borderLeft = '5px solid #FF9800';
+        }
+    }
+}
+
+    function resetTest() {
+    currentPlate = 1;
+    Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+
+    // Only reset number plates 1-17
+    for (let i = 1; i <= 15; i++) {
+        const input = document.getElementById(`answer-${i}`);
+        if (input) input.value = '';
+    }
+
+    document.querySelectorAll('.test-plate').forEach(plate => plate.classList.remove('active'));
+    const plate1Div = document.getElementById('plate-1');
+    if (plate1Div) plate1Div.classList.add('active');
+
+    prevBtn.disabled = true;
+    nextBtn.classList.remove('hidden');
+    submitBtn.classList.add('hidden');
+
+    resultsDiv.style.display = 'none';
+    testContainer.classList.remove('hidden');
+    instructionsDiv.classList.add('hidden'); 
+    startTestBtn.classList.add('hidden'); 
+
+    updateProgress();
+
+    diagnosisDiv.innerHTML = '';
+    document.querySelectorAll('.severity-level').forEach(el => el.classList.remove('selected'));
+    deficiencyTypes.forEach(type => type.style.borderLeft = '4px solid #4CAF50');
+}
+
+    // Event listeners
+    startTestBtn.addEventListener('click', () => {
+        instructionsDiv.classList.add('hidden');
+        startTestBtn.classList.add('hidden');
+        testContainer.classList.remove('hidden');
+        updateProgress();
+        showPlate(currentPlate);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        if (currentPlate > 1) {
+            showPlate(currentPlate - 1);
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        if (currentPlate < totalPlates) {
+            showPlate(currentPlate + 1);
+        }
+    });
+
+    submitBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        calculateResults();
+        testContainer.classList.add('hidden');
+        resultsDiv.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('saveResultBtn').addEventListener('click', async () => {
+    const diagnosisText = diagnosisDiv.innerText;
+    const severityLevel = document.querySelector('.severity-level.selected')?.id?.replace('severity-', '') || 'none';
+
+    const data = {
+    normal_correct: normalCorrect,
+    red_green_errors: redGreenErrors,
+    protanopia_indicators: protanopiaIndicators,
+    deuteranopia_indicators: deuteranopiaIndicators,
+    severity_level: severityLevel,
+    diagnosis_text: diagnosisText,
+};
+    try {
+       const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000'
+    : 'https://netrascreen.in';
+
+const response = await fetch(`${baseUrl}/api/color-vision-tests/`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(data)
+});
+
+        if (response.ok) {
+            document.getElementById('saveStatus').innerText = '✅ Results saved successfully!';
+        } else {
+            document.getElementById('saveStatus').innerText = '❌ Failed to save results.';
+        }
+    } catch (error) {
+        document.getElementById('saveStatus').innerText = '❌ Error occurred: ' + error.message;
+    }
+});
+
+
+    restartBtn.addEventListener('click', resetTest);
+ 
+ 
+    updateProgress();
+    showPlate(currentPlate);
+});
+</script>
+</body>
+</html>
+
