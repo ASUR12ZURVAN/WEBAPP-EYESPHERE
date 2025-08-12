@@ -304,6 +304,13 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
+         .whatsapp-button {
+            background: #6c757d;
+        }
+
+        .whatsapp-button:hover {
+            background: #5a6268;
+        }
 
         .ask-button {
             background: #6c757d;
@@ -378,11 +385,9 @@
             <div class="logo-title">NETRASCREEN AI</div>
 
             <div class="test-buttons">
-                <form action="{% url 'mainx' request.session.user_id %}" method="get" style="margin: 0;">
-                    <button type="submit" class="test-button">
-                        <span>🏠</span> Home
-                    </button>
-                </form>
+                <a href="{% url 'mainx' request.session.user_id %}" class="test-button">
+                    <span>🏠</span> Home
+                </a>
 
                 <a href="{% url 'chat_page' %}" class="test-button">
                     <span>🤖</span> ChatBot
@@ -409,7 +414,7 @@
                             <span>🎯</span> Eye Pressure Screening
                         </a>
                         <a href="{% url 'Colourblindness_Test' %}">
-                            <span>🌈</span> Color Vision SCreening
+                            <span>🌈</span> Color Vision Screening
                         </a>
                     </div>
                 </div>
@@ -604,7 +609,9 @@
                     </div>
 
                     <div class="action-buttons">
-                        <a href="#" class="action-button">Get Teleconsultation or At-Home Test Done</a>
+                         <a href="https://wa.me/+917524007689" class="action-button whatsapp-button">
+                            <span>✉</span> Contact Us
+                        </a>
                         <a href="#" class="action-button ask-button">Ask Netra AI</a>
                     </div>
                 </div>
