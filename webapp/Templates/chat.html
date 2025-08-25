@@ -138,7 +138,7 @@
 </head>
 <body>
     <div class="home-button-container">
-        <form action="{% url 'mainx' request.session.user_id %}" method="get" style="display: inline;">
+        <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
             <button type="submit" class="home-button">HOME</button>
         </form>
     </div>
