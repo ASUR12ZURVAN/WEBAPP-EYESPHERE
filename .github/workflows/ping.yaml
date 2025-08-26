@@ -1,10 +1,9 @@
-name: Keep Render App Awake
+name: Hourly Website Ping
 
 on:
   schedule:
-    # Runs every 2 hours
-    - cron: "0 */2 * * *"
-  workflow_dispatch: # optional, lets you trigger manually
+    - cron: "0 * * * *"   # every hour
+  workflow_dispatch:
 
 jobs:
   ping:
@@ -12,4 +11,6 @@ jobs:
     steps:
       - name: Ping Render website
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://netrascreen.in/
+          curl -s -o /dev/null -w "%{http_code}\n" \
+          -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" \
+          https://netrascreen.in/footer-bg.jpg
