@@ -9,19 +9,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Basic ICMP ping
-        run: |
-          echo "Pinging netrascreen.in..."
-          ping -c 4 netrascreen.in
-
       - name: Ping homepage
         run: |
-          curl -s -o /dev/null -w "Homepage status: %{http_code}, Time: %{time_total}s\n" \
-          -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" \
+          curl -s -o /dev/null -w "Status: %{http_code}, Time: %{time_total}s\n" \
           https://netrascreen.in/
-
-      - name: Ping footer-bg.jpg
-        run: |
-          curl -s -o /dev/null -w "Footer-bg.jpg status: %{http_code}, Time: %{time_total}s\n" \
-          -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" \
-          https://netrascreen.in/footer-bg.jpg
