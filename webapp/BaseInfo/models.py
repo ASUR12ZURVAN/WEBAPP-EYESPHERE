@@ -118,6 +118,7 @@ class PatientHistory(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_history')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    is_submitted = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.user.name if hasattr(self.user, 'name') else self.user.username} - Patient History"

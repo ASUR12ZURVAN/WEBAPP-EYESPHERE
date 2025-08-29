@@ -24,6 +24,8 @@ urlpatterns = [
     path('Colourblindness_Test1/',views.Colour_Blindness_Test1,name = 'Colourblindness_Test1'),
     path('glaucoma_test1/',views.next1,name = 'base_glaucoma1'),
     path('Myopia_Test1/', views.index1, name='base_myopia1'),
-    path('consent_form/',views.consent,name ='consent_frm')
+    path('consent_form/',views.consent,name ='consent_frm'),
+    path('history_form/', views.history_form, name='history_form'),
+    path('history_form1/', views.history_form1, name='history_form1'),
      
 ]

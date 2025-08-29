@@ -26,11 +26,39 @@ def index(request ):
 def index1(request ):
     return render(request, 'hd1.html', )
 
+def history_form(request):
+    return render(request, "history.html")
+
+def history_form1(request):
+    return render(request, "history1.html")
+
 def history(request):
-    return render(request,"history.html")
+    user_id = request.session.get('user_id')
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+            patient_history = PatientHistory.objects.filter(user=user).first()
+            
+            if patient_history and patient_history.is_submitted:
+                return render(request, "history_resubmit_confirm.html")
+        except User.DoesNotExist:
+            pass
+    
+    return render(request, "history.html")
 
 def history1(request):
-    return render(request,"history1.html")
+    user_id = request.session.get('user_id')
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+            patient_history = PatientHistory.objects.filter(user=user).first()
+            
+            if patient_history and patient_history.is_submitted:
+                return render(request, "history_resubmit_confirm1.html")
+        except User.DoesNotExist:
+            pass
+    
+    return render(request, "history1.html")
 
 def osdi(request):
     return render(request,"osdi.html")
@@ -195,6 +223,9 @@ def submit_patient_history(request):
                     allergy_type=allergy,
                     other_details=other_detail
                 )
+
+            patient_history.is_submitted = True
+            patient_history.save()
         
         return JsonResponse({'status': 'success', 'message': 'Patient history saved successfully'})
     

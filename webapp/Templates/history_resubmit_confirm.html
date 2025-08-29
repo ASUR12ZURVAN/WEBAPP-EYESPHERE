@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Already Submitted</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', serif;
+            background: white;
+            color: black;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid black;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .message-box {
+            background: #f9f9f9;
+            border: 2px solid black;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        .message-box h2 {
+            color: #d9534f;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .message-box p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .button-group {
+            margin-top: 30px;
+        }
+        .btn {
+            background: white;
+            color: black;
+            border: 2px solid black;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: black;
+            color: white;
+        }
+        .btn-danger {
+            background: #d9534f;
+            color: white;
+            border-color: #d9534f;
+        }
+        .btn-danger:hover {
+            background: #c9302c;
+            border-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NETRASCREEN AI</h1>
+    </div>
+    
+    <div class="message-box">
+        <h2>⚠️ Patient history Form Already Submitted</h2>
+        <p>You have already submitted your patient history form.</p>
+        <p><strong>Do you want to submit again?</strong></p>
+        <p><em>Note: This will overwrite your previous submission.</em></p>
+        
+        <div class="button-group">
+            <a href="javascript:history.back()" class="btn">No, Go Back</a>
+            <a href="/history_form/" class="btn btn-danger">Yes, Submit Again</a>
+        </div>
+    </div>
+</body>
+</html>

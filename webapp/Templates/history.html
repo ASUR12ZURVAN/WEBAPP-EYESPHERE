@@ -564,32 +564,38 @@
                 });
         });
 
-        function submitHistoryToBackend(historyData) {
-            return fetch('/submit_patient_history/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify(historyData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                
-                if (data.status === 'success') {
-                    showMessage('Patient history submitted successfully!', 'success');
-                    // Optional: Redirect after a delay
-                    
-                } else {
-                    showMessage('Error submitting history: ' + data.message, 'error');
-                }
-            })
-            .catch(error => {
-                hideMessages();
-                console.error('Error:', error);
-                showMessage('Error submitting history. Please try again.', 'error');
-            });
+        // Add this to the submitHistoryToBackend function's success block
+function submitHistoryToBackend(historyData) {
+    return fetch('/submit_patient_history/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify(historyData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showMessage('Patient history submitted successfully!', 'success');
+            
+            // Hide the Submit and Clear buttons after successful submission
+            const submitButton = document.querySelector('button[type="submit"]');
+            const clearButton = document.querySelector('button[type="reset"]');
+            
+            if (submitButton) submitButton.style.display = 'none';
+            if (clearButton) clearButton.style.display = 'none';
+            
+        } else {
+            showMessage('Error submitting history: ' + data.message, 'error');
         }
+    })
+    .catch(error => {
+        hideMessages();
+        console.error('Error:', error);
+        showMessage('Error submitting history. Please try again.', 'error');
+    });
+}
 
         function showMessage(message, type) {
             const messageDiv = document.getElementById(type === 'success' ? 'successMessage' : 'errorMessage');
