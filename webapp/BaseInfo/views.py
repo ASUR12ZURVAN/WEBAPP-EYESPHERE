@@ -32,6 +32,15 @@ def history_form(request):
 def history_form1(request):
     return render(request, "history1.html")
 
+def service(request):
+    return render(request, "service.html")
+
+def about(request):
+    return render(request, "about.html")
+
+def testimonials(request):
+    return render(request, "testimonials.html")
+
 def history(request):
     user_id = request.session.get('user_id')
     if user_id:
@@ -234,43 +243,120 @@ def submit_patient_history(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
+
+
+from django.utils import timezone
+from datetime import datetime
+from itertools import chain
+
 def user_profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)
     if not user_id:
         return redirect('login')
-    
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        return redirect('login')
-    
-    # Get patient history
+
+    user = get_object_or_404(User, id=user_id)
+
+    # Get patient history if exists
     patient_history = None
     try:
         patient_history = PatientHistory.objects.get(user=user)
     except PatientHistory.DoesNotExist:
-        pass
-    # Existing test results (from your TestResult model)
+        patient_history = None
+
+    # Fetch all test querysets in descending order by date/timestamp (newest first)
     test_results = user.test_results.all().order_by('-date_taken')
-
-    # New color vision test results
     color_vision_tests = user.color_vision_tests.all().order_by('-date_taken')
-
     blink_rates = BlinkRate.objects.filter(user=user).order_by('-timestamp')
     dryeye_results = user.dryeye_results.all().order_by('-date_taken')
     glaucoma_results = user.glaucoma_results.all().order_by('-date_taken')
     myopia_results = user.myopia_results.all().order_by('-date_taken')
 
-    return render(request, 'user_profile.html', {
+    # Create a list of all tests with unified structure for proper chronological ordering
+    all_tests = []
+    
+    # Add test_results
+    for result in test_results:
+        all_tests.append({
+            'test_name': result.test_type,
+            'test_value': result.result_value,
+            'date': result.date_taken,
+            'type': 'general'
+        })
+    
+    # Add myopia_results
+    for result in myopia_results:
+        all_tests.append({
+            'test_name': 'Myopia Test',
+            'test_value': f'L: {result.left_eye_diopter}, R: {result.right_eye_diopter}',
+            'date': result.date_taken,
+            'type': 'myopia'
+        })
+    
+    # Add dryeye_results
+    for result in dryeye_results:
+        all_tests.append({
+            'test_name': 'OSDI',
+            'test_value': f'{result.osdi_score} - {result.severity}',
+            'date': result.date_taken,
+            'type': 'dryeye'
+        })
+    
+    # Add glaucoma_results
+    for result in glaucoma_results:
+        all_tests.append({
+            'test_name': 'Peripheral Vision',
+            'test_value': f'{result.total_score}% - {result.severity}',
+            'date': result.date_taken,
+            'type': 'glaucoma'
+        })
+    
+    # Add color_vision_tests
+    for test in color_vision_tests:
+        all_tests.append({
+            'test_name': 'Color Vision Test',
+            'test_value': test.severity_level.title(),
+            'date': test.date_taken,
+            'type': 'color_vision'
+        })
+    
+    # Add blink_rates (using timestamp field)
+    for test in blink_rates:
+        all_tests.append({
+            'test_name': 'Blink Rate',
+            'test_value': f'{test.rate} blinks/30sec',
+            'date': test.timestamp,
+            'type': 'blink_rate'
+        })
+    
+    # Sort all tests by date in descending order (most recent first)
+    all_tests_sorted = sorted(all_tests, key=lambda x: x['date'], reverse=True)
+
+    # Calculate total tests count
+    total_tests = len(all_tests_sorted)
+
+    # Collect all unique dates for calendar
+    test_dates_set = set()
+    for test in all_tests_sorted:
+        test_dates_set.add(test['date'].strftime('%Y-%m-%d'))
+    
+    test_dates = list(test_dates_set)
+
+    context = {
         'user': user,
-        'test_results': test_results,
-        'color_vision_tests': color_vision_tests,
         'patient_history': patient_history,
+        'all_tests_sorted': all_tests_sorted,  # Single unified list
+        'test_results': test_results,  # Keep individual querysets for template compatibility
+        'color_vision_tests': color_vision_tests,
         'blink_rates': blink_rates,
         'dryeye_results': dryeye_results,
         'glaucoma_results': glaucoma_results,
         'myopia_results': myopia_results,
-    })
+        'total_tests': total_tests,
+        'test_dates': test_dates,
+    }
+
+    return render(request, 'user_profile.html', context)
+
+
 
 
 @csrf_exempt

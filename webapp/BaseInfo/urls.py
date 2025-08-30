@@ -27,5 +27,8 @@ urlpatterns = [
     path('consent_form/',views.consent,name ='consent_frm'),
     path('history_form/', views.history_form, name='history_form'),
     path('history_form1/', views.history_form1, name='history_form1'),
+    path('about/', views.about, name='about'),
+    path('service/', views.service, name='service'),
+    path('testimonials/', views.testimonials, name='testimonials'),
      
 ]

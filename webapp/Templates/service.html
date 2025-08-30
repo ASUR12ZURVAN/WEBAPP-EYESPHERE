@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyesphere- Our Serivces</title>
+    <!--<link rel="stylesheet" href="service.css">-->
+    <style>
+      /* Services Section */
+.services {
+    padding: 3rem 0;
+    background: #f9fbff;
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0f265c;
+  }
+  
+  .section-sub {
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  
+  /* Services Grid */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .service-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  }
+  
+  .service-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+  
+  .service-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    color: #0f265c;
+  }
+  
+  .service-card p {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.45;
+  }
+  .footer{
+    margin-bottom: 0rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: italic;
+    text-align: center;
+    
+  }
+  
+  /* Responsive */
+  @media(max-width: 992px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media(max-width: 600px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+    </style>
+</head>
+<body>
+    <!-- Services Section -->
+<section class="services" id="services">
+    <div class="container">
+      <h1 class="section-title">Our Services</h1>
+      <p class="section-sub">Comprehensive eye care solutions tailored to your unique needs</p>
+  
+      <div class="services-grid">
+        <!-- Service 1 -->
+        <div class="service-card">
+          <img src="{% static 'neareye.png' %}" alt="Vision Distance Screening">
+          <h3>Vision Distance Screening</h3>
+          <p>Vision distance screening, also known as a visual acuity test, measures how well you can see objects at a distance by having you read rows of letters on a Snellen chart from a specific distance, typically 10 feet or 3 meters.</p>
+        </div>
+  
+        <!-- Service 2 -->
+        <div class="service-card">
+          <img src="{% static 'peripheral.png' %}" alt="Peripheral Vision Screening">
+          <h3>Peripheral Vision Screening</h3>
+          <p>measures your ability to see objects outside your direct line of sight, assessing how far your eyes can see to the sides, up, and down while looking straight ahead</p>
+        </div>
+  
+        <!-- Service 3 -->
+        <div class="service-card">
+          <img src="{% static 'dryeye.png' %}" alt="Dry Eye Screening">
+          <h3>Dry Eye Screening</h3>
+          <p>Identify and measure level of dryness and recommend suitable treatment and management.
+            Special dyes are used to highlight irregularities on the corneal surface caused by insufficient tears. 
+          </p>
+        </div>
+  
+        <!-- Service 4 -->
+        <div class="service-card">
+          <img src="{% static 'colour.png' %}" alt="Color Blindness Screening">
+          <h3>Color Blindness Screening</h3>
+          <p>Standard tests to detect color vision deficiencies and advise on next steps.
+            For severe cases, color blindness can impact the ability to distinguish traffic signals, making screening important for road safety. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+    <h1 class="footer">Thanks for visiting</h1>
+</body>
+</html>
