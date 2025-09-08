@@ -18,7 +18,7 @@
         }
         body {
             font-family: 'Inter', Arial, sans-serif; 
-            background-image: url("{% static 'eyei.jpg' %}");
+            background-image: url("{% static 'macro-eye-iris.jpg' %}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -215,163 +215,170 @@
 
 
         /* --- Hero Section CSS --- */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('image.jpg') no-repeat center center/cover;
-            /* Replace 'https://via.placeholder.com/1500x800/2980b9/ffffff?text=Eye+Care+Background' with your actual background image URL */
-            color: white;
-            text-align: center;
-            padding: 100px 20px;
-            /* Top/bottom and left/right padding */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 87vh;
-            /* Minimum height, takes at least 60% of viewport height */
-            box-shadow: inset 0 -5px 10px rgba(56, 90, 146, 0.1);
-            /* Subtle inner shadow at bottom */
-        }
+       .hero {
+    background: linear-gradient(rgba(13, 79, 92, 0.4), rgba(26, 39, 68, 0.6)), url('macro-eye-iris.jpg') no-repeat center center/cover;
+    /* Updated gradient with blue/teal tones to complement the eye image */
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 87vh;
+    box-shadow: inset 0 -5px 10px rgba(0, 212, 255, 0.2);
+    /* Updated shadow with cyan tint */
+}
 
-        .hero h1 {
-            font-size: 3.5em;
-            /* Large, prominent heading */
-            margin-bottom: 20px;
-            line-height: 1.2;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            /* Text shadow for better readability */
-            max-width: 900px;
-            /* Limit heading width */
-        }
+.hero h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 212, 255, 0.3);
+    /* Enhanced shadow with cyan glow for the busy background */
+    max-width: 900px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
 
-        .hero p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            max-width: 700px;
-            /* Limit paragraph width for readability */
-            line-height: 1.8;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-        }
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    max-width: 700px;
+    line-height: 1.8;
+    color: #f0ffff;
+    /* Light cyan for softer contrast */
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 212, 255, 0.2);
+    /* Enhanced readability */
+}
 
-        .hero .cta-buttons {
-            display: flex;
-            /* Arrange buttons side-by-side */
-            gap: 20px;
-            /* Space between buttons */
-            flex-wrap: wrap;
-            /* Allow buttons to wrap on smaller screens */
-            justify-content: center;
-            /* Center buttons when wrapped */
-        }
+.hero .cta-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-        .hero .cta-button {
-            display: inline-block;
-            background-color: #032736;
-            color: white;
-            padding: 20px 64px;
-            margin-top: 2rem;
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 1.4em;
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-            letter-spacing: 0.5px;
-        }
+.hero .cta-button {
+    display: inline-block;
+    background-color: #1a2744;
+    /* Deep navy blue */
+    color: #ffffff;
+    padding: 20px 64px;
+    margin-top: 2rem;
+    text-decoration: none;
+    border-radius: 12px;
+    border: 2px solid #00d4ff;
+    /* Cyan border for tech feel */
+    font-size: 1.4em;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+    /* Cyan glow effect */
+    letter-spacing: 0.5px;
+}
 
-        .hero .cta-button:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+.hero .cta-button:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(0, 212, 255, 0.2);
+    /* Cyan overlay effect */
+    border-radius: 8px;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-        .hero .cta-button:hover {
-            background-color: #021b25;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(3, 39, 54, 0.3);
-        }
+.hero .cta-button:hover {
+    background-color: #0d4f5c;
+    /* Dark teal on hover */
+    border-color: #00ffff;
+    /* Brighter cyan border */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5), 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Enhanced glow on hover */
+    color: #ffffff;
+}
 
-        .hero .cta-button:hover:before {
-            width: 300px;
-            height: 300px;
-        }
+.hero .cta-button:hover:before {
+    width: 300px;
+    height: 300px;
+}
 
-        .hero .cta-button:active {
-            transform: translateY(1px);
-            box-shadow: 0 5px 15px rgba(5, 57, 77, 0.2);
-        }
+.hero .cta-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 
-        /* Media Queries for Hero Section Responsiveness */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 3em;
-            }
+/* Media Queries for Hero Section Responsiveness */
+@media (max-width: 992px) {
+    .hero h1 {
+        font-size: 3em;
+    }
 
-            .hero p {
-                font-size: 1.1em;
-            }
+    .hero p {
+        font-size: 1.1em;
+    }
 
-            .hero {
-                padding: 80px 20px;
-                min-height: 50vh;
-            }
-        }
+    .hero {
+        padding: 80px 20px;
+        min-height: 50vh;
+    }
+}
 
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5em;
-            }
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5em;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 212, 255, 0.4);
+    }
 
-            .hero p {
-                font-size: 1em;
-            }
+    .hero p {
+        font-size: 1em;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+    }
 
-            .hero {
-                padding: 60px 15px;
-                min-height: 45vh;
-            }
+    .hero {
+        padding: 60px 15px;
+        min-height: 45vh;
+    }
 
-            .hero .cta-buttons {
-                flex-direction: column;
-                /* Stack buttons vertically on small screens */
-                gap: 15px;
-                /* Adjust gap */
-                width: 100%;
-                /* Take full width */
-                max-width: 300px;
-                /* Limit button group width */
-            }
+    .hero .cta-buttons {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 300px;
+    }
 
-            .hero .cta-button {
-                width: 100%;
-                /* Make buttons full width when stacked */
-            }
-        }
+    .hero .cta-button {
+        width: 100%;
+        padding: 18px 32px;
+        font-size: 1.2em;
+    }
+}
 
-        @media (max-width: 576px) {
-            .hero h1 {
-                font-size: 2em;
-                margin-bottom: 15px;
-            }
+@media (max-width: 576px) {
+    .hero h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
 
-            .hero p {
-                font-size: 0.9em;
-                margin-bottom: 25px;
-            }
+    .hero p {
+        font-size: 0.9em;
+        margin-bottom: 25px;
+    }
 
-            .hero {
-                padding: 50px 10px;
-                min-height: 40vh;
-            }
-        }
+    .hero {
+        padding: 50px 10px;
+        min-height: 40vh;
+    }
+}
+
 
 
         /* --- About Us Section CSS --- */
