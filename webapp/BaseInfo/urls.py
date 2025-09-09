@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
-from Myopia_Test.views import predict_diopters
+#from Myopia_Test.views import predict_diopters
 from . import views
 from .views import ColorVisionTestView
+from .views import *
 
 urlpatterns = [
     path('',views.home,name = 'home_page'),
@@ -30,5 +31,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('service/', views.service, name='service'),
     path('testimonials/', views.testimonials, name='testimonials'),
+    path("submit_app_result/", submit_app_result, name="submit_app_result"),
+    path("app-results/<str:phone_number>/", views.get_app_results, name="get_app_results"),
      
 ]

@@ -20,7 +20,7 @@ class ProtectedView(APIView):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('predict/', views.predict_diopters, name='predict_diopters'),
+    path('app_res/', include("Myopia_Test.urls")),
     path('', include("BaseInfo.urls")),
     path('chat/',include("chatbot.urls")),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

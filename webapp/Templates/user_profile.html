@@ -824,6 +824,9 @@
                         <a href="{% url 'chat_page' %}" class="action-button ask-button">
                             <span>🤖</span> Ask NETRASCREEN AI
                         </a>
+                        <a href="{% url 'get_app_results' user.ph_Number %}">
+                            <button class="btn btn-primary">View App Results</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -987,5 +990,8 @@
             }
         });
     </script>
+
+    
+
 </body>
 </html>

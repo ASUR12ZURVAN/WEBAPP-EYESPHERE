@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest
+from .models import User,TestResult,ColorVisionPlateResponse,ColorVisionTest,MyopiaAppResult
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +21,8 @@ class ColorVisionPlateResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ColorVisionPlateResponse
         fields = '__all__'
+class MyopiaAppResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyopiaAppResult
+        fields = ["id", "left_eye_diopter", "right_eye_diopter", "date_taken"]
+        read_only_fields = ["id", "date_taken"]

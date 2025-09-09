@@ -1,0 +1,12 @@
+<h2>Myopia App Results</h2>
+<ul>
+  {% for result in results %}
+    <li>
+      L: {{ result.left_eye_diopter }},
+      R: {{ result.right_eye_diopter }},
+      Date: {{ result.date_taken }}
+    </li>
+  {% empty %}
+    <li>No results found</li>
+  {% endfor %}
+</ul>

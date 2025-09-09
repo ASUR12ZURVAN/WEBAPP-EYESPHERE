@@ -541,3 +541,60 @@ def sign_in_user(request):
 
     # For GET request, just render sign-in form
     return render(request, 'sign_in.html')
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .models import MyopiaAppResult
+from .Serializers import MyopiaAppResultSerializer
+
+from .models import MyopiaAppResult, User
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from .models import MyopiaAppResult,User
+from .Serializers import MyopiaAppResultSerializer
+
+#User = get_user_model()
+
+@api_view(["POST"])
+def submit_app_result(request):
+    phone_number = request.data.get("phone_number")
+    left_eye = request.data.get("left_eye_diopter")
+    right_eye = request.data.get("right_eye_diopter")
+
+    if not phone_number or not left_eye or not right_eye:
+        return Response(
+            {"error": "Phone number, left eye and right eye required"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        user = User.objects.get(ph_Number=phone_number)  # 🔥 fixed field name
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    result = MyopiaAppResult.objects.create(
+        user=user,
+        left_eye_diopter=left_eye,
+        right_eye_diopter=right_eye
+    )
+
+    return Response(MyopiaAppResultSerializer(result).data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET"])
+def get_app_results(request, phone_number):
+    try:
+        user = User.objects.get(ph_Number=phone_number)  # 🔥 fixed field name
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    results = MyopiaAppResult.objects.filter(user=user)
+    serializer = MyopiaAppResultSerializer(results, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
