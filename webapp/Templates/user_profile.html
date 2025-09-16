@@ -599,7 +599,33 @@
             .action-buttons {
                 flex-direction: column;
             }
+
+            /** line graph css **/
+            .test-result-graph 
+            {
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 15px;
+                margin: 15px 0;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            }
+
+        .graph-header 
+        {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
         }
+
+        .line-graph 
+        {
+            width: 100%;
+            height: 200px;
+        }
+
+    }
     </style>
 </head>
 <body>
@@ -759,6 +785,7 @@
 
             <!-- Middle Column - Test Results -->
             <div class="test-results-column">
+
                 <div class="correlator-header">
                     <span>📊</span> Recent Test Results
                 </div>
@@ -783,7 +810,6 @@
                     </button>
                 {% endif %}
             </div>
-
             <!-- Right Column - Calendar & Contact -->
             <div class="right-column">
                 <div class="calendar-container">
@@ -832,6 +858,76 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    // Parse JSON from Django
+    const testGraphs = JSON.parse('{{ test_graphs_json|escapejs }}');
+    const ctx = document.getElementById("myopia-graph").getContext("2d");
+
+    // Collect all unique dates
+    const allDatesSet = new Set();
+    testGraphs.forEach(graph => {
+        graph.dates.forEach(date => allDatesSet.add(date));
+    });
+    const allDates = Array.from(allDatesSet).sort((a,b) => {
+        // Sort dates correctly (DD-MM-YYYY)
+        const [dayA, monthA, yearA] = a.split('-').map(Number);
+        const [dayB, monthB, yearB] = b.split('-').map(Number);
+        return new Date(yearA, monthA-1, dayA) - new Date(yearB, monthB-1, dayB);
+    });
+
+    const colors = ["#007bff", "#28a745"]; // Blue = Left, Green = Right
+
+    const datasets = testGraphs.map((graph, index) => {
+        // Map values to allDates
+        const dateValueMap = {};
+        graph.dates.forEach((d, i) => { dateValueMap[d] = graph.values[i]; });
+
+        const values = allDates.map(d => dateValueMap[d] !== undefined ? dateValueMap[d] : null);
+
+        return {
+            label: graph.name,
+            data: values,
+            borderColor: colors[index],
+            backgroundColor: colors[index],
+            fill: false,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 7
+        };
+    });
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: allDates,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+                title: { display: true, text: 'Myopia Test Results (Left vs Right Eye)', font: { size: 18 } }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Diopter Value' }
+                },
+                x: {
+                    title: { display: true, text: 'Date' }
+                }
+            }
+        }
+    });
+});
+            
+    </script>
+
+
+
 
     <script>
         let currentDate = new Date();

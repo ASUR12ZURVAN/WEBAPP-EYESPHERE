@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
+from django.utils.safestring import mark_safe
+import re
 
 from BlinkRate.models import BlinkRate
 import json 
@@ -352,6 +354,7 @@ def user_profile(request, user_id):
         'myopia_results': myopia_results,
         'total_tests': total_tests,
         'test_dates': test_dates,
+
     }
 
     return render(request, 'user_profile.html', context)
@@ -592,9 +595,22 @@ def get_app_results(request, phone_number):
     try:
         user = User.objects.get(ph_Number=phone_number)  # 🔥 fixed field name
     except User.DoesNotExist:
+        if request.accepted_renderer.format == "html" or "text/html" in request.headers.get("Accept", ""):
+            return render(request, "app_results.html", {"phone_number": phone_number, "error": "User not found"})
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     results = MyopiaAppResult.objects.filter(user=user)
     serializer = MyopiaAppResultSerializer(results, many=True)
+
+    # If request is from browser (HTML)
+    if request.accepted_renderer.format == "html" or "text/html" in request.headers.get("Accept", ""):
+        return render(request, "app_results.html", {
+            "phone_number": phone_number,
+            "results": serializer.data
+        })
+
+    # Default: return JSON
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 

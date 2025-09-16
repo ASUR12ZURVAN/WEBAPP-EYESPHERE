@@ -1,12 +1,311 @@
-<h2>Myopia App Results</h2>
-<ul>
-  {% for result in results %}
-    <li>
-      L: {{ result.left_eye_diopter }},
-      R: {{ result.right_eye_diopter }},
-      Date: {{ result.date_taken }}
-    </li>
-  {% empty %}
-    <li>No results found</li>
-  {% endfor %}
-</ul>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>App Results</title>
+
+    <!-- Bootstrap (quick styling) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f8f9fa;
+      }
+      .result-card {
+        transition: transform 0.12s;
+      }
+      .result-card:hover {
+        transform: translateY(-6px);
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+          monospace;
+      }
+      .small-muted {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+          <h1 class="h3 mb-0">Myopia App Results</h1>
+          <div class="small-muted">
+            Phone:
+            <span class="mono" id="phoneNumberDisplay">{{ phone_number }}</span>
+          </div>
+        </div>
+        <div>
+          <button id="refreshBtn" class="btn btn-outline-primary btn-sm">
+            Refresh
+          </button>
+          <button
+            id="downloadCsvBtn"
+            class="btn btn-outline-success btn-sm ms-2"
+          >
+            Download CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Status area -->
+      <div id="statusArea" class="mb-3">
+        <div id="loading" class="alert alert-info py-2 d-none">
+          Loading results…
+        </div>
+        <div id="error" class="alert alert-danger py-2 d-none"></div>
+        <div id="empty" class="alert alert-warning py-2 d-none">
+          No results found for this user.
+        </div>
+      </div>
+
+      <!-- Cards view -->
+      <div id="cardsContainer" class="row g-3 mb-4"></div>
+
+      <!-- Table view -->
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table
+              id="resultsTable"
+              class="table table-striped table-hover mb-0"
+            >
+              <thead class="table-light">
+                <tr>
+                  <th>Date</th>
+                  <th>Test Type</th>
+                  <th>Details</th>
+                  <th>Left Eye</th>
+                  <th>Right Eye</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <footer class="small text-center text-muted mt-3">
+        Results are loaded from the server API. If your API path differs, update
+        <code>apiUrl</code> in the script below.
+      </footer>
+    </div>
+
+    <!-- JS (Bootstrap dependences included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      (function () {
+        // Replace this if your API path is different.
+        const phoneNumber = "{{ phone_number|default:'' }}".trim();
+        // If you prefer a different API base, change this:
+        const apiUrl = phoneNumber
+          ? `/app-results/${encodeURIComponent(phoneNumber)}/`
+          : null;
+
+        const loadingEl = document.getElementById("loading");
+        const errorEl = document.getElementById("error");
+        const emptyEl = document.getElementById("empty");
+        const cardsContainer = document.getElementById("cardsContainer");
+        const tableBody = document.querySelector("#resultsTable tbody");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const downloadCsvBtn = document.getElementById("downloadCsvBtn");
+        const phoneDisplay = document.getElementById("phoneNumberDisplay");
+
+        function show(el) {
+          el.classList.remove("d-none");
+        }
+        function hide(el) {
+          el.classList.add("d-none");
+        }
+        function clearResults() {
+          cardsContainer.innerHTML = "";
+          tableBody.innerHTML = "";
+        }
+
+        function formatDate(iso) {
+          if (!iso) return "-";
+          try {
+            const d = new Date(iso);
+            return d.toLocaleString("en-IN", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            });
+          } catch (e) {
+            return iso;
+          }
+        }
+
+        function renderResults(results) {
+          clearResults();
+          if (!results || !results.length) {
+            show(emptyEl);
+            return;
+          }
+          hide(emptyEl);
+
+          results.forEach((r) => {
+            // Example fields — adapt these to your serializer fields
+            // typical field names used here: date_taken / date, test_type / type, left_eye_diopter, right_eye_diopter, notes
+            const date = formatDate(
+              r.date || r.date_taken || r.created_at || r.timestamp
+            );
+            const testType = r.type || r.test_name || "Myopia Test";
+            const left = r.left_eye_diopter ?? r.left_eye ?? r.left ?? "-";
+            const right = r.right_eye_diopter ?? r.right_eye ?? r.right ?? "-";
+            const details = r.test_value ?? r.details ?? r.result_summary ?? "";
+
+            // Card (grid)
+            const col = document.createElement("div");
+            col.className = "col-12 col-md-6 col-lg-4";
+            col.innerHTML = `
+            <div class="card result-card h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h5 class="card-title mb-1">${testType}</h5>
+                    <div class="small-muted">${date}</div>
+                  </div>
+                  <div class="text-end">
+                    <div class="fw-bold">${left} / ${right}</div>
+                    <div class="small-muted">L / R</div>
+                  </div>
+                </div>
+                <p class="card-text mt-2 mb-0">${
+                  details
+                    ? escapeHtml(details)
+                    : '<span class="small-muted">No extra details</span>'
+                }</p>
+              </div>
+            </div>
+          `;
+            cardsContainer.appendChild(col);
+
+            // Table row
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td>${date}</td>
+            <td>${escapeHtml(testType)}</td>
+            <td>${escapeHtml(details)}</td>
+            <td class="mono">${escapeHtml(String(left))}</td>
+            <td class="mono">${escapeHtml(String(right))}</td>
+            <td>${escapeHtml(r.notes || r.remarks || "")}</td>
+          `;
+            tableBody.appendChild(tr);
+          });
+        }
+
+        function escapeHtml(s) {
+          if (!s && s !== 0) return "";
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        async function fetchResults() {
+          if (!apiUrl) {
+            errorEl.textContent =
+              "No phone number provided. Pass phone_number into the template context or update the template to fetch using a dynamic value.";
+            show(errorEl);
+            return;
+          }
+
+          hide(errorEl);
+          hide(emptyEl);
+          show(loadingEl);
+
+          try {
+            const res = await fetch(apiUrl, {
+              method: "GET",
+              headers: { Accept: "application/json" },
+            });
+            if (!res.ok) {
+              const text = await res.text();
+              throw new Error(`${res.status} ${res.statusText} — ${text}`);
+            }
+            const data = await res.json();
+            hide(loadingEl);
+            renderResults(data);
+          } catch (err) {
+            hide(loadingEl);
+            errorEl.textContent = "Error loading results: " + err.message;
+            show(errorEl);
+            clearResults();
+          }
+        }
+
+        // CSV download
+        function downloadCSV(results) {
+          if (!results || !results.length) {
+            alert("No results to download.");
+            return;
+          }
+          // build header from keys (union of keys)
+          const keys = new Set();
+          results.forEach((r) =>
+            Object.keys(r || {}).forEach((k) => keys.add(k))
+          );
+          const header = Array.from(keys);
+          const rows = results.map((r) =>
+            header
+              .map((h) => {
+                const v = r[h];
+                if (v === null || v === undefined) return "";
+                const s = typeof v === "object" ? JSON.stringify(v) : String(v);
+                // escape quotes
+                return `"${s.replace(/"/g, '""')}"`;
+              })
+              .join(",")
+          );
+          const csv = [header.join(","), ...rows].join("\r\n");
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `app_results_${phoneNumber || "user"}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        }
+
+        // Wiring
+        refreshBtn.addEventListener("click", fetchResults);
+        downloadCsvBtn.addEventListener("click", async () => {
+          if (!apiUrl) return alert("API url not configured.");
+          try {
+            const res = await fetch(apiUrl, {
+              method: "GET",
+              headers: { Accept: "application/json" },
+            });
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+            const data = await res.json();
+            downloadCSV(data);
+          } catch (err) {
+            alert("Could not download CSV: " + err.message);
+          }
+        });
+
+        // initial fetch when page loads
+        if (phoneNumber) {
+          fetchResults();
+        } else {
+          // No phone_number passed in; show helpful message
+          errorEl.textContent =
+            "Phone number is not provided to the template. You can render this template with a context variable named `phone_number`.";
+          show(errorEl);
+        }
+      })();
+    </script>
+  </body>
+</html>
