@@ -4,6 +4,7 @@ from django.urls import path, include
 from . import views
 from .views import ColorVisionTestView
 from .views import *
+from .utils import *
 
 urlpatterns = [
     path('',views.home,name = 'home_page'),
@@ -11,12 +12,12 @@ urlpatterns = [
     path('create-user/', views.create_user, name='create-user'),
     path('glaucoma_test/',views.next,name = 'base_glaucoma'),
     path('submit_score/', views.submit_score, name='submit_score'),
-    path('user_profile/<int:user_id>/',views.user_profile,name = 'user_profile'),
+    path('user_profile/<str:hashid>/',views.user_profile,name = 'user_profile'),
     path('results_history/', views.test_results_history, name='results_history'),
     path('api/color-vision-tests/', ColorVisionTestView.as_view(), name='color-vision-test'),
     path('Colourblindness_Test/',views.Colour_Blindness_Test,name = 'Colourblindness_Test'),
     path('sign-in/', views.sign_in_user, name='sign_in_user'),
-    path('main/<int:user_id>/',views.mainx,name='mainx'),
+    path('main/<str:hashid>/',views.mainx,name='mainx'),
     path('dryeye_test',views.osdi,name='osdi'),
     path('history/',views.history,name='history'),
     path('history1/',views.history1,name='history1'),
