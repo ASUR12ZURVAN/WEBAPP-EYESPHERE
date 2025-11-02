@@ -1,4 +1,4 @@
- {% load static %} 
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +17,7 @@
         
         body {
             font-family: 'Inter', Arial, sans-serif;
-            background-image: url("{% static 'eyei.jpg' %}");
+            background-image: url("{% static 'macro-eye-iris.jpg' %}");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -30,7 +30,7 @@
             padding: 20px;
         }
         
-        /* Improved overlay with gradient for better visual hierarchy */
+        /* Dark overlay matching create user page */
         body::before {
             content: '';
             position: fixed;
@@ -38,7 +38,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 64, 82, 0.4), rgba(0, 133, 165, 0.3));
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5));
             z-index: -1;
         }
         
@@ -99,25 +99,24 @@
             transform: translateY(-2px);
         }
 
-        /* Login Container */
+        /* Darkish Bluish Login Container */
         .login-container {
-            background-color: white;
-            /* background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1)); */
-            /* backdrop-filter: blur(20px); */
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(145deg, rgba(15, 25, 45, 0.95), rgba(10, 20, 40, 0.98));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(100, 150, 255, 0.2);
             border-radius: 16px;
             padding: 1.5rem 2rem;
             width: 100%;
             height: 80%;
             max-width: 480px;
-            /* width: 100%;
-            max-width: 480px; */
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                0 15px 40px rgba(0, 20, 50, 0.6),
+                0 5px 15px rgba(0, 30, 80, 0.3),
+                inset 0 1px 0 rgba(150, 180, 255, 0.1);
             position: relative;
             overflow: hidden;
             margin-top: 70px;
-            /* height: auto; */
-            /* max-height: calc(100vh - 100px); */
             display: flex;
             flex-direction: column;
             animation: fadeInUp 1s ease-out;
@@ -130,7 +129,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(100, 150, 255, 0.08), transparent);
             transition: left 0.8s ease;
             animation: shimmer 3s ease-in-out infinite;
         }
@@ -141,55 +140,53 @@
             100% { left: 100%; }
         }
 
-        /* .login-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.4);
-        } */
-
         .login-header {
             text-align: center;
             margin-bottom: 2.5rem;
         }
 
         .login-header h1 {
-            color: rgb(6, 6, 6);
+            color: #e8f2ff;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            /* text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3); */
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(100, 150, 255, 0.2);
         }
 
         .login-header p {
-            color: rgba(13, 13, 13, 0.9);
+            color: rgba(200, 220, 255, 0.8);
             font-size: 1rem;
             font-weight: 300;
-            /* text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3); */
         }
 
-        /* Form Styling */
+        /* Darkish Blue Form Styling */
         .form-group {
             margin-bottom: 1.5rem;
             position: relative;
+            animation: slideInLeft 0.6s ease-out;
+            animation-fill-mode: both;
         }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
 
         .form-group label {
             display: block;
-            color: rgb(6, 6, 6);
+            color: rgba(220, 235, 255, 0.9);
             font-weight: 500;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
-            /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); */
         }
 
         .form-group input {
             width: 100%;
             padding: 0.8rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(5, 5, 5, 0.2);
+            background: rgba(20, 35, 60, 0.8);
+            border: 2px solid rgba(80, 120, 200, 0.2);
             border-radius: 12px;
-            color: rgb(8, 8, 8);
+            color: #e8f2ff;
             font-size: 1rem;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
@@ -197,38 +194,38 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            border-color: rgba(100, 150, 255, 0.5);
+            background: rgba(25, 40, 70, 0.9);
+            box-shadow: 0 0 20px rgba(100, 150, 255, 0.2);
             transform: translateY(-2px);
         }
 
         .form-group input::placeholder {
-            color: rgba(5, 5, 5, 0.6);
+            color: rgba(180, 200, 240, 0.5);
         }
 
         .input-icon {
             position: absolute;
             top: 42px;
             right: 16px;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(150, 180, 255, 0.6);
             transition: all 0.3s ease;
             pointer-events: none;
         }
 
         .form-group:focus-within .input-icon {
-            color: white;
+            color: #a0c4ff;
             transform: scale(1.1);
         }
 
-        /* Submit Button */
+        /* Darkish Blue Submit Button */
         .submit-btn {
             width: 100%;
             padding: 0.8rem 2rem;
-            background: linear-gradient(145deg, rgba(0, 133, 165, 0.8), rgba(0, 64, 82, 0.8));
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(145deg, rgba(40, 70, 120, 0.9), rgba(30, 55, 100, 0.95));
+            border: 2px solid rgba(100, 150, 255, 0.3);
             border-radius: 12px;
-            color: white;
+            color: #e8f2ff;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
@@ -241,6 +238,8 @@
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 60, 120, 0.4);
+            animation: slideInUp 0.6s ease-out 0.4s both;
         }
 
         .submit-btn::before {
@@ -250,7 +249,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(150, 180, 255, 0.15), transparent);
             transition: left 0.5s ease;
         }
 
@@ -260,9 +259,9 @@
 
         .submit-btn:hover {
             transform: translateY(-3px);
-            background: linear-gradient(145deg, rgba(0, 133, 165, 0.9), rgba(0, 64, 82, 0.9));
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(145deg, rgba(50, 80, 140, 1), rgba(40, 65, 120, 1));
+            border-color: rgba(120, 170, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(30, 60, 120, 0.5);
         }
 
         .submit-btn:active {
@@ -277,17 +276,16 @@
             transform: translateX(5px);
         }
 
-        /* Error Messages */
+        /* Darkish Blue Error Messages */
         .error {
-            background: linear-gradient(145deg, rgba(220, 38, 38, 0.15), rgba(185, 28, 28, 0.1));
+            background: linear-gradient(145deg, rgba(120, 30, 60, 0.2), rgba(100, 20, 50, 0.15));
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(220, 38, 38, 0.3);
+            border: 2px solid rgba(255, 100, 150, 0.4);
             border-radius: 12px;
             padding: 1rem 1.2rem;
             margin-bottom: 1.5rem;
-            color: #fca5a5;
+            color: #ffb3d1;
             font-weight: 500;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             animation: shake 0.5s ease-in-out;
         }
 
@@ -297,28 +295,29 @@
             75% { transform: translateX(5px); }
         }
 
-        /* Signup Link */
+        /* Darkish Blue Signup Link */
         .signup-link {
             text-align: center;
             margin-top: 2rem;
-            color: rgba(4, 4, 4, 0.8);
+            color: rgba(200, 220, 255, 0.7);
             font-size: 0.9rem;
-            /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); */
         }
 
         .signup-link a {
-            color: rgb(112, 124, 232);
+            color: rgba(150, 200, 255, 0.9);
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
+            border: 1px solid rgba(100, 150, 255, 0.2);
         }
 
         .signup-link a:hover {
-            color: #a5b4fc;
-            background: rgba(255, 255, 255, 0.1);
-            text-shadow: 0 0 10px rgba(165, 180, 252, 0.5);
+            color: #a0c4ff;
+            background: rgba(50, 100, 180, 0.2);
+            border-color: rgba(120, 170, 255, 0.4);
+            transform: translateY(-1px);
         }
 
         /* Animations */
@@ -333,7 +332,29 @@
             }
         }
 
-        /* Floating Elements */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Darkish Blue Floating Elements */
         .floating-elements {
             position: fixed;
             top: 0;
@@ -347,7 +368,7 @@
         .floating-circle {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+            background: radial-gradient(circle, rgba(100, 150, 255, 0.05), transparent);
             animation: float 6s ease-in-out infinite;
         }
 
@@ -376,8 +397,14 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.4;
+            }
+            50% { 
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.2;
+            }
         }
 
         /* Responsive Design */
@@ -415,48 +442,9 @@
                 font-size: 1.8rem;
             }
         }
-
-        /* Form focus states with enhanced animation */
-        .form-group {
-            animation: slideInLeft 0.6s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .submit-btn {
-            animation: slideInUp 0.6s ease-out 0.4s both;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Navbar matching the eye test page -->
-    
-
     <!-- Floating background elements -->
     <div class="floating-elements">
         <div class="floating-circle"></div>
@@ -471,16 +459,16 @@
             <p>Sign in to access your eye health dashboard</p>
         </div>
         
-        <!-- {% if errors %}
+        {% if errors %}
             <div class="error">
                 {% for field, error in errors.items %}
                     <p><strong>{{ field }}:</strong> {{ error }}</p>
                 {% endfor %}
             </div>
-        {% endif %} -->
+        {% endif %}
 
         <form method="POST" action="/sign-in/">
-            <!-- {% csrf_token %} -->
+            {% csrf_token %}
 
             <div class="form-group">
                 <label for="name">Full Name</label>
