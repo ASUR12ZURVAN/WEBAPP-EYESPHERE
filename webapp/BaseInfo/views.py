@@ -73,10 +73,14 @@ def history1(request):
     return render(request, "history1.html")
 
 def osdi(request):
-    return render(request,"osdi.html")
+    user_id = request.session.get('user_id')
+    hash_id = encode_id(user_id) if user_id else None
+    return render(request, "osdi.html", {'hashid': hash_id})
 
 def osdi1(request):
-    return render(request,"osdi1.html")
+    user_id = request.session.get('user_id')
+    hash_id = encode_id(user_id) if user_id else None
+    return render(request, "osdi1.html", {'hashid': hash_id})
 
 def mainx(request, hashid):
     user_id = decode_id(hashid)
@@ -88,7 +92,10 @@ def mainx(request, hashid):
     return render(request, 'f.html', {'user': user})
 
 def next(request):
-    return render(request,'Game.html' )
+    user_id = request.session.get('user_id')
+    hash_id = encode_id(user_id) if user_id else None
+
+    return render(request, 'Game.html', {'hashid': hash_id})
 
 def next1(request):
     return render(request,'game1.html' )

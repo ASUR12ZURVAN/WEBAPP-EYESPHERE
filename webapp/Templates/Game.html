@@ -1232,7 +1232,7 @@
                 <button id="restartBtn"><i class="fas fa-sync-alt"></i> Restart</button>
                 <button id="saveBtn" style="display: none;"><i class="fas fa-save"></i> Save Results</button>
                 <button id="nextTestBtn" style="display: none;"><i class="fas fa-arrow-right"></i> Next Test</button>
-                <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
+                <form action="{% url 'user_profile' hashid %}" method="get" style="display: inline;">
                     <button type="submit" id="profileBtn" style="display: none;"><i class="fas fa-user"></i>
                         Profile</button>
                 </form>
