@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from BaseInfo.utils import *
+
 
 @csrf_exempt
 def chat_api(request):
@@ -58,4 +60,8 @@ def chat_api(request):
     return JsonResponse({"error": "POST request required"}, status=405)
 
 def chat_page(request):
-    return render(request, 'chat.html')
+    user_id = request.session.get('user_id')
+    hash_id = encode_id(user_id) if user_id else None
+
+
+    return render(request, 'chat.html',{'hashid':hash_id})
