@@ -343,6 +343,23 @@ def user_profile(request, user_id):
     
     test_dates = list(test_dates_set)
 
+    # Prepare blink rate graph data
+    blink_rate_graph_data = {
+        'name': 'Blink Rate',
+        'dates': [],
+        'values': []
+    }
+    
+    # Sort blink rates by timestamp (oldest first for graph)
+    blink_rates_sorted = blink_rates.order_by('timestamp')
+    for blink_rate in blink_rates_sorted:
+        date_str = blink_rate.timestamp.strftime('%d-%m-%Y')
+        blink_rate_graph_data['dates'].append(date_str)
+        blink_rate_graph_data['values'].append(float(blink_rate.rate))
+    
+    # Convert to JSON for template
+    blink_rate_graph_json = json.dumps([blink_rate_graph_data])
+
     context = {
         'user': user,
         'patient_history': patient_history,
@@ -355,7 +372,7 @@ def user_profile(request, user_id):
         'myopia_results': myopia_results,
         'total_tests': total_tests,
         'test_dates': test_dates,
-
+        'blink_rate_graph_json': blink_rate_graph_json,
     }
 
     return render(request, 'user_profile.html', context)
