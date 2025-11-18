@@ -1256,12 +1256,12 @@
             .radio-inputs {
             position: relative;
             display: flex;
-            justify-content: space-between;
-            flex-wrap: linear;
+            justify-content: center;
+            flex-wrap: wrap;
             border-radius: 1rem;
             box-sizing: border-box;
             padding: 0.5rem;
-            width: 1000px;
+            width: 100%%;
             font-size: 14px;
             gap: 1rem;
             }
@@ -1277,13 +1277,14 @@
             }
 
             .radio-inputs .radio .name {
+            white-space: nowrap;
             display: flex;
             cursor: pointer;
             align-items: center;
             justify-content: center;
             border-radius: 0.7rem;
             border: none;
-            padding: 0.7rem 0;
+            padding: 0.7rem 1.2rem;
             color: #2d3748;
             font-weight: 500;
             font-family: inherit;
@@ -1305,6 +1306,7 @@
                 inset -2px -2px 5px rgba(255, 255, 255, 0.1),
                 3px 3px 8px rgba(59, 130, 246, 0.3);
             transform: translateY(2px);
+            overflow:hidden;
             }
 
             /* Hover effect */
