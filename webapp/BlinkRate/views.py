@@ -43,6 +43,8 @@ def save_blink_rate(request):
 
 
 def Blink_Rate(request):
+    # Get the numeric user_id from session
     user_id = request.session.get('user_id')
-    hash_id = encode_id(user_id) if user_id else None
-    return render(request, "blink.html", {'hashid': hash_id})
+
+    # Pass it directly to the template
+    return render(request, "blink.html", {'user_id': user_id})
