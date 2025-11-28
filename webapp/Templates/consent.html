@@ -164,18 +164,19 @@
   <script>
     const checkbox = document.getElementById('agreeCheckbox');
     const nextBtn = document.getElementById('nextBtn');
-
+  
     checkbox.addEventListener('change', () => {
       nextBtn.disabled = !checkbox.checked;
     });
-
+  
     nextBtn.addEventListener('click', () => {
       if (checkbox.checked) {
-        window.location.href = "{% url 'user_profile' request.session.user_id %}";
+        const hashid = "{{ hashid }}";  // from context passed by the view
+        window.location.href = "{% url 'user_profile' 'HASH_PLACEHOLDER' %}".replace('HASH_PLACEHOLDER', hashid);
       }
     });
-    
   </script>
+  
 
 </body>
 </html>

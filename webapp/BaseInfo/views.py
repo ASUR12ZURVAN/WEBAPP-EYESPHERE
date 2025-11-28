@@ -101,7 +101,10 @@ def next1(request):
     return render(request,'game1.html' )
 
 def consent(request):
-    return render(request,'consent.html')
+    user_id = request.session.get('user_id')
+    hash_id = encode_id(user_id) if user_id else None
+    
+    return render(request,'consent.html',{'hashid':hash_id})
 
 
 @api_view(['GET', 'POST'])
@@ -113,7 +116,7 @@ def create_user(request):
         if User.objects.filter(ph_Number=data.get('ph_Number')).exists():
             error = {'error': 'User with this phone number already exists'}
             if request.content_type == 'application/json':
-                return Response(error, status=500)
+                return Response(error, status=status.HTTP_409_CONFLICT)
             return render(request, 'create_user.html', {'errors': error})
 
         # Hash the password before saving
@@ -126,9 +129,20 @@ def create_user(request):
             user_id = serializer.instance.id
             request.session['user_id'] = user_id
 
+            # Generate hashid
+            hashid = encode_id(user_id)
+
             if request.content_type == 'application/json':
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return render(request, 'consent.html', {'user': serializer.instance})
+                # Include hashid in API response
+                response_data = serializer.data.copy()
+                response_data['hashid'] = hashid
+                return Response(response_data, status=status.HTTP_201_CREATED)
+
+            # Include hashid in context for next page
+            return render(request, 'consent.html', {
+                'user': serializer.instance,
+                'hashid': hashid
+            })
 
         # Invalid data
         if request.content_type == 'application/json':
@@ -137,6 +151,7 @@ def create_user(request):
 
     # GET request: render the form
     return render(request, 'create_user.html')
+
 
 def save_test_result(request, user_id, test_type, prediction_value):
     user = User.objects.get(id=user_id)
@@ -271,7 +286,7 @@ def user_profile(request, hashid):
     # Decode hashid
     user_id = decode_id(hashid)
     if not user_id:
-        return redirect('login')  # Invalid hashid
+        return redirect('sign_in_user')  # Invalid hashid
 
     # Fetch user
     user = get_object_or_404(User, id=user_id)
