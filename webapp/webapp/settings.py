@@ -17,6 +17,7 @@ from decouple import config
 import dj_database_url
 
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -39,7 +40,7 @@ SECRET_KEY = 'django-insecure-a)thyd#n%z6l)c!%$!69y7)^+9xp(af%&gy)7snym(&ca&cg@g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1","netrascreen.in","https://webapp-eyesphere-wjrx.onrender.com/"]
+ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1","netrascreen.in"]
 
 
 
@@ -102,7 +103,8 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-"""
+
+
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
@@ -113,6 +115,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+"""
 
 
 

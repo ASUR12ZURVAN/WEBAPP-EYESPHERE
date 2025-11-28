@@ -601,6 +601,19 @@
             }
 
             /** line graph css **/
+            .blink-rate-graph-container {
+                display: flex;
+                flex-direction: column;
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 15px;
+                margin: 15px 0;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+                overflow: hidden;
+                max-width: 100%;
+            }
+            
+
             .test-result-graph 
             {
                 background: #ffffff;
@@ -613,6 +626,7 @@
         .graph-header 
         {
             display: flex;
+            height: 50px;
             justify-content: space-between;
             font-weight: bold;
             margin-bottom: 10px;
@@ -623,6 +637,13 @@
         {
             width: 100%;
             height: 200px;
+        }
+
+        .blink-rate-graph-canvas {
+            width: 100% !important;
+            height: 400px !important;   /* FIXED HEIGHT */
+            max-height: 400px !important;
+            display: block;
         }
 
     }
@@ -803,6 +824,15 @@
                         </div>
                     {% endfor %}
                 </div>
+                <!-- Blink Rate Graph Section -->
+                {% if blink_rates %}
+                <div class="blink-rate-graph-container">
+                    <div class="graph-header">
+                        <span>👁️ Blink Rate Trend</span>
+                    </div>
+                    <canvas id="blink-rate-graph" width="600" height="400" class="blink-rate-graph-canvas"></canvas>
+                </div>
+                {% endif %}
 
                 {% if all_tests_sorted|length > 6 %}
                     <button id="more-results-btn" class="more-results-btn" onclick="toggleMoreResults()">
@@ -856,15 +886,173 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-    // Parse JSON from Django
+    // Blink Rate Graph
+    {% if blink_rates %}
+    const blinkRateCanvas = document.getElementById("blink-rate-graph");
+    if (blinkRateCanvas) {
+        //blinkRateCanvas.height = 200;
+
+        const blinkRateGraphs = JSON.parse('{{ blink_rate_graph_json|escapejs }}');
+        const blinkRateCtx = blinkRateCanvas.getContext("2d");
+
+        
+        if (blinkRateGraphs && blinkRateGraphs.length > 0 && blinkRateGraphs[0].dates.length > 0) {
+            const blinkRateGraph = blinkRateGraphs[0];
+            const blinkRateDates = blinkRateGraph.dates;
+            const blinkRateValues = blinkRateGraph.values;
+            
+            // Calculate reasonable y-axis scale based on data with strict bounds
+            const maxValue = 20;
+            const minValue = 10;
+            
+            // Clamp data values to reasonable range first (0-100)
+            const clampedMax = 20;
+            const clampedMin = 10;
+            const range = clampedMax - clampedMin;
+            
+            // Calculate y-axis bounds with strict limits
+            let yAxisMin, yAxisMax;
+            
+            if (range === 0 || range < 1) {
+                // All values are the same or very close
+                const centerValue = Math.min(Math.max(clampedMax, 0), 100);
+                yAxisMin = Math.max(0, Math.floor(centerValue - 2));
+                yAxisMax = Math.min(100, Math.ceil(centerValue + 2));
+            } else {
+                // Normal case: add 10% padding (reduced from 15%)
+                const padding = Math.min(range * 0.1, 5); // Cap padding at 5
+                yAxisMin = Math.max(0, Math.floor(clampedMin - padding));
+                yAxisMax = Math.min(100, Math.ceil(clampedMax + padding));
+            }
+            
+            // Final strict bounds - never exceed 0-100
+            yAxisMin = Math.max(0, Math.min(yAxisMin, 100));
+            yAxisMax = Math.max(yAxisMin + 1, Math.min(yAxisMax, 100));
+            
+            // Ensure minimum range of at least 3
+            if (yAxisMax - yAxisMin < 3) {
+                const center = (yAxisMax + yAxisMin) / 2;
+                yAxisMin = Math.max(0, Math.floor(center - 1.5));
+                yAxisMax = Math.min(100, Math.ceil(center + 1.5));
+            }
+            
+            // Final validation - ensure bounds are valid
+            yAxisMin = Math.max(0, Math.min(yAxisMin, 99));
+            yAxisMax = Math.max(yAxisMin + 1, Math.min(yAxisMax, 100));
+            
+            new Chart(blinkRateCtx, {
+                type: 'line',
+                data: {
+                    labels: blinkRateDates,
+                    datasets: [{
+                        label: 'Blink Rate (blinks/30sec)',
+                        data: blinkRateValues,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    resizeDelay: 0,
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: 10
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            position: 'top'
+                        },
+                        title: { 
+                            display: true, 
+                            text: 'Blink Rate Over Time', 
+                            font: { size: 16 },
+                            padding: { top: 10, bottom: 20 }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Blink Rate: ' + context.parsed.y + ' blinks/30sec';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            suggestedMin: yAxisMin,
+                            suggestedMax: yAxisMax,
+                            afterBuildTicks(scale) {
+                                const axisHeight = scale.height;   // real rendered height
+                                const minSpacing = 20;
+                                const maxSpacing = 50;
+                            
+                                const idealSpacing = (minSpacing + maxSpacing) / 2; 
+                                const idealTickCount = Math.max(2, Math.floor(axisHeight / idealSpacing));
+                            
+                                const min = scale.min;
+                                const max = scale.max;
+                                const range = max - min;
+                            
+                                const step = Math.max(1, Math.round(range / idealTickCount));
+                            
+                                let ticks = [];
+                                for (let v = min; v <= max; v += step) {
+                                    ticks.push({ value: v });
+                                }
+                            
+                                scale.ticks = ticks;
+                            },
+                            ticks: {
+                                autoSkip: false
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: 'Date',
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        }
+    }
+    {% endif %}
+    
+    // Myopia Graph (if exists)
+    {% if test_graphs_json %}
     const testGraphs = JSON.parse('{{ test_graphs_json|escapejs }}');
-    const ctx = document.getElementById("myopia-graph").getContext("2d");
+    const myopiaGraphElement = document.getElementById("myopia-graph");
+    if (myopiaGraphElement) {
+        const ctx = myopiaGraphElement.getContext("2d");
 
     // Collect all unique dates
     const allDatesSet = new Set();
@@ -922,6 +1110,8 @@
             }
         }
     });
+    }
+    {% endif %}
 });
             
     </script>

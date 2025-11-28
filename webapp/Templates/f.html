@@ -2,10 +2,12 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eyesphere - Eye Tests</title>
+    <title>NETRASCREEN AI - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -14,395 +16,840 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', Arial, sans-serif;
-            background-image: url("{% static 'eyei.jpg' %}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            position: relative;
+            background: #ffffff;
+            color: #333;
             line-height: 1.6;
         }
-        
-        /* Improved overlay with gradient for better visual hierarchy */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 64, 82, 0.4), rgba(0, 133, 165, 0.3));
-            z-index: -1;
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        
+
+        /* Navbar Styles - Exactly like Eyesphere */
         .navbar {
+            background: #ffffff;
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 6%;
-            background-color: rgb(119, 118, 118);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
+
         .logo img {
-            height: 80px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 50px;
+            width: auto;
         }
-        
-        .logo-text {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #004052;
-            letter-spacing: -0.5px;
-        }
-        
+
         .nav-links {
             display: flex;
-            gap: 2.5rem;
             align-items: center;
+            gap: 35px;
         }
-        
+
         .nav-links a {
+            color: #333;
             text-decoration: none;
-            color: #004052;
             font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            font-size: 16px;
+            transition: color 0.3s ease;
             position: relative;
         }
-        
+
         .nav-links a:hover {
-            color: #0085a5;
-            background-color: rgba(0, 133, 165, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background-color: #0085a5;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-        
-        .nav-links a:hover::after {
-            width: 80%;
+            color: #007bff;
         }
 
-        /* Main content section */
-        .main-content {
-            padding: 8rem 6% 6rem;
-            color: white;
-            text-align: center;
-            z-index: 1;
-            position: relative;
+        .nav-links a.active {
+            color: #007bff;
         }
 
-        .main-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
-            z-index: -1;
-        }
-
-        .main-content h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
-            letter-spacing: -1px;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .main-content p {
-            font-size: 1.2rem;
-            font-weight: 300;
-            margin-bottom: 4rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
-            line-height: 1.7;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-
-        /* Test buttons section */
         .test-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeInUp 1s ease-out 0.4s both;
+            align-items: center;
+            gap: 20px;
         }
 
         .test-button {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 1.5rem;
-            padding: 1.5rem 2rem;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-        }
-
-        .test-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .test-button:hover::before {
-            left: 100%;
+            gap: 8px;
         }
 
         .test-button:hover {
-            transform: translateX(10px) scale(1.02);
-            background: linear-gradient(145deg, rgba(0, 133, 165, 0.3), rgba(0, 64, 82, 0.3));
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            color: #007bff;
         }
 
-        .test-button:active {
-            transform: translateX(5px) scale(1.01);
+        .dropdown {
+            position: relative;
         }
 
-        /* Icon styling within buttons */
-        .test-button span {
-            font-size: 1.8rem;
-            display: inline-block;
-            transition: transform 0.3s ease;
-            min-width: 40px;
-            text-align: center;
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            margin-left: 5px;
         }
 
-        .test-button:hover span {
-            transform: scale(1.2) rotate(5deg);
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #ffffff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            min-width: 280px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
         }
 
-        /* Profile button styling */
-        #profileBtn {
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 1.5rem;
-            padding: 1.5rem 2rem;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
+            gap: 12px;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-            width: 100%;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background: #f8f9fa;
+            color: #007bff;
+            padding-left: 25px;
+        }
+
+        /* Round Profile Button */
+        .profile-button {
+            margin-left: 25px;
+        }
+
+        #profileBtn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #007bff;
+            border: none;
+            color: #fff;
             cursor: pointer;
-        }
-
-        #profileBtn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        #profileBtn:hover::before {
-            left: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
         }
 
         #profileBtn:hover {
-            transform: translateX(10px) scale(1.02);
-            background: linear-gradient(145deg, rgba(0, 133, 165, 0.3), rgba(0, 64, 82, 0.3));
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
         }
 
-        #profileBtn:active {
-            transform: translateX(5px) scale(1.01);
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 25px;
+            height: 20px;
+            cursor: pointer;
         }
 
-        #profileBtn span {
-            font-size: 1.8rem;
-            display: inline-block;
-            transition: transform 0.3s ease;
-            min-width: 40px;
+        .hamburger .bar {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger.open .bar:nth-child(1) {
+            transform: translateY(5px) rotate(45deg);
+        }
+
+        .hamburger.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open .bar:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .left-column {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 40px;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Tests Section */
+        .tests-section h2 {
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
             text-align: center;
         }
 
-        #profileBtn:hover span {
-            transform: scale(1.2) rotate(5deg);
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .test-card {
+            background: #ffffff;
+            border: 2px solid #333333; /* Black border added */
+            border-radius: 12px;
+            padding: 30px;
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-color: #007bff; /* Blue border on hover */
+        }
+
+        .test-card-content {
+            flex-grow: 1;
+        }
+
+        .test-card-icon {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .test-card h3 {
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .test-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .test-card-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .arrow-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: 1px solid #333; /* Black border for arrow button */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .arrow-button:hover {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+
+        /* Calendar Section */
+        .calendar-container {
+            background: #ffffff;
+            border: 2px solid #333333; /* Black border added */
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .calendar-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: #f8f9fa;
+            border: 1px solid #333; /* Black border for nav buttons */
+            color: #666;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border: 1px solid #ddd; /* Light border for calendar days */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .calendar-day:hover {
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        .calendar-day.today {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .calendar-day.has-activity {
+            background: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+
+        .calendar-day.other-month {
+            color: #ccc;
+            border-color: #f0f0f0;
+        }
+
+        .activity-indicator {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 6px;
+            height: 6px;
+            background: #ffc107;
+            border-radius: 50%;
+        }
+
+        .calendar-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid #333; /* Black border for legend colors */
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: #ffffff;
+            border: 2px solid #333333; /* Black border added */
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-header {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid #333; /* Black border for action buttons */
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-button {
+            background: #25D366;
+            color: #fff;
+            border-color: #25D366;
+        }
+
+        .whatsapp-button:hover {
+            background: #20b954;
+            border-color: #20b954;
+            transform: translateY(-2px);
+        }
+
+        .ask-button {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .ask-button:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-2px);
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-content h1 {
-                font-size: 2.5rem;
-            }
-            
-            .main-content p {
-                font-size: 1rem;
-            }
-            
-            .test-buttons {
-                gap: 1rem;
-            }
-            
-            .test-button {
-                padding: 1.2rem 1.5rem;
-                font-size: 1rem;
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
             }
 
-            #profileBtn {
-                padding: 1.2rem 1.5rem;
-                font-size: 1rem;
-            }
-            
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            .navbar {
-                padding: 1rem 4%;
-            }
-            
-            .main-content {
-                padding-left: 4%;
-                padding-right: 4%;
+            .right-column {
+                order: -1;
             }
         }
-        
-        @media (max-width: 480px) {
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
             .nav-links {
                 display: none;
-            }
-            
-            .main-content {
-                padding-top: 6rem;
-            }
-            
-            .test-button {
-                justify-content: center;
-                text-align: center;
-            }
-
-            .test-button span {
-                font-size: 1.5rem;
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
             }
 
-            #profileBtn {
-                justify-content: center;
-                text-align: center;
+            .nav-links.open {
+                display: flex;
             }
 
-            #profileBtn span {
-                font-size: 1.5rem;
+            .test-buttons {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: #ffffff;
+                position: absolute;
+                top: 200px;
+                left: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+            }
+
+            .test-buttons.open {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .profile-button {
+                position: absolute;
+                top: 17px;
+                right: 60px;
+                margin: 0;
+            }
+
+            .tests-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .left-column,
+            .calendar-container,
+            .contact-section {
+                padding: 25px;
             }
         }
 
-        /* Add pulse animation for better engagement */
-        @keyframes pulse {
-            0% { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-            50% { box-shadow: 0 8px 30px rgba(0, 133, 165, 0.4); }
-            100% { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-        }
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 15px;
+            }
 
-        .test-button:nth-child(odd) {
-            animation: pulse 3s ease-in-out infinite;
-            animation-delay: 0.5s;
-        }
+            .tests-section h2 {
+                font-size: 2rem;
+            }
 
-        .test-button:nth-child(even) {
-            animation: pulse 3s ease-in-out infinite;
-            animation-delay: 1.5s;
+            .test-card {
+                padding: 25px;
+            }
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="{% static 'eyesphere.jpg' %}" alt="Eyesphere Logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="NETRASCREEN AI Logo">
         </div>
         <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Services</a>
-            <a href="#">About Us</a>
-            <a href="#">Testimonials</a>
-            <a href="#">Contact</a>
+            <a href="{% url 'mainx' request.session.user_id %}" class="active">Home</a>
+            <a href="{% url 'chat_page' %}">ChatBot</a>
+            <a href="{% url 'service' %}">Services</a>
+            <a href="{% url 'about' %}">About Us</a>
+            <a href="{% url 'testimonials' %}">Testimonials</a>
+            <a href="https://wa.me/+917524007689">Contact</a>
+        </div>
+        <div class="profile-button">
+            <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
+                <button type="submit" id="profileBtn"><span>👤</span></button>
+            </form>
+        </div>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </div>
     </nav>
 
-    <section class="main-content">
-        <h1>Eye Health Tests</h1>
-        <p>Choose from our comprehensive range of vision and eye health assessments. Each test is designed to provide valuable insights into your visual health and detect potential issues early.</p>
-        
-        <div class="test-buttons">
-            <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
-                <button type="submit" id="profileBtn"><span>👤</span> Go to Profile</button>
-            </form>
-            <a href="{% url 'chat_page'  %}" class="test-button">
-                <span>🤖</span> chatBot
-            </a>
+    <div class="container">
+        <div class="main-content">
+            <!-- Left Column - Tests -->
+            <div class="left-column">
+                <div class="tests-section">
+                    <h2>Available Eye Screening Tests</h2>
+                    <div class="tests-grid">
+                        <div class="test-card">
+                            <div class="test-card-content">
+                                <div class="test-card-icon">🩺</div>
+                                <h3>Complete Eye Screening</h3>
+                                <p>Comprehensive evaluation of your overall eye health and vision quality with detailed analysis and professional recommendations.</p>
+                            </div>
+                            <div class="test-card-footer">
+                                <a href="{% url 'history1' %}" class="arrow-button">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="test-card">
+                            <div class="test-card-content">
+                                <div class="test-card-icon">👓</div>
+                                <h3>Dry Eye Screening</h3>
+                                <p>Assess the level of eye dryness and identify potential dry eye syndrome symptoms with specialized diagnostic tools.</p>
+                            </div>
+                            <div class="test-card-footer">
+                                <a href="{% url 'osdi1' %}" class="arrow-button">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="test-card">
+                            <div class="test-card-content">
+                                <div class="test-card-icon">📏</div>
+                                <h3>Vision Distance Screening</h3>
+                                <p>Check your visual acuity for both near and far vision distances with precise measurement technology.</p>
+                            </div>
+                            <div class="test-card-footer">
+                                <a href="{% url 'base_myopia' %}" class="arrow-button">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="test-card">
+                            <div class="test-card-content">
+                                <div class="test-card-icon">🎯</div>
+                                <h3>Eye Pressure Screening</h3>
+                                <p>Monitor intraocular pressure to detect potential glaucoma risks and maintain optimal eye health early.</p>
+                            </div>
+                            <div class="test-card-footer">
+                                <a href="{% url 'base_glaucoma' %}" class="arrow-button">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="test-card">
+                            <div class="test-card-content">
+                                <div class="test-card-icon">🌈</div>
+                                <h3>Color Vision Screening</h3>
+                                <p>Evaluate your ability to distinguish different colors and detect color vision deficiencies accurately.</p>
+                            </div>
+                            <div class="test-card-footer">
+                                <a href="{% url 'Colourblindness_Test' %}" class="arrow-button">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="test-card">
+                            <div class="test-card-content">
+                                <div class="test-card-icon">📋</div>
+                                <h3>Patient History Form</h3>
+                                <p>Complete your comprehensive medical history to help provide better personalized eye care and treatment.</p>
+                            </div>
+                            <div class="test-card-footer">
+                                <a href="{% url 'history' %}" class="arrow-button">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Calendar & Contact -->
+            <div class="right-column">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div class="calendar-title">📅 Activity Calendar</div>
+                        <div class="calendar-nav">
+                            <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+                            <button class="nav-btn" onclick="changeMonth(1)">›</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid" id="calendar"></div>
+
+                    <div class="calendar-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #28a745;"></div>
+                            <span>Test Completed</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #007bff;"></div>
+                            <span>Today</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ffc107;"></div>
+                            <span>Scheduled</span>
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
         </div>
-    </section>
-    
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        
+        // Test dates for calendar highlighting
+        const testDates = [
+            {% for date in test_dates %}'{{ date }}',{% endfor %}
+        ];
+
+        function generateCalendar(month, year) {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+
+            // Day headers
+            const dayHeaders = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendar.appendChild(dayHeader);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            // Previous month's days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.textContent = daysInPrevMonth - i;
+                calendar.appendChild(day);
+            }
+
+            // Current month's days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                // Check if it's today
+                const today = new Date();
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+
+                // Check if there's test activity on this date
+                if (testDates.includes(dateString)) {
+                    dayElement.classList.add('has-activity');
+                    const indicator = document.createElement('div');
+                    indicator.className = 'activity-indicator';
+                    dayElement.appendChild(indicator);
+                }
+
+                calendar.appendChild(dayElement);
+            }
+
+            // Next month's days
+            const totalCells = 42; // 6 rows × 7 days
+            const cellsUsed = firstDay + daysInMonth;
+            for (let day = 1; cellsUsed + day - 1 < totalCells; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day other-month';
+                dayElement.textContent = day;
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar(currentMonth, currentYear);
+            updateCalendarTitle();
+        }
+
+        function updateCalendarTitle() {
+            const monthNames = [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ];
+            document.querySelector('.calendar-title').textContent = 
+                `📅 ${monthNames[currentMonth]} ${currentYear}`;
+        }
+
+        // Hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+
+            // Close menu when clicking on a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('open');
+                    navLinks.classList.remove('open');
+                });
+            });
+        });
+
+        // Initialize calendar
+        generateCalendar(currentMonth, currentYear);
+        updateCalendarTitle();
+    </script>
 </body>
 </html>

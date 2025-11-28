@@ -86,20 +86,18 @@
             font-weight: bold;
         }
 
-        /* Special styling for the single None option */
+        /* Special styling for None of the above per section */
         .none-option {
             background-color: #ffe6e6;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
             font-weight: bold;
             border: 2px solid #ff9999;
-            margin: 20px 0;
-            text-align: center;
+            margin-top: 10px;
         }
 
         .none-option label {
             font-weight: bold;
-            font-size: 16px;
             color: #cc0000;
         }
 
@@ -197,6 +195,8 @@
 
     <form id="patientHistoryForm">
         {% csrf_token %}
+        
+        <!-- Chief Complaint Section -->
         <div class="section">
             <div class="section-title">Chief Complaint</div>
             <div class="checkbox-group">
@@ -272,10 +272,15 @@
                     <input type="checkbox" id="chief_other" name="chief_complaint" value="other">
                     <label for="chief_other">Other</label>
                 </div>
+                <div class="checkbox-item none-option">
+                    <input type="checkbox" id="chief_none" name="chief_complaint" value="none">
+                    <label for="chief_none">None of the above</label>
+                </div>
             </div>
             <input type="text" id="chief_other_text" class="other-input" placeholder="Please specify other chief complaints..." style="display: none;">
         </div>
 
+        <!-- Ophthalmic History Section -->
         <div class="section">
             <div class="section-title">Ophthalmic History</div>
             <div class="checkbox-group">
@@ -319,10 +324,15 @@
                     <input type="checkbox" id="ophthalmic_other" name="ophthalmic_history" value="other">
                     <label for="ophthalmic_other">Other</label>
                 </div>
+                <div class="checkbox-item none-option">
+                    <input type="checkbox" id="ophthalmic_none" name="ophthalmic_history" value="none">
+                    <label for="ophthalmic_none">None of the above</label>
+                </div>
             </div>
             <input type="text" id="ophthalmic_other_text" class="other-input" placeholder="Please specify other ophthalmic history..." style="display: none;">
         </div>
 
+        <!-- Systemic History Section -->
         <div class="section">
             <div class="section-title">Systemic History</div>
             <div class="checkbox-group">
@@ -426,10 +436,15 @@
                     <input type="checkbox" id="systemic_other" name="systemic_history" value="other">
                     <label for="systemic_other">Other</label>
                 </div>
+                <div class="checkbox-item none-option">
+                    <input type="checkbox" id="systemic_none" name="systemic_history" value="none">
+                    <label for="systemic_none">None of the above</label>
+                </div>
             </div>
             <input type="text" id="systemic_other_text" class="other-input" placeholder="Please specify other systemic history..." style="display: none;">
         </div>
 
+        <!-- Family History Section -->
         <div class="section">
             <div class="section-title">Family History</div>
             <div class="checkbox-group">
@@ -453,10 +468,15 @@
                     <input type="checkbox" id="family_other" name="family_history" value="other">
                     <label for="family_other">Other</label>
                 </div>
+                <div class="checkbox-item none-option">
+                    <input type="checkbox" id="family_none" name="family_history" value="none">
+                    <label for="family_none">None of the above</label>
+                </div>
             </div>
             <input type="text" id="family_other_text" class="other-input" placeholder="Please specify other family history..." style="display: none;">
         </div>
 
+        <!-- Drug Allergy Section -->
         <div class="section">
             <div class="section-title">Drug Allergy</div>
             <div class="checkbox-group">
@@ -480,10 +500,15 @@
                     <input type="checkbox" id="drug_allergy_other" name="drug_allergy" value="other">
                     <label for="drug_allergy_other">Other</label>
                 </div>
+                <div class="checkbox-item none-option">
+                    <input type="checkbox" id="drug_allergy_none" name="drug_allergy" value="none">
+                    <label for="drug_allergy_none">None of the above</label>
+                </div>
             </div>
             <input type="text" id="drug_allergy_other_text" class="other-input" placeholder="Please specify other drug allergies..." style="display: none;">
         </div>
 
+        <!-- Contact Allergy Section -->
         <div class="section">
             <div class="section-title">Contact Allergy</div>
             <div class="checkbox-group">
@@ -503,28 +528,30 @@
                     <input type="checkbox" id="contact_allergy_other" name="contact_allergy" value="other">
                     <label for="contact_allergy_other">Other</label>
                 </div>
+                <div class="checkbox-item none-option">
+                    <input type="checkbox" id="contact_allergy_none" name="contact_allergy" value="none">
+                    <label for="contact_allergy_none">None of the above</label>
+                </div>
             </div>
             <input type="text" id="contact_allergy_other_text" class="other-input" placeholder="Please specify other contact allergies..." style="display: none;">
         </div>
 
-        <!-- Single None Option After All Sections -->
-        <div class="section">
-            <div class="checkbox-item none-option">
-                <input type="checkbox" id="global_none" value="none">
-                <label for="global_none">✋ None of the above applies to this patient</label>
-            </div>
-        </div>
-
+        <!-- Submit and Clear buttons INSIDE the form -->
         <div class="submit-section">
-            <form id="patientHistoryForm" style="display: inline;">
-                <button type="submit" class="submit-button">Submit History</button>
-                <button type="reset" class="submit-button">Clear Form</button>
-            </form>
-            <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
-                <button type="submit" id="profileBtn" class="submit-button"><span></span>Profile</button>
-            </form>
+            <button type="submit" class="submit-button">Submit History</button>
+            <button type="reset" class="submit-button">Clear Form</button>
         </div>
     </form>
+    <!-- Form ends here -->
+
+    <!-- Profile button OUTSIDE the form - HIDDEN BY DEFAULT -->
+    <div id="profileSection" class="submit-section" style="display: none; margin-top: 10px; border-top: none; padding-top: 0;">
+        <form action="{% url 'user_profile' request.session.user_id %}" method="get" style="display: inline;">
+            <button type="submit" id="profileBtn" class="submit-button">
+                <span></span> Go to Profile
+            </button>
+        </form>
+    </div>
 
     <div class="notes-section">
         <div class="notes-title">Important Notes</div>
@@ -541,9 +568,7 @@
     </div>
 
     <script>
-        // Show/hide other input fields and handle Select All/None functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup checkbox groups with Select All functionality
             const checkboxGroups = [
                 'chief_complaint',
                 'ophthalmic_history', 
@@ -553,21 +578,40 @@
                 'contact_allergy'
             ];
 
-            const globalNoneCheckbox = document.getElementById('global_none');
-
             checkboxGroups.forEach(groupName => {
                 const selectAllCheckbox = document.getElementById(`${groupName}_select_all`);
+                const noneCheckbox = document.getElementById(`${groupName}_none`);
+                const otherCheckbox = document.getElementById(`${groupName === 'chief_complaint' ? 'chief' : groupName}_other`);
                 const groupCheckboxes = document.querySelectorAll(`input[name="${groupName}"]`);
 
                 // Select All functionality
                 if (selectAllCheckbox) {
                     selectAllCheckbox.addEventListener('change', function() {
                         if (this.checked) {
-                            groupCheckboxes.forEach(cb => cb.checked = true);
-                            // Uncheck global None when any option is selected
-                            if (globalNoneCheckbox) globalNoneCheckbox.checked = false;
+                            groupCheckboxes.forEach(cb => {
+                                // Check all except "other" and "none"
+                                if (cb.value !== 'other' && cb.value !== 'none') {
+                                    cb.checked = true;
+                                }
+                            });
+                            if (noneCheckbox) noneCheckbox.checked = false;
+                            if (otherCheckbox) otherCheckbox.checked = false;
                         } else {
-                            groupCheckboxes.forEach(cb => cb.checked = false);
+                            groupCheckboxes.forEach(cb => {
+                                if (cb.value !== 'none') cb.checked = false;
+                            });
+                        }
+                    });
+                }
+
+                // None of the above functionality
+                if (noneCheckbox) {
+                    noneCheckbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                            groupCheckboxes.forEach(cb => {
+                                if (cb.value !== 'none') cb.checked = false;
+                            });
                         }
                     });
                 }
@@ -575,30 +619,15 @@
                 // Individual checkbox functionality
                 groupCheckboxes.forEach(cb => {
                     cb.addEventListener('change', function() {
-                        if (this.checked) {
-                            if (selectAllCheckbox) selectAllCheckbox.checked = false;
-                            // Uncheck global None when any option is selected
-                            if (globalNoneCheckbox) globalNoneCheckbox.checked = false;
+                        if (this.checked && this.value !== 'none') {
+                            if (noneCheckbox) noneCheckbox.checked = false;
+                            if (this.value === 'other') {
+                                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                            }
                         }
                     });
                 });
             });
-
-            // Global None functionality
-            if (globalNoneCheckbox) {
-                globalNoneCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        // Uncheck all other checkboxes and select all buttons
-                        checkboxGroups.forEach(groupName => {
-                            const selectAllCheckbox = document.getElementById(`${groupName}_select_all`);
-                            const groupCheckboxes = document.querySelectorAll(`input[name="${groupName}"]`);
-                            
-                            if (selectAllCheckbox) selectAllCheckbox.checked = false;
-                            groupCheckboxes.forEach(cb => cb.checked = false);
-                        });
-                    }
-                });
-            }
 
             // Handle "Other" input field visibility
             const otherCheckboxes = [
@@ -625,41 +654,46 @@
             });
         });
 
-        // Form submission handler with validation
+        // Form submission handler with EVERY SECTION validation
         document.getElementById('patientHistoryForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Check if anything is selected at all
             const checkboxGroups = [
-                'chief_complaint',
-                'ophthalmic_history', 
-                'systemic_history',
-                'family_history',
-                'drug_allergy',
-                'contact_allergy'
+                { name: 'chief_complaint', label: 'Chief Complaint' },
+                { name: 'ophthalmic_history', label: 'Ophthalmic History' },
+                { name: 'systemic_history', label: 'Systemic History' },
+                { name: 'family_history', label: 'Family History' },
+                { name: 'drug_allergy', label: 'Drug Allergy' },
+                { name: 'contact_allergy', label: 'Contact Allergy' }
             ];
 
-            let hasAnySelection = false;
-            const globalNoneCheckbox = document.getElementById('global_none');
+            let incompleteSections = [];
 
-            // Check all regular checkboxes
-            for (let groupName of checkboxGroups) {
-                const groupCheckboxes = document.querySelectorAll(`input[name="${groupName}"]`);
-                const selectAllCheckbox = document.getElementById(`${groupName}_select_all`);
+            // Check EACH section for at least one selection
+            for (let group of checkboxGroups) {
+                const groupCheckboxes = document.querySelectorAll(`input[name="${group.name}"]`);
+                const selectAllCheckbox = document.getElementById(`${group.name}_select_all`);
                 
+                let hasSelection = false;
+                
+                // Check if any checkbox in this group is checked
                 groupCheckboxes.forEach(cb => {
-                    if (cb.checked) hasAnySelection = true;
+                    if (cb.checked) hasSelection = true;
                 });
                 
-                if (selectAllCheckbox && selectAllCheckbox.checked) hasAnySelection = true;
+                // Also check Select All
+                if (selectAllCheckbox && selectAllCheckbox.checked) hasSelection = true;
+                
+                // If this section has no selection, add to incomplete list
+                if (!hasSelection) {
+                    incompleteSections.push(group.label);
+                }
             }
 
-            // Check global None
-            if (globalNoneCheckbox && globalNoneCheckbox.checked) hasAnySelection = true;
-
-            // If nothing is selected at all, show popup error
-            if (!hasAnySelection) {
-                alert('⚠️ Please select at least one option from any section, or click "None of the above applies to this patient" if nothing applies.');
+            // If any sections are incomplete, show error
+            if (incompleteSections.length > 0) {
+                const sectionList = incompleteSections.join('\n• ');
+                alert(`⚠️ Please select at least one option in the following sections:\n\n• ${sectionList}`);
                 return;
             }
 
@@ -683,14 +717,12 @@
                 }
             }
 
-            // If validation passes, proceed with original form submission logic
             // Show loading state
             const submitButton = document.querySelector('button[type="submit"]');
             const originalText = submitButton.textContent;
             submitButton.textContent = 'Submitting...';
             submitButton.disabled = true;
             
-            const formData = new FormData(this);
             const historyData = {
                 chief_complaint: [],
                 ophthalmic_history: [],
@@ -698,8 +730,7 @@
                 family_history: [],
                 drug_allergy: [],
                 contact_allergy: [],
-                other_details: {},
-                global_none: false
+                other_details: {}
             };
 
             // Process all checkboxes
@@ -714,18 +745,13 @@
             });
 
             // Add Select All checkboxes
-            checkboxGroups.forEach(groupName => {
-                const selectAllCheckbox = document.getElementById(`${groupName}_select_all`);
+            checkboxGroups.forEach(group => {
+                const selectAllCheckbox = document.getElementById(`${group.name}_select_all`);
                 
                 if (selectAllCheckbox && selectAllCheckbox.checked) {
-                    historyData[groupName].push('select_all');
+                    historyData[group.name].push('select_all');
                 }
             });
-
-            // Add global None
-            if (globalNoneCheckbox && globalNoneCheckbox.checked) {
-                historyData.global_none = true;
-            }
 
             // Add other details
             const otherInputs = [
@@ -747,13 +773,11 @@
             // Submit to backend
             submitHistoryToBackend(historyData)
                 .finally(() => {
-                    // Restore button state
                     submitButton.textContent = originalText;
                     submitButton.disabled = false;
                 });
         });
 
-        // Backend submission function (unchanged)
         function submitHistoryToBackend(historyData) {
             return fetch('/submit_patient_history/', {
                 method: 'POST',
@@ -766,14 +790,28 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    showMessage('Patient history submitted successfully!', 'success');
+                    showMessage('✅ Patient history submitted successfully!', 'success');
                     
-                    // Hide the Submit and Clear buttons after successful submission
+                    // Hide Submit and Clear buttons
                     const submitButton = document.querySelector('button[type="submit"]');
                     const clearButton = document.querySelector('button[type="reset"]');
                     
                     if (submitButton) submitButton.style.display = 'none';
                     if (clearButton) clearButton.style.display = 'none';
+                    
+                    // Show Profile button
+                    const profileSection = document.getElementById('profileSection');
+                    if (profileSection) {
+                        profileSection.style.display = 'block';
+                    }
+                    
+                    // Disable all checkboxes to prevent further editing
+                    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                    allCheckboxes.forEach(cb => cb.disabled = true);
+                    
+                    // Disable all text inputs
+                    const allTextInputs = document.querySelectorAll('.other-input');
+                    allTextInputs.forEach(input => input.disabled = true);
                     
                 } else {
                     alert('❌ Error submitting history: ' + data.message);
@@ -791,7 +829,6 @@
             messageDiv.textContent = message;
             messageDiv.style.display = 'block';
             
-            // Auto-hide after 5 seconds
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 5000);
@@ -802,7 +839,6 @@
             document.getElementById('errorMessage').style.display = 'none';
         }
 
-        // Helper function to get CSRF token
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {

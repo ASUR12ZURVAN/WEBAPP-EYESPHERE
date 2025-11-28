@@ -15,7 +15,6 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
 from django.utils.safestring import mark_safe
-from .utils import *
 import re
 
 from BlinkRate.models import BlinkRate
@@ -73,29 +72,18 @@ def history1(request):
     return render(request, "history1.html")
 
 def osdi(request):
-    user_id = request.session.get('user_id')
-    hash_id = encode_id(user_id) if user_id else None
-    return render(request, "osdi.html", {'hashid': hash_id})
+    return render(request,"osdi.html")
 
 def osdi1(request):
-    user_id = request.session.get('user_id')
-    hash_id = encode_id(user_id) if user_id else None
-    return render(request, "osdi1.html", {'hashid': hash_id})
+    return render(request,"osdi1.html")
 
-def mainx(request, hashid):
-    user_id = decode_id(hashid)
-    if not user_id:
-        return redirect('login')
-
-    request.session['user_id'] = user_id
+def mainx(request,user_id):
+    request.session['user_id'] = user_id  # store in session
     user = get_object_or_404(User, id=user_id)
     return render(request, 'f.html', {'user': user})
 
 def next(request):
-    user_id = request.session.get('user_id')
-    hash_id = encode_id(user_id) if user_id else None
-
-    return render(request, 'Game.html', {'hashid': hash_id})
+    return render(request,'Game.html' )
 
 def next1(request):
     return render(request,'game1.html' )
@@ -256,6 +244,7 @@ def submit_patient_history(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
     
 
 
@@ -263,26 +252,20 @@ from django.utils import timezone
 from datetime import datetime
 from itertools import chain
 
-def user_profile(request, hashid):
-    """
-    Display the user's profile and all test results.
-    The 'hashid' is the URL-safe encoded user ID.
-    """
-    # Decode hashid
-    user_id = decode_id(hashid)
+def user_profile(request, user_id):
     if not user_id:
-        return redirect('login')  # Invalid hashid
+        return redirect('login')
 
-    # Fetch user
     user = get_object_or_404(User, id=user_id)
 
     # Get patient history if exists
+    patient_history = None
     try:
         patient_history = PatientHistory.objects.get(user=user)
     except PatientHistory.DoesNotExist:
         patient_history = None
 
-    # Fetch all test querysets in descending order by date/timestamp
+    # Fetch all test querysets in descending order by date/timestamp (newest first)
     test_results = user.test_results.all().order_by('-date_taken')
     color_vision_tests = user.color_vision_tests.all().order_by('-date_taken')
     blink_rates = BlinkRate.objects.filter(user=user).order_by('-timestamp')
@@ -290,10 +273,10 @@ def user_profile(request, hashid):
     glaucoma_results = user.glaucoma_results.all().order_by('-date_taken')
     myopia_results = user.myopia_results.all().order_by('-date_taken')
 
-    # Combine all tests in a unified list
+    # Create a list of all tests with unified structure for proper chronological ordering
     all_tests = []
-
-    # General test results
+    
+    # Add test_results
     for result in test_results:
         all_tests.append({
             'test_name': result.test_type,
@@ -301,8 +284,8 @@ def user_profile(request, hashid):
             'date': result.date_taken,
             'type': 'general'
         })
-
-    # Myopia results
+    
+    # Add myopia_results
     for result in myopia_results:
         all_tests.append({
             'test_name': 'Myopia Test',
@@ -310,8 +293,8 @@ def user_profile(request, hashid):
             'date': result.date_taken,
             'type': 'myopia'
         })
-
-    # Dry eye results
+    
+    # Add dryeye_results
     for result in dryeye_results:
         all_tests.append({
             'test_name': 'OSDI',
@@ -319,8 +302,8 @@ def user_profile(request, hashid):
             'date': result.date_taken,
             'type': 'dryeye'
         })
-
-    # Glaucoma results
+    
+    # Add glaucoma_results
     for result in glaucoma_results:
         all_tests.append({
             'test_name': 'Peripheral Vision',
@@ -328,8 +311,8 @@ def user_profile(request, hashid):
             'date': result.date_taken,
             'type': 'glaucoma'
         })
-
-    # Color vision tests
+    
+    # Add color_vision_tests
     for test in color_vision_tests:
         all_tests.append({
             'test_name': 'Color Vision Test',
@@ -337,8 +320,8 @@ def user_profile(request, hashid):
             'date': test.date_taken,
             'type': 'color_vision'
         })
-
-    # Blink rates
+    
+    # Add blink_rates (using timestamp field)
     for test in blink_rates:
         all_tests.append({
             'test_name': 'Blink Rate',
@@ -346,22 +329,42 @@ def user_profile(request, hashid):
             'date': test.timestamp,
             'type': 'blink_rate'
         })
-
-    # Sort all tests by date descending
+    
+    # Sort all tests by date in descending order (most recent first)
     all_tests_sorted = sorted(all_tests, key=lambda x: x['date'], reverse=True)
 
-    # Total tests
+    # Calculate total tests count
     total_tests = len(all_tests_sorted)
 
-    # Collect unique dates
-    test_dates_set = {test['date'].strftime('%Y-%m-%d') for test in all_tests_sorted}
+    # Collect all unique dates for calendar
+    test_dates_set = set()
+    for test in all_tests_sorted:
+        test_dates_set.add(test['date'].strftime('%Y-%m-%d'))
+    
     test_dates = list(test_dates_set)
+
+    # Prepare blink rate graph data
+    blink_rate_graph_data = {
+        'name': 'Blink Rate',
+        'dates': [],
+        'values': []
+    }
+    
+    # Sort blink rates by timestamp (oldest first for graph)
+    blink_rates_sorted = blink_rates.order_by('timestamp')
+    for blink_rate in blink_rates_sorted:
+        date_str = blink_rate.timestamp.strftime('%d-%m-%Y')
+        blink_rate_graph_data['dates'].append(date_str)
+        blink_rate_graph_data['values'].append(float(blink_rate.rate))
+    
+    # Convert to JSON for template
+    blink_rate_graph_json = json.dumps([blink_rate_graph_data])
 
     context = {
         'user': user,
         'patient_history': patient_history,
-        'all_tests_sorted': all_tests_sorted,
-        'test_results': test_results,
+        'all_tests_sorted': all_tests_sorted,  # Single unified list
+        'test_results': test_results,  # Keep individual querysets for template compatibility
         'color_vision_tests': color_vision_tests,
         'blink_rates': blink_rates,
         'dryeye_results': dryeye_results,
@@ -369,10 +372,11 @@ def user_profile(request, hashid):
         'myopia_results': myopia_results,
         'total_tests': total_tests,
         'test_dates': test_dates,
-        'hashid': encode_id(user.id),
+        'blink_rate_graph_json': blink_rate_graph_json,
     }
 
     return render(request, 'user_profile.html', context)
+
 
 
 
@@ -495,15 +499,7 @@ def test_results_history(request):
     return render(request, 'test_results_history.html', context)
 
 def Colour_Blindness_Test(request):
-    # Get numeric user ID from session
-    user_id = request.session.get('user_id')
-    hashid = encode_id(user_id) if user_id else None
-
-    context = {
-        'hashid': hashid,
-    }
-
-    return render(request, "Colourblindness_test.html", context)
+    return render(request,"Colourblindness_test.html")
 
 def Colour_Blindness_Test1(request):
     return render(request,"colour1.html")
@@ -551,20 +547,13 @@ def sign_in_user(request):
 
         if check_password(raw_password, user.password):
             # Password is correct
-            request.session['user_id'] = user.id  # keep numeric ID in session
-
-            # Encode user ID for URL
-            hashid = encode_id(user.id)
+            request.session['user_id'] = user.id  # Set session
 
             if request.content_type == 'application/json':
                 serializer = UserSerializer(user)
-                # Include hashid in JSON if needed
-                data = serializer.data
-                data['hashid'] = hashid
-                return Response(data, status=status.HTTP_200_OK)
-
-            # Redirect to user profile page with hashed ID
-            return redirect('user_profile', hashid=hashid)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            # Redirect to user profile page with user id as parameter
+            return redirect('user_profile',user_id=user.id)
         else:
             error = {'error': 'Incorrect password'}
             if request.content_type == 'application/json':
