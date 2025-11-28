@@ -1,1283 +1,1258 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NETRASCREEN AI - Health Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        z-index: 1000;
+      }
+
+      .logo-title {
+        color: white;
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .test-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .test-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .test-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        z-index: 1001;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 250px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+        z-index: 1002;
+        border-radius: 10px;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 1px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: #333;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .dropdown-content a:first-child {
+        border-radius: 10px 10px 0 0;
+      }
+
+      .dropdown-content a:last-child {
+        border-radius: 0 0 10px 10px;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown:hover .test-button {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .dropdown-arrow {
+        margin-left: 5px;
+        font-size: 0.8em;
+      }
+
+      .patient-date-info {
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px 30px;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .patient-info {
+        font-size: 1.2em;
+        font-weight: 600;
+      }
+
+      .date-info {
+        font-size: 1em;
+        opacity: 0.9;
+      }
+
+      /* Three Column Dashboard Grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 350px;
+        gap: 25px;
+        padding: 30px;
+        min-height: 600px;
+      }
+
+      /* Left Column - Patient History */
+      .patient-history-column {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        border-left: 5px solid #ff6b6b;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+      }
+
+      .diagnosis-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .condition {
+        margin-bottom: 20px;
+        background: #f8f9fa;
+        padding: 18px;
+        border-radius: 12px;
+        border-left: 4px solid #28a745;
+        transition: transform 0.2s ease;
+      }
+
+      .condition:hover {
+        transform: translateX(5px);
+      }
+
+      .condition-title {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .condition-detail {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 5px;
+      }
+
+      .history-prompt {
+        text-align: center;
+        background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      .history-prompt a {
+        color: white;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+
+      /* Middle Column - Test Results */
+      .test-results-column {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e1e4e8;
+        height: fit-content;
+      }
+
+      .correlator-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .test-result {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 15px 20px;
+        border-radius: 10px;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+      }
+
+      .test-result:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-name {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .test-percentage {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #28a745;
+        background: rgba(40, 167, 69, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+      }
+
+      .more-results-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+        margin-top: 15px;
+      }
+
+      .more-results-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      /* Right Column - Calendar & Actions */
+      .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .calendar-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e1e4e8;
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f6f8fa;
+      }
+
+      .calendar-title {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #24292e;
+      }
+
+      .calendar-nav {
+        display: flex;
+        gap: 8px;
+      }
+
+      .nav-btn {
+        background: #f6f8fa;
+        border: 1px solid #d1d5da;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #586069;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        font-size: 0.85em;
+      }
+
+      .nav-btn:hover {
+        background: #e1e4e8;
+        border-color: #c6cbd1;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+        margin-bottom: 15px;
+      }
+
+      .calendar-day-header {
+        text-align: center;
+        font-weight: 600;
+        color: #586069;
+        padding: 8px 0;
+        font-size: 0.75em;
+        text-transform: uppercase;
+      }
+
+      .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8em;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .calendar-day:hover {
+        background: #f6f8fa;
+      }
+
+      /* Today's date - Blue */
+      .calendar-day.today {
+        background: #0366d6 !important;
+        color: white !important;
+        font-weight: 600;
+      }
+
+      /* Test activity dates - GREEN (This is the key fix!) */
+      .calendar-day.has-activity {
+        background: #28a745 !important;
+        color: white !important;
+        font-weight: 600;
+      }
+
+      .calendar-day.has-activity:hover {
+        background: #22863a !important;
+      }
+
+      /* If a date is both today AND has activity, prioritize green */
+      .calendar-day.today.has-activity {
+        background: #28a745 !important;
+        color: white !important;
+      }
+
+      .calendar-day.other-month {
+        color: #d1d5da;
+      }
+
+      .activity-indicator {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 4px;
+        height: 4px;
+        background: #ffd33d;
+        border-radius: 50%;
+      }
+
+      .calendar-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-size: 0.75em;
+        color: #586069;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .legend-color {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+      }
+
+      /* Contact Section */
+      .contact-section {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e1e4e8;
+      }
+
+      .contact-header {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #24292e;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .action-button {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.9em;
+      }
+
+      .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+      }
+
+      .whatsapp-button {
+        background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      }
+
+      .whatsapp-button:hover {
+        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+      }
+
+      .ask-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .ask-button:hover {
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .empty-state-icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+      }
+
+      /* Hidden test results - show only 6 initially */
+      .test-result.hidden {
+        display: none;
+      }
+
+      @media (max-width: 1200px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto auto;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 20px;
+        .right-column {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 25px;
         }
+      }
 
+      @media (max-width: 768px) {
         .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+          margin: 10px;
+          border-radius: 15px;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-            z-index: 1000;
+          padding: 20px;
         }
 
         .logo-title {
-            color: white;
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          font-size: 2em;
         }
 
-        .test-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
+        .dashboard-grid {
+          padding: 20px;
+          gap: 20px;
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
         }
 
-        .test-button {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .test-button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            z-index: 1001;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 250px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
-            z-index: 1002;
-            border-radius: 10px;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-top: 1px;
-            overflow: hidden;
-        }
-
-        .dropdown-content a {
-            color: #333;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .dropdown-content a:first-child {
-            border-radius: 10px 10px 0 0;
-        }
-
-        .dropdown-content a:last-child {
-            border-radius: 0 0 10px 10px;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown:hover .test-button {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .dropdown-arrow {
-            margin-left: 5px;
-            font-size: 0.8em;
+        .right-column {
+          grid-column: 1;
+          grid-row: auto;
+          display: flex;
+          flex-direction: column;
         }
 
         .patient-date-info {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 20px 30px;
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
         }
 
-        .patient-info {
-            font-size: 1.2em;
-            font-weight: 600;
+        .test-buttons {
+          flex-direction: column;
+          align-items: center;
         }
 
-        .date-info {
-            font-size: 1em;
-            opacity: 0.9;
-        }
-
-        /* Three Column Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 350px;
-            gap: 25px;
-            padding: 30px;
-            min-height: 600px;
-        }
-
-        /* Left Column - Patient History */
-        .patient-history-column {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            border-left: 5px solid #FF6B6B;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            height: fit-content;
-        }
-
-        .diagnosis-header {
-            background: linear-gradient(135deg, #FF6B6B 0%, #ff8e53 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .condition {
-            margin-bottom: 20px;
-            background: #f8f9fa;
-            padding: 18px;
-            border-radius: 12px;
-            border-left: 4px solid #28a745;
-            transition: transform 0.2s ease;
-        }
-
-        .condition:hover {
-            transform: translateX(5px);
-        }
-
-        .condition-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .condition-detail {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 5px;
-        }
-
-        .history-prompt {
-            text-align: center;
-            background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .history-prompt a {
-            color: white;
-            text-decoration: underline;
-            font-weight: bold;
-        }
-
-        /* Middle Column - Test Results */
-        .test-results-column {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 1px solid #e1e4e8;
-            height: fit-content;
-        }
-
-        .correlator-header {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .test-result {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 15px 20px;
-            border-radius: 10px;
-            border: 1px solid #dee2e6;
-            transition: all 0.3s ease;
-        }
-
-        .test-result:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .test-name {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .test-percentage {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #28a745;
-            background: rgba(40, 167, 69, 0.1);
-            padding: 5px 12px;
-            border-radius: 20px;
-        }
-
-        .more-results-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .more-results-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Right Column - Calendar & Actions */
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .calendar-container {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 1px solid #e1e4e8;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f6f8fa;
-        }
-
-        .calendar-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #24292e;
+        .test-button {
+          width: 100%;
+          max-width: 250px;
+          justify-content: center;
         }
 
         .calendar-nav {
-            display: flex;
-            gap: 8px;
+          flex-direction: column;
+          gap: 5px;
         }
 
         .nav-btn {
-            background: #f6f8fa;
-            border: 1px solid #d1d5da;
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            color: #586069;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            font-size: 0.85em;
-        }
-
-        .nav-btn:hover {
-            background: #e1e4e8;
-            border-color: #c6cbd1;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin-bottom: 15px;
-        }
-
-        .calendar-day-header {
-            text-align: center;
-            font-weight: 600;
-            color: #586069;
-            padding: 8px 0;
-            font-size: 0.75em;
-            text-transform: uppercase;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8em;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .calendar-day:hover {
-            background: #f6f8fa;
-        }
-
-        /* Today's date - Blue */
-        .calendar-day.today {
-            background: #0366d6 !important;
-            color: white !important;
-            font-weight: 600;
-        }
-
-        /* Test activity dates - GREEN (This is the key fix!) */
-        .calendar-day.has-activity {
-            background: #28a745 !important;
-            color: white !important;
-            font-weight: 600;
-        }
-
-        .calendar-day.has-activity:hover {
-            background: #22863a !important;
-        }
-
-        /* If a date is both today AND has activity, prioritize green */
-        .calendar-day.today.has-activity {
-            background: #28a745 !important;
-            color: white !important;
-        }
-
-        .calendar-day.other-month {
-            color: #d1d5da;
-        }
-
-        .activity-indicator {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 4px;
-            height: 4px;
-            background: #ffd33d;
-            border-radius: 50%;
-        }
-
-        .calendar-legend {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-size: 0.75em;
-            color: #586069;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .legend-color {
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-        }
-
-        /* Contact Section */
-        .contact-section {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 1px solid #e1e4e8;
-        }
-
-        .contact-header {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #24292e;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+          font-size: 0.8em;
         }
 
         .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+          flex-direction: column;
         }
 
-        .action-button {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.9em;
+        /** line graph css **/
+        .blink-rate-graph-container {
+          display: flex;
+          flex-direction: column;
+          background: #ffffff;
+          border-radius: 12px;
+          padding: 15px;
+          margin: 15px 0;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+          overflow: hidden;
+          max-width: 100%;
         }
 
-        .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        .test-result-graph {
+          background: #ffffff;
+          border-radius: 12px;
+          padding: 15px;
+          margin: 15px 0;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .whatsapp-button {
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+        .graph-header {
+          display: flex;
+          height: 50px;
+          justify-content: space-between;
+          font-weight: bold;
+          margin-bottom: 10px;
+          color: #333;
         }
 
-        .whatsapp-button:hover {
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
-        }
-
-        .ask-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .ask-button:hover {
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .empty-state-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-
-        /* Hidden test results - show only 6 initially */
-        .test-result.hidden {
-            display: none;
-        }
-
-        @media (max-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto auto;
-            }
-            
-            .right-column {
-                grid-column: 1 / -1;
-                grid-row: 2;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 25px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-
-            .header {
-                padding: 20px;
-            }
-
-            .logo-title {
-                font-size: 2em;
-            }
-
-            .dashboard-grid {
-                padding: 20px;
-                gap: 20px;
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-            }
-
-            .right-column {
-                grid-column: 1;
-                grid-row: auto;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .patient-date-info {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-
-            .test-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .test-button {
-                width: 100%;
-                max-width: 250px;
-                justify-content: center;
-            }
-
-            .calendar-nav {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .nav-btn {
-                font-size: 0.8em;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            /** line graph css **/
-            .blink-rate-graph-container {
-                display: flex;
-                flex-direction: column;
-                background: #ffffff;
-                border-radius: 12px;
-                padding: 15px;
-                margin: 15px 0;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-                overflow: hidden;
-                max-width: 100%;
-            }
-            
-
-            .test-result-graph 
-            {
-                background: #ffffff;
-                border-radius: 12px;
-                padding: 15px;
-                margin: 15px 0;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            }
-
-        .graph-header 
-        {
-            display: flex;
-            height: 50px;
-            justify-content: space-between;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .line-graph 
-        {
-            width: 100%;
-            height: 200px;
+        .line-graph {
+          width: 100%;
+          height: 200px;
         }
 
         .blink-rate-graph-canvas {
-            width: 100% !important;
-            height: 400px !important;   /* FIXED HEIGHT */
-            max-height: 400px !important;
-            display: block;
+          width: 100% !important;
+          height: 400px !important; /* FIXED HEIGHT */
+          max-height: 400px !important;
+          display: block;
         }
-
-    }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <div class="logo-title">NETRASCREEN AI</div>
-            <div class="test-buttons">
-                <a href="{% url 'mainx' hashid %}" class="test-button">
-                    <span>🏠</span> Home
-                </a>
-                <a href="{% url 'chat_page' %}" class="test-button">
-                    <span>🤖</span> ChatBot
-                </a>
-                <a href="{% url 'history' %}" class="test-button">
-                    <span>📄</span> Patient History Form
-                </a>
-                <div class="dropdown">
-                    <a href="#" class="test-button">
-                        <span>🔬</span> Screening <span class="dropdown-arrow">▼</span>
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'history1' %}">
-                            <span>🩺</span> Complete Eye Screening
-                        </a>
-                        <a href="{% url 'osdi1' %}">
-                            <span>👓</span> Dry Eye Screening
-                        </a>
-                        <a href="{% url 'base_myopia' %}">
-                            <span>📏</span> Vision Distance Screening
-                        </a>
-                        <a href="{% url 'base_glaucoma' %}">
-                            <span>🎯</span> Eye Pressure Screening
-                        </a>
-                        <a href="{% url 'Colourblindness_Test' %}">
-                            <span>🌈</span> Color Vision Screening
-                        </a>
-                    </div>
-                </div>
+      <div class="header">
+        <div class="logo-title">NETRASCREEN AI</div>
+        <div class="test-buttons">
+          <a href="{% url 'mainx' user.id %}" class="test-button">
+            <span>🏠</span> Home
+          </a>
+          <a href="{% url 'chat_page' %}" class="test-button">
+            <span>🤖</span> ChatBot
+          </a>
+          <a href="{% url 'history' %}" class="test-button">
+            <span>📄</span> Patient History Form
+          </a>
+          <div class="dropdown">
+            <a href="#" class="test-button">
+              <span>🔬</span> Screening <span class="dropdown-arrow">▼</span>
+            </a>
+            <div class="dropdown-content">
+              <a href="{% url 'history1' %}">
+                <span>🩺</span> Complete Eye Screening
+              </a>
+              <a href="{% url 'osdi1' %}">
+                <span>👓</span> Dry Eye Screening
+              </a>
+              <a href="{% url 'base_myopia' %}">
+                <span>📏</span> Vision Distance Screening
+              </a>
+              <a href="{% url 'base_glaucoma' %}">
+                <span>🎯</span> Eye Pressure Screening
+              </a>
+              <a href="{% url 'Colourblindness_Test' %}">
+                <span>🌈</span> Color Vision Screening
+              </a>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="patient-date-info">
+        <div class="patient-info">👤 {{ user.name }} | Age: {{ user.age }}</div>
+        <div class="date-info">📅 Last Scan: {% now "d M Y" %}</div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Left Column - Patient History -->
+        <div class="patient-history-column">
+          <div class="diagnosis-header"><span>📋</span> Patient History</div>
+
+          {% if patient_history %}
+  
+  {% if patient_history.chief_complaints.exists %}
+  <div class="condition">
+    <div class="condition-title"><span>🩺</span> Chief Complaints</div>
+    {% for complaint in patient_history.chief_complaints.all %}
+    <div class="condition-detail">
+      • {{ complaint.get_complaint_display }}
+      {% if complaint.other_details %} - {{ complaint.other_details }} {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if patient_history.ophthalmic_histories.exists %}
+  <div class="condition">
+    <div class="condition-title"><span>👁️</span> Ophthalmic History</div>
+    {% for history in patient_history.ophthalmic_histories.all %}
+    <div class="condition-detail">
+      • {{ history.get_history_item_display }}
+      {% if history.other_details %} - {{ history.other_details }} {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if patient_history.systemic_histories.exists %}
+  <div class="condition">
+    <div class="condition-title"><span>🏥</span> Systemic History</div>
+    {% for history in patient_history.systemic_histories.all %}
+    <div class="condition-detail">
+      • {{ history.get_history_item_display }}
+      {% if history.other_details %} - {{ history.other_details }} {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if patient_history.family_histories.exists %}
+  <div class="condition">
+    <div class="condition-title"><span>👨‍👩‍👧‍👦</span> Family History</div>
+    {% for history in patient_history.family_histories.all %}
+    <div class="condition-detail">
+      • {{ history.get_history_item_display }}
+      {% if history.other_details %} - {{ history.other_details }} {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if patient_history.drug_allergies.exists %}
+  <div class="condition">
+    <div class="condition-title"><span>💊</span> Drug Allergies</div>
+    {% for allergy in patient_history.drug_allergies.all %}
+    <div class="condition-detail">
+      • {{ allergy.get_allergy_type_display }}
+      {% if allergy.other_details %} - {{ allergy.other_details }} {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if patient_history.contact_allergies.exists %}
+  <div class="condition">
+    <div class="condition-title"><span>🤧</span> Contact Allergies</div>
+    {% for allergy in patient_history.contact_allergies.all %}
+    <div class="condition-detail">
+      • {{ allergy.get_allergy_type_display }}
+      {% if allergy.other_details %} - {{ allergy.other_details }} {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+{% else %}
+  <div class="history-prompt">
+    <strong>📋 No patient history found!</strong><br />
+    Please <a href="/history/">fill out your medical history form</a> to
+    see your complete health profile here.
+  </div>
+{% endif %}
+
         </div>
 
-        <div class="patient-date-info">
-            <div class="patient-info">👤 {{ user.name }} | Age: {{ user.age }}</div>
-            <div class="date-info">📅 Last Scan: {% now "d M Y" %}</div>
+        <!-- Middle Column - Test Results -->
+        <div class="test-results-column">
+          <div class="correlator-header">
+            <span>📊</span> Recent Test Results
+          </div>
+
+          <div id="test-results-container">
+            {% for test in all_tests_sorted %}
+            <div class="test-result">
+              <span class="test-name">{{ test.test_name }}</span>
+              <span class="test-percentage">{{ test.test_value }}</span>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+              <div class="empty-state-icon">📊</div>
+              <p class="empty-state-text">
+                No test results available. Complete tests above to see
+                correlations.
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+          <!-- Blink Rate Graph Section -->
+          {% if blink_rates %}
+          <div class="blink-rate-graph-container">
+            <div class="graph-header">
+              <span>👁️ Blink Rate Trend</span>
+            </div>
+            <canvas
+              id="blink-rate-graph"
+              width="600"
+              height="400"
+              class="blink-rate-graph-canvas"
+            ></canvas>
+          </div>
+          {% endif %} {% if all_tests_sorted|length > 6 %}
+          <button
+            id="more-results-btn"
+            class="more-results-btn"
+            onclick="toggleMoreResults()"
+          >
+            <span>📊</span> Show Previous Results
+          </button>
+          {% endif %}
         </div>
-
-        <div class="dashboard-grid">
-            <!-- Left Column - Patient History -->
-            <div class="patient-history-column">
-                <div class="diagnosis-header">
-                    <span>📋</span> Patient History
-                </div>
-
-                {% if patient_history %}
-                    {% if patient_history.chief_complaints.exists %}
-                        <div class="condition">
-                            <div class="condition-title">
-                                <span>🩺</span> Chief Complaints
-                            </div>
-                            {% for complaint in patient_history.chief_complaints.all %}
-                                <div class="condition-detail">
-                                    • {{ complaint.get_complaint_display }}
-                                    {% if complaint.other_details %}
-                                        - {{ complaint.other_details }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {% if patient_history.ophthalmic_histories.exists %}
-                        <div class="condition">
-                            <div class="condition-title">
-                                <span>👁️</span> Ophthalmic History
-                            </div>
-                            {% for history in patient_history.ophthalmic_histories.all %}
-                                <div class="condition-detail">
-                                    • {{ history.get_history_item_display }}
-                                    {% if history.other_details %}
-                                        - {{ history.other_details }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {% if patient_history.systemic_histories.exists %}
-                        <div class="condition">
-                            <div class="condition-title">
-                                <span>🏥</span> Systemic History
-                            </div>
-                            {% for history in patient_history.systemic_histories.all %}
-                                <div class="condition-detail">
-                                    • {{ history.get_history_item_display }}
-                                    {% if history.other_details %}
-                                        - {{ history.other_details }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {% if patient_history.family_histories.exists %}
-                        <div class="condition">
-                            <div class="condition-title">
-                                <span>👨‍👩‍👧‍👦</span> Family History
-                            </div>
-                            {% for history in patient_history.family_histories.all %}
-                                <div class="condition-detail">
-                                    • {{ history.get_history_item_display }}
-                                    {% if history.other_details %}
-                                        - {{ history.other_details }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {% if patient_history.drug_allergies.exists %}
-                        <div class="condition">
-                            <div class="condition-title">
-                                <span>💊</span> Drug Allergies
-                            </div>
-                            {% for allergy in patient_history.drug_allergies.all %}
-                                <div class="condition-detail">
-                                    • {{ allergy.get_allergy_type_display }}
-                                    {% if allergy.other_details %}
-                                        - {{ allergy.other_details }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {% if patient_history.contact_allergies.exists %}
-                        <div class="condition">
-                            <div class="condition-title">
-                                <span>🤧</span> Contact Allergies
-                            </div>
-                            {% for allergy in patient_history.contact_allergies.all %}
-                                <div class="condition-detail">
-                                    • {{ allergy.get_allergy_type_display }}
-                                    {% if allergy.other_details %}
-                                        - {{ allergy.other_details }}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <div class="history-prompt">
-                        <strong>📋 No patient history found!</strong><br>
-                        Please <a href="/history/">fill out your medical history form</a> to see your complete health profile here.
-                    </div>
-                {% endif %}
+        <!-- Right Column - Calendar & Contact -->
+        <div class="right-column">
+          <div class="calendar-container">
+            <div class="calendar-header">
+              <div class="calendar-title">📅 Activity</div>
+              <div class="calendar-nav">
+                <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+                <button class="nav-btn" onclick="changeMonth(1)">›</button>
+              </div>
             </div>
 
-            <!-- Middle Column - Test Results -->
-            <div class="test-results-column">
+            <div class="calendar-grid" id="calendar"></div>
 
-                <div class="correlator-header">
-                    <span>📊</span> Recent Test Results
-                </div>
-
-                <div id="test-results-container">
-                    {% for test in all_tests_sorted %}
-                        <div class="test-result">
-                            <span class="test-name">{{ test.test_name }}</span>
-                            <span class="test-percentage">{{ test.test_value }}</span>
-                        </div>
-                    {% empty %}
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📊</div>
-                            <p class="empty-state-text">No test results available. Complete tests above to see correlations.</p>
-                        </div>
-                    {% endfor %}
-                </div>
-                <!-- Blink Rate Graph Section -->
-                {% if blink_rates %}
-                <div class="blink-rate-graph-container">
-                    <div class="graph-header">
-                        <span>👁️ Blink Rate Trend</span>
-                    </div>
-                    <canvas id="blink-rate-graph" width="600" height="400" class="blink-rate-graph-canvas"></canvas>
-                </div>
-                {% endif %}
-
-                {% if all_tests_sorted|length > 6 %}
-                    <button id="more-results-btn" class="more-results-btn" onclick="toggleMoreResults()">
-                        <span>📊</span> Show Previous Results
-                    </button>
-                {% endif %}
+            <div class="calendar-legend">
+              <div class="legend-item">
+                <div class="legend-color" style="background: #28a745"></div>
+                <span>Test Completed</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background: #0366d6"></div>
+                <span>Today</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background: #ffc107"></div>
+                <span>Scheduled</span>
+              </div>
             </div>
-            <!-- Right Column - Calendar & Contact -->
-            <div class="right-column">
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <div class="calendar-title">📅 Activity</div>
-                        <div class="calendar-nav">
-                            <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
-                            <button class="nav-btn" onclick="changeMonth(1)">›</button>
-                        </div>
-                    </div>
+          </div>
 
-                    <div class="calendar-grid" id="calendar"></div>
-
-                    <div class="calendar-legend">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #28a745;"></div>
-                            <span>Test Completed</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #0366d6;"></div>
-                            <span>Today</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #ffc107;"></div>
-                            <span>Scheduled</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="contact-section">
-                    <div class="contact-header">
-                        <span>📞</span> Contact & Support
-                    </div>
-                    <div class="action-buttons">
-                        <a href="https://wa.me/+917524007689" class="action-button whatsapp-button">
-                            <span>📱</span> Contact Us
-                        </a>
-                        <a href="{% url 'chat_page' %}" class="action-button ask-button">
-                            <span>🤖</span> Ask NETRASCREEN AI
-                        </a>
-                        <a href="{% url 'get_app_results' user.ph_Number %}">
-                            <button class="btn btn-primary">View App Results</button>
-                        </a>
-                    </div>
-                </div>
+          <div class="contact-section">
+            <div class="contact-header"><span>📞</span> Contact & Support</div>
+            <div class="action-buttons">
+              <a
+                href="https://wa.me/+917524007689"
+                class="action-button whatsapp-button"
+              >
+                <span>📱</span> Contact Us
+              </a>
+              <a href="{% url 'chat_page' %}" class="action-button ask-button">
+                <span>🤖</span> Ask NETRASCREEN AI
+              </a>
+              <a href="{% url 'get_app_results' user.ph_Number %}">
+                <button class="btn btn-primary">View App Results</button>
+              </a>
             </div>
-
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-    // Blink Rate Graph
-    {% if blink_rates %}
-    const blinkRateCanvas = document.getElementById("blink-rate-graph");
-    if (blinkRateCanvas) {
-        //blinkRateCanvas.height = 200;
+              document.addEventListener("DOMContentLoaded", function() {
+          // Blink Rate Graph
+          {% if blink_rates %}
+          const blinkRateCanvas = document.getElementById("blink-rate-graph");
+          if (blinkRateCanvas) {
+              //blinkRateCanvas.height = 200;
 
-        const blinkRateGraphs = JSON.parse('{{ blink_rate_graph_json|escapejs }}');
-        const blinkRateCtx = blinkRateCanvas.getContext("2d");
+              const blinkRateGraphs = JSON.parse('{{ blink_rate_graph_json|escapejs }}');
+              const blinkRateCtx = blinkRateCanvas.getContext("2d");
 
-        
-        if (blinkRateGraphs && blinkRateGraphs.length > 0 && blinkRateGraphs[0].dates.length > 0) {
-            const blinkRateGraph = blinkRateGraphs[0];
-            const blinkRateDates = blinkRateGraph.dates;
-            const blinkRateValues = blinkRateGraph.values;
-            
-            // Calculate reasonable y-axis scale based on data with strict bounds
-            const maxValue = 20;
-            const minValue = 10;
-            
-            // Clamp data values to reasonable range first (0-100)
-            const clampedMax = 20;
-            const clampedMin = 10;
-            const range = clampedMax - clampedMin;
-            
-            // Calculate y-axis bounds with strict limits
-            let yAxisMin, yAxisMax;
-            
-            if (range === 0 || range < 1) {
-                // All values are the same or very close
-                const centerValue = Math.min(Math.max(clampedMax, 0), 100);
-                yAxisMin = Math.max(0, Math.floor(centerValue - 2));
-                yAxisMax = Math.min(100, Math.ceil(centerValue + 2));
-            } else {
-                // Normal case: add 10% padding (reduced from 15%)
-                const padding = Math.min(range * 0.1, 5); // Cap padding at 5
-                yAxisMin = Math.max(0, Math.floor(clampedMin - padding));
-                yAxisMax = Math.min(100, Math.ceil(clampedMax + padding));
-            }
-            
-            // Final strict bounds - never exceed 0-100
-            yAxisMin = Math.max(0, Math.min(yAxisMin, 100));
-            yAxisMax = Math.max(yAxisMin + 1, Math.min(yAxisMax, 100));
-            
-            // Ensure minimum range of at least 3
-            if (yAxisMax - yAxisMin < 3) {
-                const center = (yAxisMax + yAxisMin) / 2;
-                yAxisMin = Math.max(0, Math.floor(center - 1.5));
-                yAxisMax = Math.min(100, Math.ceil(center + 1.5));
-            }
-            
-            // Final validation - ensure bounds are valid
-            yAxisMin = Math.max(0, Math.min(yAxisMin, 99));
-            yAxisMax = Math.max(yAxisMin + 1, Math.min(yAxisMax, 100));
-            
-            new Chart(blinkRateCtx, {
-                type: 'line',
-                data: {
-                    labels: blinkRateDates,
-                    datasets: [{
-                        label: 'Blink Rate (blinks/30sec)',
-                        data: blinkRateValues,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: '#667eea',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: false,
-                    resizeDelay: 0,
-                    layout: {
-                        padding: {
-                            top: 10,
-                            bottom: 10,
-                            left: 10,
-                            right: 10
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            display: true,
-                            position: 'top'
-                        },
-                        title: { 
-                            display: true, 
-                            text: 'Blink Rate Over Time', 
-                            font: { size: 16 },
-                            padding: { top: 10, bottom: 20 }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Blink Rate: ' + context.parsed.y + ' blinks/30sec';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            suggestedMin: yAxisMin,
-                            suggestedMax: yAxisMax,
-                            afterBuildTicks(scale) {
-                                const axisHeight = scale.height;   // real rendered height
-                                const minSpacing = 20;
-                                const maxSpacing = 50;
-                            
-                                const idealSpacing = (minSpacing + maxSpacing) / 2; 
-                                const idealTickCount = Math.max(2, Math.floor(axisHeight / idealSpacing));
-                            
-                                const min = scale.min;
-                                const max = scale.max;
-                                const range = max - min;
-                            
-                                const step = Math.max(1, Math.round(range / idealTickCount));
-                            
-                                let ticks = [];
-                                for (let v = min; v <= max; v += step) {
-                                    ticks.push({ value: v });
-                                }
-                            
-                                scale.ticks = ticks;
-                            },
-                            ticks: {
-                                autoSkip: false
-                            }
-                        },
-                        x: {
-                            title: { 
-                                display: true, 
-                                text: 'Date',
-                                font: { size: 12 }
-                            }
-                        }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
-                    }
-                }
-            });
-        }
-    }
-    {% endif %}
-    
-    // Myopia Graph (if exists)
-    {% if test_graphs_json %}
-    const testGraphs = JSON.parse('{{ test_graphs_json|escapejs }}');
-    const myopiaGraphElement = document.getElementById("myopia-graph");
-    if (myopiaGraphElement) {
-        const ctx = myopiaGraphElement.getContext("2d");
 
-    // Collect all unique dates
-    const allDatesSet = new Set();
-    testGraphs.forEach(graph => {
-        graph.dates.forEach(date => allDatesSet.add(date));
-    });
-    const allDates = Array.from(allDatesSet).sort((a,b) => {
-        // Sort dates correctly (DD-MM-YYYY)
-        const [dayA, monthA, yearA] = a.split('-').map(Number);
-        const [dayB, monthB, yearB] = b.split('-').map(Number);
-        return new Date(yearA, monthA-1, dayA) - new Date(yearB, monthB-1, dayB);
-    });
+              if (blinkRateGraphs && blinkRateGraphs.length > 0 && blinkRateGraphs[0].dates.length > 0) {
+                  const blinkRateGraph = blinkRateGraphs[0];
+                  const blinkRateDates = blinkRateGraph.dates;
+                  const blinkRateValues = blinkRateGraph.values;
 
-    const colors = ["#007bff", "#28a745"]; // Blue = Left, Green = Right
+                  // Calculate reasonable y-axis scale based on data with strict bounds
+                  const maxValue = 20;
+                  const minValue = 10;
 
-    const datasets = testGraphs.map((graph, index) => {
-        // Map values to allDates
-        const dateValueMap = {};
-        graph.dates.forEach((d, i) => { dateValueMap[d] = graph.values[i]; });
+                  // Clamp data values to reasonable range first (0-100)
+                  const clampedMax = 20;
+                  const clampedMin = 10;
+                  const range = clampedMax - clampedMin;
 
-        const values = allDates.map(d => dateValueMap[d] !== undefined ? dateValueMap[d] : null);
+                  // Calculate y-axis bounds with strict limits
+                  let yAxisMin, yAxisMax;
 
-        return {
-            label: graph.name,
-            data: values,
-            borderColor: colors[index],
-            backgroundColor: colors[index],
-            fill: false,
-            tension: 0.3,
-            pointRadius: 5,
-            pointHoverRadius: 7
-        };
-    });
+                  if (range === 0 || range < 1) {
+                      // All values are the same or very close
+                      const centerValue = Math.min(Math.max(clampedMax, 0), 100);
+                      yAxisMin = Math.max(0, Math.floor(centerValue - 2));
+                      yAxisMax = Math.min(100, Math.ceil(centerValue + 2));
+                  } else {
+                      // Normal case: add 10% padding (reduced from 15%)
+                      const padding = Math.min(range * 0.1, 5); // Cap padding at 5
+                      yAxisMin = Math.max(0, Math.floor(clampedMin - padding));
+                      yAxisMax = Math.min(100, Math.ceil(clampedMax + padding));
+                  }
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: allDates,
-            datasets: datasets
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: true },
-                title: { display: true, text: 'Myopia Test Results (Left vs Right Eye)', font: { size: 18 } }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: 'Diopter Value' }
-                },
-                x: {
-                    title: { display: true, text: 'Date' }
-                }
-            }
-        }
-    });
-    }
-    {% endif %}
-});
-            
+                  // Final strict bounds - never exceed 0-100
+                  yAxisMin = Math.max(0, Math.min(yAxisMin, 100));
+                  yAxisMax = Math.max(yAxisMin + 1, Math.min(yAxisMax, 100));
+
+                  // Ensure minimum range of at least 3
+                  if (yAxisMax - yAxisMin < 3) {
+                      const center = (yAxisMax + yAxisMin) / 2;
+                      yAxisMin = Math.max(0, Math.floor(center - 1.5));
+                      yAxisMax = Math.min(100, Math.ceil(center + 1.5));
+                  }
+
+                  // Final validation - ensure bounds are valid
+                  yAxisMin = Math.max(0, Math.min(yAxisMin, 99));
+                  yAxisMax = Math.max(yAxisMin + 1, Math.min(yAxisMax, 100));
+
+                  new Chart(blinkRateCtx, {
+                      type: 'line',
+                      data: {
+                          labels: blinkRateDates,
+                          datasets: [{
+                              label: 'Blink Rate (blinks/30sec)',
+                              data: blinkRateValues,
+                              borderColor: '#667eea',
+                              backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                              fill: true,
+                              tension: 0.4,
+                              pointRadius: 5,
+                              pointHoverRadius: 7,
+                              pointBackgroundColor: '#667eea',
+                              pointBorderColor: '#fff',
+                              pointBorderWidth: 2
+                          }]
+                      },
+                      options: {
+                          responsive: false,
+                          maintainAspectRatio: false,
+                          resizeDelay: 0,
+                          layout: {
+                              padding: {
+                                  top: 10,
+                                  bottom: 10,
+                                  left: 10,
+                                  right: 10
+                              }
+                          },
+                          plugins: {
+                              legend: {
+                                  display: true,
+                                  position: 'top'
+                              },
+                              title: {
+                                  display: true,
+                                  text: 'Blink Rate Over Time',
+                                  font: { size: 16 },
+                                  padding: { top: 10, bottom: 20 }
+                              },
+                              tooltip: {
+                                  mode: 'index',
+                                  intersect: false,
+                                  callbacks: {
+                                      label: function(context) {
+                                          return 'Blink Rate: ' + context.parsed.y + ' blinks/30sec';
+                                      }
+                                  }
+                              }
+                          },
+                          scales: {
+                              y: {
+                                  type: 'linear',
+                                  suggestedMin: yAxisMin,
+                                  suggestedMax: yAxisMax,
+                                  afterBuildTicks(scale) {
+                                      const axisHeight = scale.height;   // real rendered height
+                                      const minSpacing = 20;
+                                      const maxSpacing = 50;
+
+                                      const idealSpacing = (minSpacing + maxSpacing) / 2;
+                                      const idealTickCount = Math.max(2, Math.floor(axisHeight / idealSpacing));
+
+                                      const min = scale.min;
+                                      const max = scale.max;
+                                      const range = max - min;
+
+                                      const step = Math.max(1, Math.round(range / idealTickCount));
+
+                                      let ticks = [];
+                                      for (let v = min; v <= max; v += step) {
+                                          ticks.push({ value: v });
+                                      }
+
+                                      scale.ticks = ticks;
+                                  },
+                                  ticks: {
+                                      autoSkip: false
+                                  }
+                              },
+                              x: {
+                                  title: {
+                                      display: true,
+                                      text: 'Date',
+                                      font: { size: 12 }
+                                  }
+                              }
+                          },
+                          interaction: {
+                              mode: 'nearest',
+                              axis: 'x',
+                              intersect: false
+                          }
+                      }
+                  });
+              }
+          }
+          {% endif %}
+
+          // Myopia Graph (if exists)
+          {% if test_graphs_json %}
+          const testGraphs = JSON.parse('{{ test_graphs_json|escapejs }}');
+          const myopiaGraphElement = document.getElementById("myopia-graph");
+          if (myopiaGraphElement) {
+              const ctx = myopiaGraphElement.getContext("2d");
+
+          // Collect all unique dates
+          const allDatesSet = new Set();
+          testGraphs.forEach(graph => {
+              graph.dates.forEach(date => allDatesSet.add(date));
+          });
+          const allDates = Array.from(allDatesSet).sort((a,b) => {
+              // Sort dates correctly (DD-MM-YYYY)
+              const [dayA, monthA, yearA] = a.split('-').map(Number);
+              const [dayB, monthB, yearB] = b.split('-').map(Number);
+              return new Date(yearA, monthA-1, dayA) - new Date(yearB, monthB-1, dayB);
+          });
+
+          const colors = ["#007bff", "#28a745"]; // Blue = Left, Green = Right
+
+          const datasets = testGraphs.map((graph, index) => {
+              // Map values to allDates
+              const dateValueMap = {};
+              graph.dates.forEach((d, i) => { dateValueMap[d] = graph.values[i]; });
+
+              const values = allDates.map(d => dateValueMap[d] !== undefined ? dateValueMap[d] : null);
+
+              return {
+                  label: graph.name,
+                  data: values,
+                  borderColor: colors[index],
+                  backgroundColor: colors[index],
+                  fill: false,
+                  tension: 0.3,
+                  pointRadius: 5,
+                  pointHoverRadius: 7
+              };
+          });
+
+          new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: allDates,
+                  datasets: datasets
+              },
+              options: {
+                  responsive: true,
+                  plugins: {
+                      legend: { display: true },
+                      title: { display: true, text: 'Myopia Test Results (Left vs Right Eye)', font: { size: 18 } }
+                  },
+                  scales: {
+                      y: {
+                          beginAtZero: true,
+                          title: { display: true, text: 'Diopter Value' }
+                      },
+                      x: {
+                          title: { display: true, text: 'Date' }
+                      }
+                  }
+              }
+          });
+          }
+          {% endif %}
+      });
     </script>
-
-
-
 
     <script>
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
-        let showingAllResults = false;
-        
-        // Test dates for calendar highlighting
-        const testDates = [
-            {% for date in test_dates %}'{{ date }}',{% endfor %}
-        ];
+      let currentDate = new Date();
+      let currentMonth = currentDate.getMonth();
+      let currentYear = currentDate.getFullYear();
+      let showingAllResults = false;
 
-        // Debug: Log test dates to console
-        console.log('Test dates loaded:', testDates);
+      // Test dates for calendar highlighting
+      const testDates = [
+          {% for date in test_dates %}'{{ date }}',{% endfor %}
+      ];
 
-        // Initialize test results display
-        function initializeTestResults() {
-            const container = document.getElementById('test-results-container');
-            const testResults = Array.from(container.querySelectorAll('.test-result'));
-            
-            // Hide results beyond the first 6 (already ordered by date in view)
-            testResults.forEach((result, index) => {
-                if (index >= 6) {
-                    result.classList.add('hidden');
-                }
-            });
-            
-            // Hide "More Results" button if 6 or fewer results
-            if (testResults.length <= 6) {
-                const moreBtn = document.getElementById('more-results-btn');
-                if (moreBtn) {
-                    moreBtn.style.display = 'none';
-                }
-            }
-        }
+      // Debug: Log test dates to console
+      console.log('Test dates loaded:', testDates);
 
-        // Toggle showing more/less results
-        function toggleMoreResults() {
-            const testResults = document.querySelectorAll('.test-result');
-            const moreBtn = document.getElementById('more-results-btn');
-            
-            if (!showingAllResults) {
-                // Show all results
-                testResults.forEach(result => {
-                    result.classList.remove('hidden');
-                });
-                moreBtn.innerHTML = '<span>📊</span> Show Less Results';
-                showingAllResults = true;
-            } else {
-                // Show only first 6 results (most recent)
-                testResults.forEach((result, index) => {
-                    if (index >= 6) {
-                        result.classList.add('hidden');
-                    }
-                });
-                moreBtn.innerHTML = '<span>📊</span> Show Previous Results';
-                showingAllResults = false;
-            }
-        }
+      // Initialize test results display
+      function initializeTestResults() {
+          const container = document.getElementById('test-results-container');
+          const testResults = Array.from(container.querySelectorAll('.test-result'));
 
-        function generateCalendar(month, year) {
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
+          // Hide results beyond the first 6 (already ordered by date in view)
+          testResults.forEach((result, index) => {
+              if (index >= 6) {
+                  result.classList.add('hidden');
+              }
+          });
 
-            // Day headers
-            const dayHeaders = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            dayHeaders.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'calendar-day-header';
-                dayHeader.textContent = day;
-                calendar.appendChild(dayHeader);
-            });
+          // Hide "More Results" button if 6 or fewer results
+          if (testResults.length <= 6) {
+              const moreBtn = document.getElementById('more-results-btn');
+              if (moreBtn) {
+                  moreBtn.style.display = 'none';
+              }
+          }
+      }
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const daysInPrevMonth = new Date(year, month, 0).getDate();
+      // Toggle showing more/less results
+      function toggleMoreResults() {
+          const testResults = document.querySelectorAll('.test-result');
+          const moreBtn = document.getElementById('more-results-btn');
 
-            // Previous month's days
-            for (let i = firstDay - 1; i >= 0; i--) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day other-month';
-                day.textContent = daysInPrevMonth - i;
-                calendar.appendChild(day);
-            }
+          if (!showingAllResults) {
+              // Show all results
+              testResults.forEach(result => {
+                  result.classList.remove('hidden');
+              });
+              moreBtn.innerHTML = '<span>📊</span> Show Less Results';
+              showingAllResults = true;
+          } else {
+              // Show only first 6 results (most recent)
+              testResults.forEach((result, index) => {
+                  if (index >= 6) {
+                      result.classList.add('hidden');
+                  }
+              });
+              moreBtn.innerHTML = '<span>📊</span> Show Previous Results';
+              showingAllResults = false;
+          }
+      }
 
-            // Current month's days
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
+      function generateCalendar(month, year) {
+          const calendar = document.getElementById('calendar');
+          calendar.innerHTML = '';
 
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                // Check if it's today
-                const today = new Date();
-                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
-                    dayElement.classList.add('today');
-                }
+          // Day headers
+          const dayHeaders = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+          dayHeaders.forEach(day => {
+              const dayHeader = document.createElement('div');
+              dayHeader.className = 'calendar-day-header';
+              dayHeader.textContent = day;
+              calendar.appendChild(dayHeader);
+          });
 
-                // Check if there's test activity on this date (will show green)
-                if (testDates.includes(dateString)) {
-                    dayElement.classList.add('has-activity');
-                    const indicator = document.createElement('div');
-                    indicator.className = 'activity-indicator';
-                    dayElement.appendChild(indicator);
-                    
-                    // Debug: Log when activity is added
-                    console.log('Added activity for date:', dateString);
-                }
+          const firstDay = new Date(year, month, 1).getDay();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-                calendar.appendChild(dayElement);
-            }
+          // Previous month's days
+          for (let i = firstDay - 1; i >= 0; i--) {
+              const day = document.createElement('div');
+              day.className = 'calendar-day other-month';
+              day.textContent = daysInPrevMonth - i;
+              calendar.appendChild(day);
+          }
 
-            // Next month's days
-            const totalCells = 42; // 6 rows × 7 days
-            const cellsUsed = firstDay + daysInMonth;
-            for (let day = 1; cellsUsed + day - 1 < totalCells; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day other-month';
-                dayElement.textContent = day;
-                calendar.appendChild(dayElement);
-            }
-        }
+          // Current month's days
+          for (let day = 1; day <= daysInMonth; day++) {
+              const dayElement = document.createElement('div');
+              dayElement.className = 'calendar-day';
+              dayElement.textContent = day;
 
-        function changeMonth(direction) {
-            currentMonth += direction;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            } else if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            generateCalendar(currentMonth, currentYear);
-            updateCalendarTitle();
-        }
+              const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-        function updateCalendarTitle() {
-            const monthNames = [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-            ];
-            document.querySelector('.calendar-title').textContent = 
-                `📅 ${monthNames[currentMonth]} ${currentYear}`;
-        }
+              // Check if it's today
+              const today = new Date();
+              if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                  dayElement.classList.add('today');
+              }
 
-        // Initialize calendar and test results
-        generateCalendar(currentMonth, currentYear);
-        updateCalendarTitle();
-        initializeTestResults();
+              // Check if there's test activity on this date (will show green)
+              if (testDates.includes(dateString)) {
+                  dayElement.classList.add('has-activity');
+                  const indicator = document.createElement('div');
+                  indicator.className = 'activity-indicator';
+                  dayElement.appendChild(indicator);
 
-        // Add click events to calendar days
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('calendar-day') && !e.target.classList.contains('other-month')) {
-                console.log('Clicked on day:', e.target.textContent);
-            }
-        });
+                  // Debug: Log when activity is added
+                  console.log('Added activity for date:', dateString);
+              }
+
+              calendar.appendChild(dayElement);
+          }
+
+          // Next month's days
+          const totalCells = 42; // 6 rows × 7 days
+          const cellsUsed = firstDay + daysInMonth;
+          for (let day = 1; cellsUsed + day - 1 < totalCells; day++) {
+              const dayElement = document.createElement('div');
+              dayElement.className = 'calendar-day other-month';
+              dayElement.textContent = day;
+              calendar.appendChild(dayElement);
+          }
+      }
+
+      function changeMonth(direction) {
+          currentMonth += direction;
+          if (currentMonth > 11) {
+              currentMonth = 0;
+              currentYear++;
+          } else if (currentMonth < 0) {
+              currentMonth = 11;
+              currentYear--;
+          }
+          generateCalendar(currentMonth, currentYear);
+          updateCalendarTitle();
+      }
+
+      function updateCalendarTitle() {
+          const monthNames = [
+              'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          ];
+          document.querySelector('.calendar-title').textContent =
+              `📅 ${monthNames[currentMonth]} ${currentYear}`;
+      }
+
+      // Initialize calendar and test results
+      generateCalendar(currentMonth, currentYear);
+      updateCalendarTitle();
+      initializeTestResults();
+
+      // Add click events to calendar days
+      document.addEventListener('click', function(e) {
+          if (e.target.classList.contains('calendar-day') && !e.target.classList.contains('other-month')) {
+              console.log('Clicked on day:', e.target.textContent);
+          }
+      });
     </script>
-
-    
-
-</body>
+  </body>
 </html>
