@@ -66,7 +66,8 @@ INSTALLED_APPS = [
     'Myopia_Test',
     'BlinkRate',
     'AI_eye_image',
-    'chatbot'
+    'chatbot',
+    'AI_Suggestion'
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'webapp.wsgi.application'
 
+GROQ_API_KEY= "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"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
