@@ -4,6 +4,7 @@ from django.urls import path, include
 from . import views
 from .views import ColorVisionTestView
 from .views import *
+from .utils import *
 
 urlpatterns = [
     path('',views.home,name = 'home_page'),

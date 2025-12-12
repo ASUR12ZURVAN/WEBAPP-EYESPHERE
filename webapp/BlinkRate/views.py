@@ -7,6 +7,7 @@ from BlinkRate.models import BlinkRate
 from BaseInfo.models import User
 import json
 from .models import BlinkRate
+from BaseInfo.utils import *
 
 
 @csrf_exempt
@@ -41,6 +42,9 @@ def save_blink_rate(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-
 def Blink_Rate(request):
-    return render(request,"blink.html")
+    # Get the numeric user_id from session
+    user_id = request.session.get('user_id')
+
+    # Pass it directly to the template
+    return render(request, "blink.html", {'user_id': user_id})

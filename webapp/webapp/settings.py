@@ -40,7 +40,7 @@ SECRET_KEY = 'django-insecure-a)thyd#n%z6l)c!%$!69y7)^+9xp(af%&gy)7snym(&ca&cg@g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1","netrascreen.in"]
+ALLOWED_HOSTS = ["webapp-eyesphere.onrender.com","127.0.0.1","netrascreen.in","webapp-eyesphere-wjrx.onrender.com"]
 
 
 
@@ -66,7 +66,8 @@ INSTALLED_APPS = [
     'Myopia_Test',
     'BlinkRate',
     'AI_eye_image',
-    'chatbot'
+    'chatbot',
+    'AI_Suggestion'
 ]
 
 MIDDLEWARE = [
@@ -100,11 +101,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'webapp.wsgi.application'
 
+GROQ_API_KEY= "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"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
+"""
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
@@ -115,7 +117,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-"""
+
+
 
 
 

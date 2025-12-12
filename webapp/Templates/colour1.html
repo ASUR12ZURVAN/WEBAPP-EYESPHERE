@@ -1022,7 +1022,7 @@ async function autoSaveResults() {
     try {
         const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
             ? 'http://127.0.0.1:8000'
-            : 'https://netrascreen.in';
+            : 'https://webapp-eyesphere-wjrx.onrender.com/';
 
         const response = await fetch(`${baseUrl}/api/color-vision-tests/`, {
             method: 'POST',
@@ -1216,7 +1216,7 @@ function showDeficiencyInfo() {
     try {
        const baseUrl = window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1'
     ? 'http://127.0.0.1:8000'
-    : 'https://netrascreen.in';
+    : 'https://webapp-eyesphere-wjrx.onrender.com/';
 
 const response = await fetch(`${baseUrl}/api/color-vision-tests/`, {
     method: 'POST',
