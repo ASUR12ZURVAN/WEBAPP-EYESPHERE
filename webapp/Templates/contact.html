@@ -1,0 +1,702 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Eyesphere</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-image: url("{% static 'macro-eye-iris.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Professional medical overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.8) 0%, rgba(135, 206, 235, 0.7) 100%);
+            z-index: -1;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #f6f6f6;
+            color: #05394d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(209, 218, 224, 0.2);
+            position: relative;
+            min-height: 60px;
+        }
+
+        .navbar .logo img {
+            height: 80px;
+            vertical-align: middle;
+        }
+
+        /* Navigation as styled radio buttons */
+        .radio-inputs {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-radius: 1rem;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            width: 100%;
+            font-size: 14px;
+            gap: 1rem;
+        }
+
+        .radio-inputs .radio {
+            flex: 1 1 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .radio-inputs .radio input {
+            display: none;
+        }
+
+        .radio-inputs .radio .name {
+            white-space: nowrap;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.7rem;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            color: #2d3748;
+            font-weight: 500;
+            font-family: inherit;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .radio-inputs .radio input:checked + .name {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .contact-header h1 {
+            font-size: 3.5em;
+            color: #05394d;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-header p {
+            font-size: 1.2em;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-info h2 {
+            font-size: 2em;
+            color: #05394d;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00d4ff;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .info-item i {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-right: 20px;
+            min-width: 30px;
+            padding-top: 5px;
+        }
+
+        .info-item-content h3 {
+            font-size: 1.2em;
+            color: #05394d;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .info-item-content p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .info-item-content a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .info-item-content a:hover {
+            color: #05394d;
+        }
+
+        .contact-form-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-form-container h2 {
+            font-size: 2em;
+            color: #05394d;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00d4ff;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #05394d;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Inter', Arial, sans-serif;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #05394d 0%, #0a9ec6 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+            background: linear-gradient(135deg, #0a9ec6 0%, #05394d 100%);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #05394d;
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .social-links a:hover {
+            background: #00d4ff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Map Section */
+        .map-section {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-section h2 {
+            font-size: 2em;
+            color: #05394d;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00d4ff;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #033747;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin-top: 60px;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 50px 10%;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex: 1 1 200px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid #446e7c;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            background: #042e40;
+            padding: 20px 10%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-header h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contact-section {
+                padding: 40px 15px;
+            }
+
+            .contact-header h1 {
+                font-size: 2em;
+            }
+
+            .contact-info,
+            .contact-form-container {
+                padding: 25px;
+            }
+
+            .info-item {
+                padding: 15px;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
+        </div>
+        <!-- Navigation as styled radio buttons -->
+        <div class="radio-inputs">
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'home_page' %}'" />
+                <span class="name">Home</span>
+            </label>
+
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'service' %}'" />
+                <span class="name">Services</span>
+            </label>
+
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'about' %}'" />
+                <span class="name">About Us</span>
+            </label>
+
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'testimonials' %}'" />
+                <span class="name">Testimonials</span>
+            </label>
+
+            <label class="radio">
+                <input checked name="nav" type="radio" onclick="location.href='{% url 'contact' %}'" />
+                <span class="name">Contact</span>
+            </label>
+        </div>
+    </nav>
+
+    <section class="contact-section">
+        <div class="contact-header">
+            <h1>Get In Touch</h1>
+            <p>We're here to help! Reach out to us with any questions, concerns, or feedback. Our team is ready to assist you.</p>
+        </div>
+
+        <div class="contact-container">
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                
+                <div class="info-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div class="info-item-content">
+                        <h3>Phone</h3>
+                        <p><a href="tel:+918287948191">+91 8287948191</a></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info-item-content">
+                        <h3>Email</h3>
+                        <p><a href="mailto:connect@eyesphere.in">connect@eyesphere.in</a></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="info-item-content">
+                        <h3>Address</h3>
+                        <p>Noida, India</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="info-item-content">
+                        <h3>Business Hours</h3>
+                        <p>Monday - Friday: 9:00 AM - 6:00 PM<br>
+                        Saturday: 10:00 AM - 4:00 PM<br>
+                        Sunday: Closed</p>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-container">
+                <h2>Send Us a Message</h2>
+                
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-check-circle"></i> Thank you! Your message has been sent successfully. We'll get back to you soon.
+                </div>
+
+                <div id="errorMessage" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i> There was an error sending your message. Please try again.
+                </div>
+
+                <form id="contactForm" method="POST" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject"><i class="fas fa-tag"></i> Subject *</label>
+                        <input type="text" id="subject" name="subject" required placeholder="What is this regarding?">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message"><i class="fas fa-comment-alt"></i> Message *</label>
+                        <textarea id="message" name="message" required placeholder="Tell us how we can help you..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <h2>Find Us</h2>
+            <div class="map-container">
+                <p><i class="fas fa-map-marker-alt" style="font-size: 2em; color: #00d4ff; margin-bottom: 10px;"></i><br>
+                Noida, India</p>
+                <!-- You can embed a Google Map here if needed -->
+                <!-- <iframe src="YOUR_GOOGLE_MAP_EMBED_URL" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-col brand">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Group-147.png" alt="Eyesphere Logo" class="footer-logo" style="width: 200px; margin-bottom: 15px;" />
+                <p>
+                    EyeSphere is where the pinnacle of vision care excellence converges with
+                    the bespoke needs of your distinguished organization.
+                </p>
+                <ul class="footer-contact" style="list-style: none; padding: 0; margin-top: 20px;">
+                    <li><i class="fas fa-phone-alt"></i> +91 8287948191</li>
+                    <li><i class="fas fa-envelope"></i> connect@eyesphere.in</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Noida, India</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home_page' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'service' %}">Services</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialities</h4>
+                <ul>
+                    <li><a href="#">Surgery</a></li>
+                    <li><a href="#">Therapy</a></li>
+                    <li><a href="#">Treatment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Diseases</h4>
+                <ul>
+                    <li><a href="#">Amblyopia</a></li>
+                    <li><a href="#">Age related Macular Degeneration</a></li>
+                    <li><a href="#">Diabetic Retinopathy</a></li>
+                    <li><a href="#">Glaucoma</a></li>
+                    <li><a href="#">Strabismus / Squint</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Copyright © 2025 Eyesphere. All rights reserved.</p>
+            <div class="footer-actions">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('.submit-btn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            // Submit form via fetch
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    successMsg.style.display = 'block';
+                    this.reset();
+                    // Scroll to success message
+                    successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.message || 'There was an error sending your message. Please try again.');
+                }
+            })
+            .catch(error => {
+                errorMsg.style.display = 'block';
+                errorMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> There was an error sending your message. Please try again.';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -41,6 +41,127 @@
     z-index: -1;
 }
 
+        /* Page Loader Animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(5, 57, 77, 0.95) 0%, rgba(10, 158, 198, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .loader-text {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .loader-subtitle {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeInUp 1.2s ease-out;
+            margin-bottom: 40px;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loader-text {
+                font-size: 2em;
+            }
+
+            .loader-subtitle {
+                font-size: 1em;
+            }
+
+            .loader-logo {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
         /* Basic Reset & Body Styling (optional, but good practice) */
         body {
             margin: 0;
@@ -1125,6 +1246,18 @@
 </head>
 
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
+            </div>
+            <h1 class="loader-text">Welcome to Eyesphere</h1>
+            <p class="loader-subtitle">Vision Beyond Limits</p>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+
     <!-- Welcome Screen -->
     <div class="welcome-screen" style="display: none;">
         <div class="welcome-content">
@@ -1261,7 +1394,7 @@
             border-radius: 1rem;
             box-sizing: border-box;
             padding: 0.5rem;
-            width: 100%%;
+            width: 100%;
             font-size: 14px;
             gap: 1rem;
             }
@@ -1610,7 +1743,7 @@
             </label>
 
             <label class="radio">
-                <input name="nav" type="radio" onclick="location.href='/contact'" />
+                <input name="nav" type="radio" onclick="location.href='{% url 'contact' %}'" />
                 <span class="name">Contact</span>
             </label>
         </div>
@@ -2508,5 +2641,33 @@ document.addEventListener('DOMContentLoaded', function() {
         animation: slideDown 0.3s ease-in-out forwards;
     }
 </style>
+
+<script>
+    // Page Loader - Hide when page is fully loaded
+    window.addEventListener('load', function() {
+        const pageLoader = document.getElementById('pageLoader');
+        
+        // Add a small delay for smooth transition
+        setTimeout(function() {
+            pageLoader.classList.add('hidden');
+            
+            // Remove from DOM after animation completes
+            setTimeout(function() {
+                pageLoader.style.display = 'none';
+            }, 500);
+        }, 1000); // Show loader for at least 1 second
+    });
+
+    // Fallback: Hide loader if page takes too long to load
+    setTimeout(function() {
+        const pageLoader = document.getElementById('pageLoader');
+        if (pageLoader && !pageLoader.classList.contains('hidden')) {
+            pageLoader.classList.add('hidden');
+            setTimeout(function() {
+                pageLoader.style.display = 'none';
+            }, 500);
+        }
+    }, 5000); // Maximum 5 seconds
+</script>
 </body>
 </html>

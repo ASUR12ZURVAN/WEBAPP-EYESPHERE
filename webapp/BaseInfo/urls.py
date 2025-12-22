@@ -32,6 +32,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('service/', views.service, name='service'),
     path('testimonials/', views.testimonials, name='testimonials'),
+    path('contact/', views.contact, name='contact'),
     path("submit_app_result/", submit_app_result, name="submit_app_result"),
     path("app-results/<str:phone_number>/", views.get_app_results, name="get_app_results"),
      
