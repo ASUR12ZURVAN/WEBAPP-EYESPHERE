@@ -1,183 +1,581 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eyesphere-About us</title>
-   <!-- <link rel="stylesheet" href="about.css"-->
-   <style>
-    .about {
-    padding: 3rem 0;
-    background: #f9fbff;
-  }
-  
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: center;
-  }
-  
-  .about-image img {
-    width: 100%;
-    border-radius: 14px;
-    box-shadow: 0 8px 26px rgba(0,0,0,0.08);
-  }
-  
-  .about-content h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #0f265c;
-  }
-  
-  .about-content p {
-    color: #444;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-  
-  .about-list {
-    list-style: none;
-    margin-bottom: 1.5rem;
-  }
-  
-  .about-list li {
-    margin: .5rem 0;
-    color: #333;
-    font-size: .95rem;
-  }
-  
-  .btn {
-    display: inline-block;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  
-  .btn-primary {
-    background: #0f62fe;
-    color: #fff;
-    transition: background .2s ease;
-    position: fixed;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .btn-primary:hover {
-    background: #0046c7;
-  }
-  
-  /* Responsive */
-  @media(max-width: 768px) {
-    .about-grid {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-  
-    .about-content h2 {
-      font-size: 1.5rem;
-    }
-  }
-  
-   </style>
+    <title>About Us - Eyesphere</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-image: url("{% static 'macro-eye-iris.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.8) 0%, rgba(135, 206, 235, 0.7) 100%);
+            z-index: -1;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #f6f6f6;
+            color: #05394d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(209, 218, 224, 0.2);
+            position: relative;
+            min-height: 60px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar .logo img {
+            height: 80px;
+            vertical-align: middle;
+        }
+
+        .radio-inputs {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-radius: 1rem;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            width: 100%;
+            font-size: 14px;
+            gap: 1rem;
+        }
+
+        .radio-inputs .radio {
+            flex: 1 1 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .radio-inputs .radio input {
+            display: none;
+        }
+
+        .radio-inputs .radio .name {
+            white-space: nowrap;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.7rem;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            color: #2d3748;
+            font-weight: 500;
+            font-family: inherit;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .radio-inputs .radio input:checked + .name {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 600;
+        }
+
+        .radio-inputs .radio:hover .name {
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            transform: translateY(-1px);
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: slideInDown 0.8s ease-out;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .about-header h1 {
+            font-size: 3.5em;
+            color: #05394d;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-header p {
+            font-size: 1.2em;
+            color: #1976d2;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .about-image {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(66, 165, 245, 0.3);
+            transition: transform 0.4s ease;
+        }
+
+        .about-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .about-content {
+            animation: slideInRight 1s ease-out;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .about-content h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #05394d;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .about-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #42a5f5 0%, #1976d2 100%);
+            border-radius: 2px;
+            animation: expandWidth 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes expandWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: 60px;
+            }
+        }
+
+        .about-content p {
+            color: #424242;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .about-content p:nth-child(2) { animation-delay: 0.2s; }
+        .about-content p:nth-child(3) { animation-delay: 0.4s; }
+        .about-content p:nth-child(4) { animation-delay: 0.6s; }
+
+        .about-list {
+            list-style: none;
+            margin: 30px 0;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .about-list li {
+            margin: 15px 0;
+            color: #1976d2;
+            font-size: 1.05em;
+            padding-left: 30px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .about-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #42a5f5;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .about-list li:hover {
+            transform: translateX(10px);
+            color: #05394d;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            animation: fadeInScale 0.8s ease-out 1s both;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(66, 165, 245, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(66, 165, 245, 0.4);
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #033747;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin-top: 60px;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 50px 10%;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex: 1 1 200px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid #446e7c;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            background: #042e40;
+            padding: 20px 10%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .social-icons a {
+            color: #fff;
+            background: #0e4a5f;
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background 0.3s;
+            margin: 0 5px;
+        }
+
+        .social-icons a:hover {
+            background: #00c7e2;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-header h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about {
+                padding: 40px 15px;
+            }
+
+            .about-header h1 {
+                font-size: 2em;
+            }
+
+            .about-content h2 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- About EyeSphere Section -->
-<section class="about" id="about">
-    <div class="container about-grid">
-      <!-- Left: Image -->
-      <div class="about-image">
-        <!-- Replace with the real EyeSphere image URL -->
-        <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="About EyeSphere">
-      </div>
-  
-      <!-- Right: Content -->
-      <div class="about-content">
-        <h2>About EyeSphere</h2>
-        <p>
-          EyeSphere is where the pinnacle of vision care excellence converges with bespoke solutions for individuals and organizations. 
-          With cutting-edge diagnostic technology, experienced clinicians, and a compassionate approach, we are committed to providing 
-          comprehensive eye care that goes beyond treatment — empowering you to live life with clarity and confidence.
-        </p>
-        <h2>Leadership & Expertise</h2>
-        <p>
-            Leadership & Expertise
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
+        </div>
+        <div class="radio-inputs">
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'home_page' %}'" />
+                <span class="name">Home</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'service' %}'" />
+                <span class="name">Services</span>
+            </label>
+            <label class="radio">
+                <input checked name="nav" type="radio" onclick="location.href='{% url 'about' %}'" />
+                <span class="name">About Us</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'testimonials' %}'" />
+                <span class="name">Testimonials</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'contact' %}'" />
+                <span class="name">Contact</span>
+            </label>
+        </div>
+    </nav>
 
-        Dr. Mohita Sharma serves as Chief Ophthalmologist at Eyesphere Medicare and is recognized for her extensive expertise:
+    <section class="about" id="about">
+        <div class="about-header">
+            <h1>About EyeSphere</h1>
+            <p>Vision Beyond Limits - Excellence in Eye Care</p>
+        </div>
 
-        Over 35 years of experience in ophthalmology, particularly in diabetic retinopathy and retina procedures.
+        <div class="about-grid">
+            <div class="about-image">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="About EyeSphere">
+            </div>
 
-        She has performed advanced retina laser treatments and custom care plans leading to restored vision for patients with severe cases 
-       Eyesphere
-       Alongside Dr. Sharma are key ophthalmology professionals including:
+            <div class="about-content">
+                <h2>Our Mission</h2>
+                <p>
+                    EyeSphere is where the pinnacle of vision care excellence converges with bespoke solutions for individuals and organizations. 
+                    With cutting-edge diagnostic technology, experienced clinicians, and a compassionate approach, we are committed to providing 
+                    comprehensive eye care that goes beyond treatment — empowering you to live life with clarity and confidence.
+                </p>
+                
+                <h2>Leadership & Expertise</h2>
+                <p>
+                    <strong>Dr. Mohita Sharma</strong> serves as Chief Ophthalmologist at Eyesphere Medicare and is recognized for her extensive expertise with over 35 years of experience in ophthalmology, particularly in diabetic retinopathy and retina procedures. She has performed advanced retina laser treatments and custom care plans leading to restored vision for patients with severe cases.
+                </p>
+                <p>
+                    Alongside Dr. Sharma are key ophthalmology professionals including <strong>Dr. Robin Aggarwal</strong> – Lead Ophthalmic Surgeon, and <strong>Dr. Abhiyan Kumar Pattnaik</strong> – Senior Consultant.
+                </p>
 
-       Dr. Robin Aggarwal – Lead Ophthalmic Surgeon
+                <h2>Services & Offerings</h2>
+                <p>
+                    Eyesphere Medicare delivers a wide array of eye-care services including General & Specialty Care (OPD, IPD, surgeries, opticals), Preventive & At-Home Services (vision therapy, dry eye treatments, low vision rehab), International Patient Services (teleconsultations, visa assistance, travel support), Corporate Wellness Programs, and Subscription-Based Support ("NETRAKAVACH").
+                </p>
 
-        Dr. Abhiyan Kumar Pattnaik – Senior Consultant
-        </p>
-        <h2>Services & Offering</h2>
-        <p>Eyesphere Medicare delivers a wide array of eye-care services:
+                <ul class="about-list">
+                    <li>Advanced eye care diagnostics</li>
+                    <li>Personalized treatment plans</li>
+                    <li>Preventive screenings for long-term vision health</li>
+                    <li>Professional and compassionate team</li>
+                    <li>Cutting-edge technology and equipment</li>
+                    <li>Comprehensive care for all ages</li>
+                </ul>
 
-            General & Specialty Care: OPD, IPD, surgeries, opticals (spectacles/contact lenses) 
-            Eyesphere
-            .
-            
-            Preventive & At-Home Services: Including vision therapy, dry eye treatments, low vision rehab, and home eye-care diagnostics 
-            Eyesphere
-            +1
-            .
-            
-            International Patient Services:
-            
-            Teleconsultations
-            
-            Visa assistance, interpretation
-            
-            Travel & accommodation support
-            
-            Dedicated relationship managers and airport transfers 
-            Eyesphere
-            .
-            
-            Corporate Wellness Programs:
-            
-            "Corporate Premium Card" with discounts:
-            
-            25% off all surgeries
-            
-            50% off OPD services in Delhi-NCR
-            
-            20% off at-home testing
-            
-            Complimentary pick-up/drop, 24/7 care support, insurance/EMI assistance, and more 
-            Eyesphere
-            .
-            
-            Subscription-Based Support (“NETRAKAVACH”):
-            
-            At ₹299/year, provides:
-            
-            4 free OPD visits
-            
-            15% off surgeries
-            
-            Pickup/drop, insurance help, priority scheduling, annual exam, personalized health report, educational resources, and more
-            
-            Family add-ons (parents, spouse, children) available at discounted rates
-            
-            Additional 30% discounts on conditions like LASIK, cataract, glaucoma, et</p>
-        <ul class="about-list">
-          <li>✔ Advanced eye care diagnostics</li>
-          <li>✔ Personalized treatment plans</li>
-          <li>✔ Preventive screenings for long-term vision health</li>
-          <li>✔ Professional and compassionate team</li>
-        </ul>
-        <a href="home.html" class="btn btn-primary">Get in Touch</a>
-      </div>
-    </div>
-  </section>
-  
+                <a href="{% url 'contact' %}" class="btn btn-primary">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-col brand">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Group-147.png" alt="Eyesphere Logo" class="footer-logo" style="width: 200px; margin-bottom: 15px;" />
+                <p>
+                    EyeSphere is where the pinnacle of vision care excellence converges with
+                    the bespoke needs of your distinguished organization.
+                </p>
+                <ul class="footer-contact" style="list-style: none; padding: 0; margin-top: 20px;">
+                    <li><i class="fas fa-phone-alt"></i> +91 8287948191</li>
+                    <li><i class="fas fa-envelope"></i> connect@eyesphere.in</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Noida, India</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home_page' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'service' %}">Services</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialities</h4>
+                <ul>
+                    <li><a href="#">Surgery</a></li>
+                    <li><a href="#">Therapy</a></li>
+                    <li><a href="#">Treatment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Diseases</h4>
+                <ul>
+                    <li><a href="#">Amblyopia</a></li>
+                    <li><a href="#">Age related Macular Degeneration</a></li>
+                    <li><a href="#">Diabetic Retinopathy</a></li>
+                    <li><a href="#">Glaucoma</a></li>
+                    <li><a href="#">Strabismus / Squint</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Copyright © 2025 Eyesphere. All rights reserved.</p>
+            <div class="footer-actions">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
