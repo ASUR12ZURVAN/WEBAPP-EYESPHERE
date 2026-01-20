@@ -4,131 +4,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eyesphere- Our Serivces</title>
-    <!--<link rel="stylesheet" href="service.css">-->
+    <title>Our Services - Eyesphere</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-      /* Services Section */
-.services {
-    padding: 3rem 0;
-    background: #f9fbff;
-    text-align: center;
-  }
-  
-  .section-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: #0f265c;
-  }
-  
-  .section-sub {
-    color: #555;
-    margin-bottom: 2rem;
-  }
-  
-  /* Services Grid */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-  }
-  
-  .service-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 1.25rem;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .service-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-  }
-  
-  .service-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-  }
-  
-  .service-card h3 {
-    font-size: 1.05rem;
-    margin-bottom: 0.5rem;
-    color: #0f265c;
-  }
-  
-  .service-card p {
-    font-size: 0.92rem;
-    color: #444;
-    line-height: 1.45;
-  }
-  .footer{
-    margin-bottom: 0rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-style: italic;
-    text-align: center;
-    
-  }
-  
-  /* Responsive */
-  @media(max-width: 992px) {
-    .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  @media(max-width: 600px) {
-    .services-grid {
-      grid-template-columns: 1fr;
-    }
-  }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-image: url("{% static 'macro-eye-iris.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.8) 0%, rgba(135, 206, 235, 0.7) 100%);
+            z-index: -1;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #f6f6f6;
+            color: #05394d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(209, 218, 224, 0.2);
+            position: relative;
+            min-height: 60px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar .logo img {
+            height: 80px;
+            vertical-align: middle;
+        }
+
+        .radio-inputs {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-radius: 1rem;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            width: 100%;
+            font-size: 14px;
+            gap: 1rem;
+        }
+
+        .radio-inputs .radio {
+            flex: 1 1 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .radio-inputs .radio input {
+            display: none;
+        }
+
+        .radio-inputs .radio .name {
+            white-space: nowrap;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.7rem;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            color: #2d3748;
+            font-weight: 500;
+            font-family: inherit;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .radio-inputs .radio input:checked + .name {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 600;
+        }
+
+        .radio-inputs .radio:hover .name {
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            transform: translateY(-1px);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .services-header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: slideInDown 0.8s ease-out;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #05394d;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-sub {
+            font-size: 1.2em;
+            color: #1976d2;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 8px 24px rgba(66, 165, 245, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+            animation: cardFadeIn 0.6s ease-out both;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #42a5f5 0%, #1976d2 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .service-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 16px 32px rgba(66, 165, 245, 0.3);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+            margin-bottom: 0;
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .service-card-content {
+            padding: 25px;
+        }
+
+        .service-card h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #05394d;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            font-size: 1em;
+            color: #424242;
+            line-height: 1.7;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #1976d2;
+            font-size: 1.2em;
+            font-weight: 600;
+            font-style: italic;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #033747;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin-top: 60px;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 50px 10%;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex: 1 1 200px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid #446e7c;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            background: #042e40;
+            padding: 20px 10%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .social-icons a {
+            color: #fff;
+            background: #0e4a5f;
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background 0.3s;
+            margin: 0 5px;
+        }
+
+        .social-icons a:hover {
+            background: #00c7e2;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .services {
+                padding: 40px 15px;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-card img {
+                height: 180px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Services Section -->
-<section class="services" id="services">
-    <div class="container">
-      <h1 class="section-title">Our Services</h1>
-      <p class="section-sub">Comprehensive eye care solutions tailored to your unique needs</p>
-  
-      <div class="services-grid">
-        <!-- Service 1 -->
-        <div class="service-card">
-          <img src="{% static 'neareye.png' %}" alt="Vision Distance Screening">
-          <h3>Vision Distance Screening</h3>
-          <p>Vision distance screening, also known as a visual acuity test, measures how well you can see objects at a distance by having you read rows of letters on a Snellen chart from a specific distance, typically 10 feet or 3 meters.</p>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
         </div>
-  
-        <!-- Service 2 -->
-        <div class="service-card">
-          <img src="{% static 'peripheral.png' %}" alt="Peripheral Vision Screening">
-          <h3>Peripheral Vision Screening</h3>
-          <p>measures your ability to see objects outside your direct line of sight, assessing how far your eyes can see to the sides, up, and down while looking straight ahead</p>
+        <div class="radio-inputs">
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'home_page' %}'" />
+                <span class="name">Home</span>
+            </label>
+            <label class="radio">
+                <input checked name="nav" type="radio" onclick="location.href='{% url 'service' %}'" />
+                <span class="name">Services</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'about' %}'" />
+                <span class="name">About Us</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'testimonials' %}'" />
+                <span class="name">Testimonials</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'contact' %}'" />
+                <span class="name">Contact</span>
+            </label>
         </div>
-  
-        <!-- Service 3 -->
-        <div class="service-card">
-          <img src="{% static 'dryeye.png' %}" alt="Dry Eye Screening">
-          <h3>Dry Eye Screening</h3>
-          <p>Identify and measure level of dryness and recommend suitable treatment and management.
-            Special dyes are used to highlight irregularities on the corneal surface caused by insufficient tears. 
-          </p>
+    </nav>
+
+    <section class="services" id="services">
+        <div class="services-header">
+            <h1 class="section-title">Our Services</h1>
+            <p class="section-sub">Comprehensive eye care solutions tailored to your unique needs</p>
         </div>
-  
-        <!-- Service 4 -->
-        <div class="service-card">
-          <img src="{% static 'colour.png' %}" alt="Color Blindness Screening">
-          <h3>Color Blindness Screening</h3>
-          <p>Standard tests to detect color vision deficiencies and advise on next steps.
-            For severe cases, color blindness can impact the ability to distinguish traffic signals, making screening important for road safety. 
-          </p>
+
+        <div class="services-grid">
+            <!-- Service 1 -->
+            <div class="service-card">
+                <img src="{% static 'neareye.png' %}" alt="Vision Distance Screening">
+                <div class="service-card-content">
+                    <h3><i class="fas fa-eye" style="color: #42a5f5; margin-right: 10px;"></i>Vision Distance Screening</h3>
+                    <p>Vision distance screening, also known as a visual acuity test, measures how well you can see objects at a distance by having you read rows of letters on a Snellen chart from a specific distance, typically 10 feet or 3 meters.</p>
+                </div>
+            </div>
+
+            <!-- Service 2 -->
+            <div class="service-card">
+                <img src="{% static 'peripheral.png' %}" alt="Peripheral Vision Screening">
+                <div class="service-card-content">
+                    <h3><i class="fas fa-eye" style="color: #ff69b4; margin-right: 10px;"></i>Peripheral Vision Screening</h3>
+                    <p>Measures your ability to see objects outside your direct line of sight, assessing how far your eyes can see to the sides, up, and down while looking straight ahead.</p>
+                </div>
+            </div>
+
+            <!-- Service 3 -->
+            <div class="service-card">
+                <img src="{% static 'dryeye.png' %}" alt="Dry Eye Screening">
+                <div class="service-card-content">
+                    <h3><i class="fas fa-tint" style="color: #00bfff; margin-right: 10px;"></i>Dry Eye Screening</h3>
+                    <p>Identify and measure level of dryness and recommend suitable treatment and management. Special dyes are used to highlight irregularities on the corneal surface caused by insufficient tears.</p>
+                </div>
+            </div>
+
+            <!-- Service 4 -->
+            <div class="service-card">
+                <img src="{% static 'colour.png' %}" alt="Color Blindness Screening">
+                <div class="service-card-content">
+                    <h3><i class="fas fa-palette" style="color: #ffa07a; margin-right: 10px;"></i>Color Blindness Screening</h3>
+                    <p>Standard tests to detect color vision deficiencies and advise on next steps. For severe cases, color blindness can impact the ability to distinguish traffic signals, making screening important for road safety.</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
-    <h1 class="footer">Thanks for visiting</h1>
+
+        <div class="footer">
+            <p>Thanks for visiting</p>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-col brand">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Group-147.png" alt="Eyesphere Logo" class="footer-logo" style="width: 200px; margin-bottom: 15px;" />
+                <p>
+                    EyeSphere is where the pinnacle of vision care excellence converges with
+                    the bespoke needs of your distinguished organization.
+                </p>
+                <ul class="footer-contact" style="list-style: none; padding: 0; margin-top: 20px;">
+                    <li><i class="fas fa-phone-alt"></i> +91 8287948191</li>
+                    <li><i class="fas fa-envelope"></i> connect@eyesphere.in</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Noida, India</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home_page' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'service' %}">Services</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialities</h4>
+                <ul>
+                    <li><a href="#">Surgery</a></li>
+                    <li><a href="#">Therapy</a></li>
+                    <li><a href="#">Treatment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Diseases</h4>
+                <ul>
+                    <li><a href="#">Amblyopia</a></li>
+                    <li><a href="#">Age related Macular Degeneration</a></li>
+                    <li><a href="#">Diabetic Retinopathy</a></li>
+                    <li><a href="#">Glaucoma</a></li>
+                    <li><a href="#">Strabismus / Squint</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Copyright © 2025 Eyesphere. All rights reserved.</p>
+            <div class="footer-actions">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

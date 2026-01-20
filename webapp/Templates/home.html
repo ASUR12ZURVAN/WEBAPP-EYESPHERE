@@ -25,6 +25,7 @@
             min-height: 100vh;
             position: relative;
             line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
 
@@ -40,6 +41,127 @@
     background: linear-gradient(135deg, rgba(173, 216, 230, 0.8) 0%, rgba(135, 206, 235, 0.7) 100%);
     z-index: -1;
 }
+
+        /* Page Loader Animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(5, 57, 77, 0.95) 0%, rgba(10, 158, 198, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .loader-text {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .loader-subtitle {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeInUp 1.2s ease-out;
+            margin-bottom: 40px;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loader-text {
+                font-size: 2em;
+            }
+
+            .loader-subtitle {
+                font-size: 1em;
+            }
+
+            .loader-logo {
+                width: 80px;
+                height: 80px;
+            }
+        }
 
         /* Basic Reset & Body Styling (optional, but good practice) */
         body {
@@ -227,12 +349,40 @@
     justify-content: center;
     align-items: center;
     min-height: 87vh;
-    
-    /* Updated shadow with cyan tint */
+    position: relative;
+    overflow: hidden;
+    animation: heroFadeIn 1s ease-out;
+}
+
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(5, 57, 77, 0.4) 0%, rgba(10, 158, 198, 0.3) 100%);
+    z-index: 0;
+}
+
+.hero > * {
+    position: relative;
+    z-index: 1;
 }
 
 .hero h1 {
-    font-size: 3.5em;
+    font-size: 5em;
     margin-bottom: 20px;
     line-height: 1.2;
     color: #ffffff;
@@ -241,6 +391,65 @@
     max-width: 900px;
     font-weight: 700;
     letter-spacing: 1px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3em;
+}
+
+.hero h1 .word {
+    display: inline-block;
+    position: relative;
+    opacity: 0;
+    transform: translateY(40px) scale(0.8);
+    filter: blur(15px);
+    animation: wordReveal 1.5s ease-out forwards;
+}
+
+@keyframes wordReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.8);
+        filter: blur(15px);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateY(20px) scale(0.95);
+        filter: blur(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* Add a subtle glow animation after each word appears */
+.hero h1 .word::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), transparent);
+    animation: wordShimmer 2s ease-in-out 1.5s infinite;
+    pointer-events: none;
+}
+
+@keyframes wordShimmer {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
 }
 
 .hero p {
@@ -252,6 +461,18 @@
     /* Light cyan for softer contrast */
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 212, 255, 0.2);
     /* Enhanced readability */
+    animation: slideInUp 1s ease-out 0.5s both;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero .cta-buttons {
@@ -280,6 +501,18 @@
     box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
     /* Cyan glow effect */
     letter-spacing: 0.5px;
+    animation: fadeInScale 1s ease-out 0.7s both;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .hero .cta-button:before {
@@ -593,19 +826,35 @@
             /* Ample padding top/bottom, some side padding */
             text-align: center;
             /* Center align headings and subtitle */
-            background-color: #f8f8f8;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
             /* Light background to make it stand out */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #42a5f5 0%, #1976d2 50%, #42a5f5 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
         }
 
         .features h2 {
             font-size: 2.8em;
-            color: #2c3e50;
+            color: #05394d;
             /* Dark blue/grey matching navbar */
             margin-bottom: 15px;
             position: relative;
             /* For the underline effect */
             display: inline-block;
             /* Allows underline to fit content */
+            font-weight: 700;
+            animation: fadeInUp 0.8s ease-out;
         }
 
         /* Underline effect for H2 */
@@ -616,11 +865,21 @@
             /* Width of the underline */
             height: 4px;
             /* Thickness of the underline */
-            background-color: #05394d;
+            background: linear-gradient(90deg, #42a5f5 0%, #1976d2 100%);
             /* Green accent color */
             margin: 10px auto 0;
             /* Center the underline below the text */
             border-radius: 2px;
+            animation: expandWidth 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes expandWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: 60px;
+            }
         }
 
         .features-subtitle {
@@ -648,34 +907,69 @@
         }
 
         .card {
-            background-color: #05394d;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #05394d 0%, #0a9ec6 100%);
+            border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 24px rgba(66, 165, 245, 0.2);
             /* More prominent shadow */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             /* Smooth hover effects */
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: cardFadeIn 0.6s ease-out both;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-12px) scale(1.03);
             /* Lift effect on hover */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 16px 32px rgba(66, 165, 245, 0.3);
             /* Enhanced shadow on hover */
         }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
 
         .card-icon {
             font-size: 3.5em;
             /* Large icons */
             margin-bottom: 20px;
-            color: #28a745;
-            /* Green accent color for icons */
-            background-color: #e6ffee;
-            /* Light green background for icon */
+            color: #ffffff;
+            /* White icons for contrast */
+            background: rgba(255, 255, 255, 0.2);
+            /* Light background for icon */
             border-radius: 50%;
             /* Make it circular */
             width: 80px;
@@ -685,8 +979,15 @@
             /* Use flex to center icon content */
             justify-content: center;
             align-items: center;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             /* Inner shadow for depth */
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .card:hover .card-icon {
+            transform: rotate(360deg) scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .card h3 {
@@ -1125,6 +1426,18 @@
 </head>
 
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
+            </div>
+            <h1 class="loader-text">Welcome to Eyesphere</h1>
+            <p class="loader-subtitle">Vision Beyond Limits</p>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+
     <!-- Welcome Screen -->
     <div class="welcome-screen" style="display: none;">
         <div class="welcome-content">
@@ -1261,7 +1574,7 @@
             border-radius: 1rem;
             box-sizing: border-box;
             padding: 0.5rem;
-            width: 100%%;
+            width: 100%;
             font-size: 14px;
             gap: 1rem;
             }
@@ -1610,7 +1923,7 @@
             </label>
 
             <label class="radio">
-                <input name="nav" type="radio" onclick="location.href='/contact'" />
+                <input name="nav" type="radio" onclick="location.href='{% url 'contact' %}'" />
                 <span class="name">Contact</span>
             </label>
         </div>
@@ -1618,7 +1931,11 @@
     </nav>
 
     <section class="hero">
-        <h1 class="hero-title">Vision Beyond Limits</h1>
+        <h1 class="hero-title">
+            <span class="word" style="animation-delay: 0.6s;">Vision</span>
+            <span class="word" style="animation-delay: 0.9s;">Beyond</span>
+            <span class="word" style="animation-delay: 1.2s;">Limits</span>
+        </h1>
         <p class="hero-paragraph">Experience comprehensive eye care with cutting-edge technology and compassionate professionals dedicated to
             your visual health and well-being.</p>
         <div class="cta-buttons">
@@ -1717,14 +2034,53 @@
     <style>
     .services {
         padding: 4rem 2rem;
-        background-color: #a64848ff;
+        background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .services::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #42a5f5 0%, #1976d2 50%, #42a5f5 100%);
+        background-size: 200% 100%;
+        animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
     }
 
     .services h2 {
         text-align: center;
-        color: #333;
+        color: #05394d;
         margin-bottom: 1rem;
         font-size: 2.5em;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .services h2.scroll-animate {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .services-subtitle {
@@ -1732,25 +2088,55 @@
         color: #666;
         margin-bottom: 3rem;
         font-size: 1.1em;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
+    }
+
+    .services-subtitle.scroll-animate {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .service-list {
-        max-width: 800px;
+        max-width: 1000px;
         margin: 0 auto;
+        width: 100%;
     }
 
     .service-item {
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        background-color: #f8f9fa;
-        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+        border-radius: 12px;
+        background: white;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        animation: slideInLeft 0.6s ease-out both;
+        width: 100%;
     }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .service-item:nth-child(1) { animation-delay: 0.1s; }
+    .service-item:nth-child(2) { animation-delay: 0.2s; }
+    .service-item:nth-child(3) { animation-delay: 0.3s; }
+    .service-item:nth-child(4) { animation-delay: 0.4s; }
 
     .service-header {
         display: flex;
         align-items: center;
-        padding: 1.2rem;
+        padding: 1.5rem 2rem;
         cursor: pointer;
+        width: 100%;
     }
 
     .service-icon {
@@ -1763,8 +2149,9 @@
     .service-header h3 {
         flex-grow: 1;
         margin: 0;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: #333;
+        font-weight: 600;
     }
 
     .expand-icon {
@@ -1774,16 +2161,19 @@
     }
 
     .service-item:hover {
-        background-color: #e9ecef;
+        background-color: #f0f8ff;
+        transform: translateX(5px);
+        box-shadow: 0 6px 20px rgba(66, 165, 245, 0.2);
     }
 
     /* Changes made: Added service content with smooth transition and overflow handling */
     .service-content {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease-out;
+        transition: max-height 0.4s ease-out;
         background-color: #fff;
-        padding: 0 1.5rem 0 4rem;
+        padding: 0 2rem 0 5rem;
+        width: 100%;
     }
 
     .service-content p {
@@ -1800,9 +2190,16 @@
     }
 
     /* Changes made: Added responsive image styling with hover zoom effect */
+    .service-image {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
     .service-image img {
         width: 100%;
-        height: 200px;
+        height: 250px;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
@@ -1812,7 +2209,8 @@
     }
 
     .service-item.active .service-content {
-        max-height: 500px;
+        max-height: 600px;
+        padding: 1.5rem 2rem 1.5rem 5rem;
     }
 
     .service-item.active .expand-icon i {
@@ -1824,8 +2222,20 @@
             padding: 3rem 1rem;
         }
 
+        .service-list {
+            max-width: 100%;
+        }
+
         .service-header {
-            padding: 1rem;
+            padding: 1.2rem;
+        }
+
+        .service-content {
+            padding: 0 1.5rem 0 3rem;
+        }
+
+        .service-item.active .service-content {
+            padding: 1.5rem 1.5rem 1.5rem 3rem;
         }
 
         .service-icon {
@@ -1934,21 +2344,53 @@
     /* Changes made: Added modern testimonials section with side-scrolling functionality */
     .testimonials {
         padding: 4rem 2rem;
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .testimonials::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1976d2 0%, #42a5f5 50%, #1976d2 100%);
+        background-size: 200% 100%;
+        animation: shimmer 3s linear infinite;
     }
 
     .testimonials h2 {
         text-align: center;
-        color: #333;
+        color: #05394d;
         margin-bottom: 1rem;
         font-size: 2.5em;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .testimonials h2.scroll-animate {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .testimonials-subtitle {
         text-align: center;
-        color: #666;
+        color: #1976d2;
         margin-bottom: 3rem;
         font-size: 1.1em;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
+    }
+
+    .testimonials-subtitle.scroll-animate {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .testimonials-container {
@@ -1961,11 +2403,12 @@
     .testimonials-slider {
         display: flex;
         gap: 2rem;
-        overflow-x: auto;
+        overflow-x: hidden;
         scroll-behavior: smooth;
         scrollbar-width: none;
         -ms-overflow-style: none;
         padding: 1rem 0;
+        position: relative;
     }
 
     .testimonials-slider::-webkit-scrollbar {
@@ -1976,13 +2419,43 @@
         flex: 0 0 300px;
         background: white;
         padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(66, 165, 245, 0.15);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        animation: cardSlideIn 0.6s ease-out both;
+    }
+
+    @keyframes cardSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .testimonial-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #42a5f5 0%, #1976d2 100%);
+        transition: width 0.3s ease;
     }
 
     .testimonial-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 12px 32px rgba(66, 165, 245, 0.3);
+    }
+
+    .testimonial-card:hover::before {
+        width: 6px;
     }
 
     .stars {
@@ -2024,21 +2497,28 @@
         transform: translateY(-50%);
         background: white;
         border: none;
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #333;
-        transition: all 0.3s ease;
+        color: #1976d2;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10;
     }
 
     .nav-btn:hover {
-        background: #007bff;
+        background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
         color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 6px 20px rgba(66, 165, 245, 0.4);
+    }
+
+    .nav-btn:active {
+        transform: translateY(-50%) scale(0.95);
     }
 
     .prev-btn {
@@ -2067,6 +2547,32 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Scroll animation for headings
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const headingObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('scroll-animate');
+                    headingObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe service and testimonial headings
+        const servicesHeading = document.querySelector('.services h2');
+        const servicesSubtitle = document.querySelector('.services-subtitle');
+        const testimonialsHeading = document.querySelector('.testimonials h2');
+        const testimonialsSubtitle = document.querySelector('.testimonials-subtitle');
+
+        if (servicesHeading) headingObserver.observe(servicesHeading);
+        if (servicesSubtitle) headingObserver.observe(servicesSubtitle);
+        if (testimonialsHeading) headingObserver.observe(testimonialsHeading);
+        if (testimonialsSubtitle) headingObserver.observe(testimonialsSubtitle);
+
         // Services accordion functionality
         const serviceItems = document.querySelectorAll('.service-item');
 
@@ -2089,19 +2595,54 @@
             });
         });
 
-        // Testimonials slider functionality
+        // Testimonials slider functionality with auto-scroll
         const slider = document.querySelector('.testimonials-slider');
         const prevBtn = document.querySelector('.prev-btn');
         const nextBtn = document.querySelector('.next-btn');
         const cardWidth = 300 + 32; // card width + gap
+        let autoScrollInterval;
+        let isPaused = false;
 
+        // Auto-scroll function
+        function startAutoScroll() {
+            autoScrollInterval = setInterval(() => {
+                if (!isPaused && slider) {
+                    const maxScroll = slider.scrollWidth - slider.clientWidth;
+                    if (slider.scrollLeft >= maxScroll - 10) {
+                        // Reset to beginning
+                        slider.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        // Scroll forward
+                        slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                    }
+                }
+            }, 3000); // Auto-scroll every 3 seconds
+        }
+
+        // Pause auto-scroll on hover
+        slider.addEventListener('mouseenter', () => {
+            isPaused = true;
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            isPaused = false;
+        });
+
+        // Manual navigation
         prevBtn.addEventListener('click', () => {
-            slider.scrollLeft -= cardWidth;
+            isPaused = true;
+            slider.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+            setTimeout(() => { isPaused = false; }, 3000);
         });
 
         nextBtn.addEventListener('click', () => {
-            slider.scrollLeft += cardWidth;
+            isPaused = true;
+            slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
+            setTimeout(() => { isPaused = false; }, 3000);
         });
+
+        // Start auto-scroll
+        startAutoScroll();
     });
     </script>
 
@@ -2508,5 +3049,33 @@ document.addEventListener('DOMContentLoaded', function() {
         animation: slideDown 0.3s ease-in-out forwards;
     }
 </style>
+
+<script>
+    // Page Loader - Hide when page is fully loaded
+    window.addEventListener('load', function() {
+        const pageLoader = document.getElementById('pageLoader');
+        
+        // Add a small delay for smooth transition
+        setTimeout(function() {
+            pageLoader.classList.add('hidden');
+            
+            // Remove from DOM after animation completes
+            setTimeout(function() {
+                pageLoader.style.display = 'none';
+            }, 500);
+        }, 1000); // Show loader for at least 1 second
+    });
+
+    // Fallback: Hide loader if page takes too long to load
+    setTimeout(function() {
+        const pageLoader = document.getElementById('pageLoader');
+        if (pageLoader && !pageLoader.classList.contains('hidden')) {
+            pageLoader.classList.add('hidden');
+            setTimeout(function() {
+                pageLoader.style.display = 'none';
+            }, 500);
+        }
+    }, 5000); // Maximum 5 seconds
+</script>
 </body>
 </html>

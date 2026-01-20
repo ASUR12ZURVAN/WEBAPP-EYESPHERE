@@ -43,6 +43,23 @@ def about(request):
 def testimonials(request):
     return render(request, "testimonials.html")
 
+def contact(request):
+    if request.method == 'POST':
+        # Handle form submission
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone', '')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        # Here you can add logic to save the contact form data to database
+        # or send an email notification
+        
+        # For now, just return a success response
+        return JsonResponse({'success': True, 'message': 'Thank you for contacting us! We will get back to you soon.'})
+    
+    return render(request, "contact.html")
+
 def history(request):
     user_id = request.session.get('user_id')
     if user_id:

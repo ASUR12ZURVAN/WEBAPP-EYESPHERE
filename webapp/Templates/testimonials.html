@@ -1,311 +1,633 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testimonials</title>
-   <!--<link rel="stylesheet" href="testimonials.css">--> 
-   <style>
-    body {
-  font-family: "Poppins", Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f8f9fb;
-}
+    <title>Testimonials - Eyesphere</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-.testimonials {
-  padding: 60px 20px;
-  text-align: center;
-  /* Center heading and subtitle */
-  background-color: #f8f8f8;
-  /* A very light blue for a fresh look */
-  color: #ffffff;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.testimonials h2 {
-  font-size: 2.8em;
-  color: #3792e6;
-  margin-bottom: 15px;
-  position: relative;
-  display: inline-block;
-  /* For the underline */
-}
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-image: url("{% static 'macro-eye-iris.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
 
-.testimonials h2::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 4px;
-  background-color: #2b8bcf;
-  margin: 10px auto 0;
-  border-radius: 2px;
-}
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.8) 0%, rgba(135, 206, 235, 0.7) 100%);
+            z-index: -1;
+        }
 
-.testimonials-subtitle {
-  font-size: 1.15em;
-  color: #3678e3;
-  margin-bottom: 50px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
+        /* Navbar */
+        .navbar {
+            background-color: #f6f6f6;
+            color: #05394d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(209, 218, 224, 0.2);
+            position: relative;
+            min-height: 60px;
+            animation: slideDown 0.6s ease-out;
+        }
 
-.testimonial-cards-container {
-  display: grid;
-  /* Responsive grid for testimonials */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  /* Space between testimonial cards */
-  max-width: 1200px;
-  margin: 0 auto;
-  /* Center the grid of cards */
-}
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.testimonial-card {
-  background-color: #2a378d;
-  border: #010101 solid 4px;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 8px 16px rgba(11, 11, 11, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Center content within the card */
-  text-align: center;
-  /* Center text within the card */
-}
+        .navbar .logo img {
+            height: 80px;
+            vertical-align: middle;
+        }
 
-.testimonial-card:hover {
-  border: #ffffff solid 4px;
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
+        .radio-inputs {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-radius: 1rem;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            width: 100%;
+            font-size: 14px;
+            gap: 1rem;
+        }
 
-.testimonial-card .rating {
-  margin-bottom: 15px;
-  font-size: 1.5em;
-  /* Size of the stars */
-  color: #f39c12;
-  /* Golden color for stars */
-}
+        .radio-inputs .radio {
+            flex: 1 1 auto;
+            text-align: center;
+            position: relative;
+        }
 
-.testimonial-card .star {
-  margin: 0 2px;
-  /* Small space between stars */
-}
+        .radio-inputs .radio input {
+            display: none;
+        }
 
-.testimonial-card .review-text {
-  font-size: 1.1em;
-  color: #000000;
-  line-height: 1.7;
-  margin-bottom: 20px;
-  font-style: italic;
-  /* Make review text italic */
-}
+        .radio-inputs .radio .name {
+            white-space: nowrap;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.7rem;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            color: #2d3748;
+            font-weight: 500;
+            font-family: inherit;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
 
-.testimonial-card .reviewer-name {
-  font-size: 1.3em;
-  color: #121313;
-  margin-bottom: 5px;
-  font-weight: 600;
-}
+        .radio-inputs .radio input:checked + .name {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 600;
+        }
 
-.testimonial-card .reviewer-title {
-  font-size: 0.9em;
-  color: #3166c2;
-  margin-top: 0;
-}
+        .radio-inputs .radio:hover .name {
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            transform: translateY(-1px);
+        }
 
-@media (max-width: 1024px) {
-  .testimonials h2 {
-      font-size: 2.5em;
-  }
+        /* Testimonials Section */
+        .testimonials {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
 
-  .testimonials-subtitle {
-      font-size: 1.1em;
-  }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
 
-  .testimonial-cards-container {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
+        .testimonials::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1976d2 0%, #42a5f5 50%, #1976d2 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
 
-  .testimonial-card {
-      padding: 25px;
-  }
-}
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
 
-@media (max-width: 768px) {
-  .testimonials {
-      padding: 50px 15px;
-  }
+        .testimonials-header {
+            margin-bottom: 50px;
+            animation: slideInDown 0.8s ease-out;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
 
-  .testimonials h2 {
-      font-size: 2.2em;
-  }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-  .testimonials-subtitle {
-      font-size: 1em;
-      margin-bottom: 40px;
-  }
+        .testimonials h2 {
+            font-size: 3.5em;
+            color: #05394d;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-  .testimonial-cards-container {
-      grid-template-columns: 1fr;
-      /* Stack cards on mobile */
-      gap: 25px;
-  }
+        .testimonials-subtitle {
+            font-size: 1.2em;
+            color: #1976d2;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
 
-  .testimonial-card .review-text {
-      font-size: 1em;
-  }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-  .testimonial-card .reviewer-name {
-      font-size: 1.2em;
-  }
-}
+        .testimonials-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-@media (max-width: 480px) {
-  .testimonials {
-      padding: 40px 10px;
-  }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
 
-  .testimonials h2 {
-      font-size: 1.8em;
-  }
+        .testimonial-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(66, 165, 245, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            animation: scrollFadeIn 0.8s ease-out forwards;
+        }
 
-  .testimonials h2::after {
-      width: 50px;
-      height: 3px;
-      margin: 8px auto 0;
-  }
+        @keyframes scrollFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
-  .testimonials-subtitle {
-      font-size: 0.95em;
-      margin-bottom: 30px;
-  }
+        .testimonial-card.visible {
+            animation: scrollFadeIn 0.8s ease-out forwards;
+        }
 
-  .testimonial-card {
-      padding: 20px;
-  }
+        .testimonial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #42a5f5 0%, #1976d2 100%);
+            transition: width 0.3s ease;
+        }
 
-  .testimonial-card .rating {
-      font-size: 1.3em;
-  }
+        .testimonial-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 16px 32px rgba(66, 165, 245, 0.3);
+        }
 
-  .testimonial-card .review-text {
-      font-size: 0.95em;
-  }
+        .testimonial-card:hover::before {
+            width: 6px;
+        }
 
-  .testimonial-card .reviewer-name {
-      font-size: 1.1em;
-  }
+        .stars {
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+            font-size: 1.3em;
+            animation: starTwinkle 2s ease-in-out infinite;
+        }
 
-  .testimonial-card .reviewer-title {
-      font-size: 0.8em;
-  }
-}
-.logo{
-    vertical-align: left;
-    margin: 0%;
-    padding: 0%;
-    height: 110px;
-    width: 130px;
-    display: flex;
-}
-   </style>
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .testimonial-text {
+            color: #333;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            border-top: 2px solid #e3f2fd;
+            padding-top: 1rem;
+        }
+
+        .author-name {
+            color: #05394d;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 1.2em;
+        }
+
+        .author-title {
+            color: #1976d2;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+
+        /* Footer */
+        .site-footer {
+            background: #033747;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin-top: 60px;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 50px 10%;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex: 1 1 200px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid #446e7c;
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            background: #042e40;
+            padding: 20px 10%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .social-icons a {
+            color: #fff;
+            background: #0e4a5f;
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background 0.3s;
+            margin: 0 5px;
+        }
+
+        .social-icons a:hover {
+            background: #00c7e2;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .testimonials {
+                padding: 50px 15px;
+            }
+
+            .testimonials h2 {
+                font-size: 2.2em;
+            }
+
+            .testimonials-container {
+                padding: 0 15px;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonial-card {
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="logo">
-    <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
-</div>
-    <!-- Testimonials Section -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://eyesphere.in/wp-content/uploads/2024/05/logo-with-tagline-07.png" alt="Eyesphere Logo">
+        </div>
+        <div class="radio-inputs">
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'home_page' %}'" />
+                <span class="name">Home</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'service' %}'" />
+                <span class="name">Services</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'about' %}'" />
+                <span class="name">About Us</span>
+            </label>
+            <label class="radio">
+                <input checked name="nav" type="radio" onclick="location.href='{% url 'testimonials' %}'" />
+                <span class="name">Testimonials</span>
+            </label>
+            <label class="radio">
+                <input name="nav" type="radio" onclick="location.href='{% url 'contact' %}'" />
+                <span class="name">Contact</span>
+            </label>
+        </div>
+    </nav>
+
     <section class="testimonials">
-      <h2>What Our Patients Say</h2>
-      <p class="testimonials-subtitle">Hear directly from those who've experienced our expert eye care</p>
-      
-      <div class="testimonials-container">
-          <button class="nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
-          
-          <div class="testimonials-slider">
-              <div class="testimonial-card">
-                  <div class="stars">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                  </div>
-                  <p class="testimonial-text">"The selection of glasses is fantastic, the fitting process was seamless!"</p>
-                  <div class="testimonial-author">
-                      <p class="author-name">— Priya Devi</p>
-                      <p class="author-title">Graphic Designer</p>
-                  </div>
-              </div>
+        <div class="testimonials-header">
+            <h2>What Our Patients Say</h2>
+            <p class="testimonials-subtitle">Hear directly from those who've experienced our expert eye care</p>
+        </div>
+        
+        <div class="testimonials-container">
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The selection of glasses is fantastic, the fitting process was seamless!"</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Priya Devi</p>
+                        <p class="author-title">Graphic Designer</p>
+                    </div>
+                </div>
 
-              <div class="testimonial-card">
-                  <div class="stars">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                  </div>
-                  <p class="testimonial-text">"My kids love coming here! The team was great with children."</p>
-                  <div class="testimonial-author">
-                      <p class="author-name">— David Chen</p>
-                      <p class="author-title">Educator</p>
-                  </div>
-              </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"My kids love coming here! The team was great with children."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— David Chen</p>
+                        <p class="author-title">Educator</p>
+                    </div>
+                </div>
 
-              <div class="testimonial-card">
-                  <div class="stars">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                  </div>
-                  <p class="testimonial-text">"Outstanding experience with advanced equipment and excellent support!"</p>
-                  <div class="testimonial-author">
-                      <p class="author-name">— Sophia Mehta</p>
-                      <p class="author-title">Marketing Specialist</p>
-                  </div>
-              </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Outstanding experience with advanced equipment and excellent support!"</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Sophia Mehta</p>
+                        <p class="author-title">Marketing Specialist</p>
+                    </div>
+                </div>
 
-              <div class="testimonial-card">
-                  <div class="stars">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                  </div>
-                  <p class="testimonial-text">"I had a great experience with my LASIK surgery. The team was professional and caring throughout the process."</p>
-                  <div class="testimonial-author">
-                      <p class="author-name">— Anil Kumar</p>
-                      <p class="author-title">Entrepreneur</p>
-                  </div>
-              </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"I had a great experience with my LASIK surgery. The team was professional and caring throughout the process."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Anil Kumar</p>
+                        <p class="author-title">Entrepreneur</p>
+                    </div>
+                </div>
 
-              <div class="testimonial-card">
-                  <div class="stars">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                  </div>
-                  <p class="testimonial-text">"The staff is incredibly knowledgeable and took the time to explain everything thoroughly."</p>
-                  <div class="testimonial-author">
-                      <p class="author-name">— Sarah Johnson</p>
-                      <p class="author-title">Software Engineer</p>
-                  </div>
-              </div>
-          </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The staff is incredibly knowledgeable and took the time to explain everything thoroughly."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Sarah Johnson</p>
+                        <p class="author-title">Software Engineer</p>
+                    </div>
+                </div>
 
-          <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
-      </div>
-  </section>
-  
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Excellent service from start to finish. The doctors are highly skilled and the facility is top-notch."</p>
+                    <div class="testimonial-author">
+                        <p class="author-name">— Rajesh Patel</p>
+                        <p class="author-title">Business Owner</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-col brand">
+                <img src="https://eyesphere.in/wp-content/uploads/2024/05/Group-147.png" alt="Eyesphere Logo" class="footer-logo" style="width: 200px; margin-bottom: 15px;" />
+                <p>
+                    EyeSphere is where the pinnacle of vision care excellence converges with
+                    the bespoke needs of your distinguished organization.
+                </p>
+                <ul class="footer-contact" style="list-style: none; padding: 0; margin-top: 20px;">
+                    <li><i class="fas fa-phone-alt"></i> +91 8287948191</li>
+                    <li><i class="fas fa-envelope"></i> connect@eyesphere.in</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Noida, India</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home_page' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'service' %}">Services</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialities</h4>
+                <ul>
+                    <li><a href="#">Surgery</a></li>
+                    <li><a href="#">Therapy</a></li>
+                    <li><a href="#">Treatment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Diseases</h4>
+                <ul>
+                    <li><a href="#">Amblyopia</a></li>
+                    <li><a href="#">Age related Macular Degeneration</a></li>
+                    <li><a href="#">Diabetic Retinopathy</a></li>
+                    <li><a href="#">Glaucoma</a></li>
+                    <li><a href="#">Strabismus / Squint</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>Copyright © 2025 Eyesphere. All rights reserved.</p>
+            <div class="footer-actions">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll-triggered animations for testimonials
+            const testimonialCards = document.querySelectorAll('.testimonial-card');
+            
+            // Intersection Observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0) scale(1)';
+                        }, index * 150); // Staggered delay
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe each testimonial card
+            testimonialCards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
 </body>
 </html>
